@@ -16,15 +16,15 @@ dependencies[] = path
 dependencies[] = admin
 dependencies[] = openid
 dependencies[] = openidadmin
-dependencies[] = context
-dependencies[] = context_ui
+;dependencies[] = context
+;dependencies[] = context_ui
 dependencies[] = ctools
-dependencies[] = devel
-dependencies[] = diff
+;dependencies[] = devel
+;dependencies[] = diff
 dependencies[] = features
 dependencies[] = strongarm
 dependencies[] = views
-dependencies[] = views_ui
+;dependencies[] = views_ui
 
 ; additional (beyond BuildKit)
 dependencies[] = libraries

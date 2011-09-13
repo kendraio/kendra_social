@@ -1,0 +1,7 @@
+<?php
+
+/**
+ * implements hook_install()
+ */
+function kendra_social_install() {
+}

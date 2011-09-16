@@ -1,0 +1,21 @@
+kendra_social is a Drupal installation profile which contains pretty much all you need to set up a hub for social networking.
+
+Current contents:
+[drupal 7](http://drupal.org/project/drupal)
+[admin](http://drupal.org/project/admin)
+[admin_menu](http://drupal.org/project/admin_menu)
+[ctools](http://drupal.org/project/ctools)
+[devel](http://drupal.org/project/devel)
+[features](http://drupal.org/project/features)
+[fivestar](http://drupal.org/project/fivestar)
+[html5_base](http://drupal.org/project/html5_base)
+[libraries](http://drupal.org/project/libraries)
+[modernizr](http://drupal.org/project/modernizr)
+[notifications](http://drupal.org/project/notifications)
+[pathauto](http://drupal.org/project/pathauto)
+[strongarm](http://drupal.org/project/strongarm)
+[rules](http://drupal.org/project/rules)
+[jquery_plugin](http://drupal.org/project/jquery_plugin)
+[jquery_update](http://drupal.org/project/jquery_update)
+[views](http://drupal.org/project/views)
+[tao](http://drupal.org/project/tao)

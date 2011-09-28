@@ -35,44 +35,29 @@ projects[drupal][type] = core
 ; Modules
 ; --------
 projects[admin][version] = 2.0-beta3
-projects[admin][type] = "module"
 projects[admin_menu][version] = 3.0-rc1
-projects[admin_menu][type] = "module"
 projects[ctools][version] = 1.0-rc1
-projects[ctools][type] = "module"
 projects[devel][version] = 1.2
-projects[devel][type] = "module"
 projects[features][version] = 1.0-beta3
-projects[features][type] = "module"
 projects[fivestar][version] = 2.x-dev
-projects[fivestar][type] = "module"
 projects[html5_base][version] = 2.x-dev
-projects[html5_base][type] = "module"
 projects[libraries][version] = 1.0
-projects[libraries][type] = "module"
 projects[modernizr][version] = 1.0
-projects[modernizr][type] = "module"
 projects[notifications][version] = 1.0-alpha1
-projects[notifications][type] = "module"
 projects[pathauto][version] = 1.0-rc2
-projects[pathauto][type] = "module"
 projects[strongarm][version] = 2.0-beta2
-projects[strongarm][type] = "module"
 projects[rules][version] = 2.0-beta3
-projects[rules][type] = "module"
 projects[jquery_plugin][version] = 1.0
-projects[jquery_plugin][type] = "module"
 projects[jquery_update][version] = 2.2
-projects[jquery_update][type] = "module"
 projects[views][version] = 3.0-rc1
-projects[views][type] = "module"
-
+projects[job_scheduler][version] = 2.0-alpha2
+projects[feeds][version] = 2.0-alpha4
+projects[feeds_jsonpath_parser][version] = 1.0-beta2
   
 
 ; Themes
 ; --------
 projects[tao][version] = 3.0-beta3
-projects[tao][type] = "theme"
 
   
   
@@ -84,3 +69,9 @@ libraries[jquery][download][type] = "file"
 libraries[jquery][download][url] = "https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"
 libraries[jqueryui][download][type] = "file"
 libraries[jqueryui][download][url] = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js"
+libraries[jsonpath][download][url] = http://jsonpath.googlecode.com/files/jsonpath-0.8.1.php
+libraries[jsonpath][download][type] = file
+libraries[jsonpath][destination] = profiles/kendra_social/modules/feeds_jsonpath_parser/jsonpath-0.8.1.php
+
+
+

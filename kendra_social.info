@@ -29,3 +29,6 @@ dependencies[] = views
 ; additional (beyond BuildKit)
 dependencies[] = libraries
 dependencies[] = oauth
+
+files = kendra_social.profile
+

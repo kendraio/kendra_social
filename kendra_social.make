@@ -53,7 +53,9 @@ projects[views][version] = 3.0-rc1
 projects[job_scheduler][version] = 2.0-alpha2
 projects[feeds][version] = 2.0-alpha4
 projects[feeds_jsonpath_parser][version] = 1.0-beta2
-  
+projects[] = openidadmin
+projects[] = oauth
+
 
 ; Themes
 ; --------

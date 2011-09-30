@@ -11,7 +11,7 @@ dependencies[] = block
 ;dependencies[] = file
 dependencies[] = menu
 dependencies[] = path
-;dependencies[] = taxonomy
+dependencies[] = taxonomy
 
 ; Contrib
 dependencies[] = admin

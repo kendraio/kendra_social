@@ -4,7 +4,7 @@
  * implements hook_install()
  */
 function kendra_social_install() {
-  include_once DRUPAL_ROOT . '/profiles/minimal/minimal.install';
-  minimal_install();
+  include_once DRUPAL_ROOT . '/profiles/standard/standard.install';
+  standard_install();
 }
 

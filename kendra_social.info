@@ -2,38 +2,33 @@ name = Kendra Social
 core = 7.x
 description = Set up a hub for social networking in minutes!
 
-; Core
+dependencies[] = admin
 dependencies[] = block
 ;dependencies[] = book
 dependencies[] = comment
 ;dependencies[] = contact
+;dependencies[] = context
+;dependencies[] = context_ui
+dependencies[] = ctools
+dependencies[] = dashboard
 ;dependencies[] = dblog
+;dependencies[] = devel
+;dependencies[] = diff
+dependencies[] = features
 ;dependencies[] = field_ui
 ;dependencies[] = file
 dependencies[] = help
 dependencies[] = image
+dependencies[] = libraries
 dependencies[] = menu
-dependencies[] = path
-dependencies[] = taxonomy
-
-
-; Contrib
-dependencies[] = admin
+dependencies[] = oauth_common
 dependencies[] = openid
 dependencies[] = openidadmin
-;dependencies[] = context
-;dependencies[] = context_ui
-dependencies[] = ctools
-;dependencies[] = devel
-;dependencies[] = diff
-dependencies[] = features
+dependencies[] = path
 dependencies[] = rdf
 dependencies[] = strongarm
+dependencies[] = taxonomy
 dependencies[] = views
-;dependencies[] = views_ui
-
-; additional
-dependencies[] = libraries
-dependencies[] = oauth_common
+dependencies[] = views_ui
 
 files = kendra_social.profile

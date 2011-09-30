@@ -5,6 +5,7 @@ description = Set up a hub for social networking in minutes!
 ; Core
 dependencies[] = block
 ;dependencies[] = book
+dependencies[] = comment
 ;dependencies[] = contact
 ;dependencies[] = dblog
 ;dependencies[] = field_ui

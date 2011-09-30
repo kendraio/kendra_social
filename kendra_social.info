@@ -3,6 +3,7 @@ core = 7.x
 description = Set up a hub for social networking in minutes!
 
 ; Core
+dependencies[] = block
 ;dependencies[] = book
 ;dependencies[] = contact
 ;dependencies[] = dblog

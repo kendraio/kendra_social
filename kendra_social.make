@@ -56,9 +56,6 @@ projects[feeds_jsonpath_parser][version] = 1.0-beta2
 projects[] = openidadmin
 projects[] = oauth
 
-; Patch profiler with #1165672-5: Don't disable blocks
-libraries[profiler][patch][] = "http://drupal.org/files/issues/0001-Issue-1165672-don-t-disable-blocks.patch"
-
 
 ; Themes
 ; --------

@@ -1,7 +1,9 @@
+; -------------
 name = Kendra Social
-core = 7.x
 description = Set up a hub for social networking in minutes!
-
+; -------------
+core = 7.x
+; -------------
 dependencies[] = admin
 dependencies[] = block
 ;dependencies[] = book
@@ -38,5 +40,5 @@ dependencies[] = strongarm
 dependencies[] = taxonomy
 dependencies[] = views
 dependencies[] = views_ui
-
+; -------------
 files = kendra_social.profile

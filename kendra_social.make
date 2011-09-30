@@ -56,6 +56,9 @@ projects[feeds_jsonpath_parser][version] = 1.0-beta2
 projects[] = openidadmin
 projects[] = oauth
 
+; Patch profiler with #1165672-5: Don't disable blocks
+libraries[profiler][patch][] = "http://drupal.org/files/issues/0001-Issue-1165672-don-t-disable-blocks.patch"
+
 
 ; Themes
 ; --------
@@ -74,7 +77,3 @@ libraries[jqueryui][download][url] = "https://ajax.googleapis.com/ajax/libs/jque
 libraries[jsonpath][download][url] = http://jsonpath.googlecode.com/files/jsonpath-0.8.1.php
 libraries[jsonpath][download][type] = file
 libraries[jsonpath][destination] = profiles/kendra_social/modules/feeds_jsonpath_parser/jsonpath-0.8.1.php
-
-; Patch profiler with #1165672-5: Don't disable blocks
-libraries[profiler][patch][] = "http://drupal.org/files/issues/0001-Issue-1165672-don-t-disable-blocks.patch"
-

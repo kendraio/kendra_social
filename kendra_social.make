@@ -46,6 +46,7 @@ projects[feeds][version] = 2.0-alpha4
 projects[feeds_jsonpath_parser][version] = 1.0-beta2
 projects[] = openidadmin
 projects[] = oauth
+projects[] = services
 
 ; -------------
 ; Themes

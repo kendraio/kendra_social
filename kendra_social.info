@@ -41,5 +41,10 @@ dependencies[] = strongarm
 dependencies[] = taxonomy
 dependencies[] = views
 dependencies[] = views_ui
+dependencies[] = services_test_resource
+dependencies[] = rest_server
+dependencies[] = xmlrpc_server
+
+
 ; -------------
 files = kendra_social.profile

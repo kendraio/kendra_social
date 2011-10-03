@@ -5,6 +5,7 @@ description = Set up a hub for social networking in minutes!
 core = 7.x
 ; -------------
 ;dependencies[] = admin
+dependencies[] = admin_menu
 dependencies[] = block
 ;dependencies[] = book
 dependencies[] = comment
@@ -13,7 +14,7 @@ dependencies[] = comment
 ;dependencies[] = context_ui
 dependencies[] = ctools
 dependencies[] = dashboard
-;dependencies[] = dblog
+dependencies[] = dblog
 ;dependencies[] = devel
 ;dependencies[] = diff
 dependencies[] = features

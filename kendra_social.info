@@ -4,7 +4,7 @@ description = Set up a hub for social networking in minutes!
 ; -------------
 core = 7.x
 ; -------------
-dependencies[] = admin
+;dependencies[] = admin
 dependencies[] = block
 ;dependencies[] = book
 dependencies[] = comment

@@ -44,6 +44,7 @@ projects[views][version] = 3.0-rc1
 projects[job_scheduler][version] = 2.0-alpha2
 projects[feeds][version] = 2.0-alpha4
 projects[feeds_jsonpath_parser][version] = 1.x-dev
+projects[feeds_jsonpath_parser][patch][] = http://drupal.org/files/feeds_jsonpath_parser-drush_make.patch
 projects[] = openidadmin
 projects[] = oauth
 projects[] = services

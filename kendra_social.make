@@ -30,6 +30,7 @@ projects[ctools][version] = 1.0-rc1
 projects[entity][version] = 1.0-beta10
 projects[devel][version] = 1.2
 projects[features][version] = 1.0-beta3
+projects[html5_base][version] = 2.x-dev
 projects[job_scheduler][version] = 2.0-alpha2
 projects[jquery_plugin][version] = 1.0
 projects[jquery_update][version] = 2.2

@@ -17,7 +17,6 @@ dependencies[] = feeds_import
 dependencies[] = feeds_jsonpath_parser
 dependencies[] = feeds_ui
 dependencies[] = help
-dependencies[] = html5_base
 dependencies[] = image
 dependencies[] = job_scheduler
 dependencies[] = jquery_plugin

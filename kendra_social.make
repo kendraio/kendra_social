@@ -43,6 +43,7 @@ projects[rules][version] = 2.0-beta3
 projects[strongarm][version] = 2.0-beta2
 projects[token][version] = 1.0-beta6
 projects[views][version] = 3.0-rc1
+projects[fb][version] = 3.x-dev
 
 projects[feeds][version] = 2.0-alpha4
 ;projects[feeds_jsonpath_parser][version] = 1.x-dev
@@ -75,3 +76,6 @@ libraries[jsonpath][download][url] = http://jsonpath.googlecode.com/files/jsonpa
 libraries[jsonpath][download][type] = file
 libraries[jsonpath][directory_name] = jsonpath
 libraries[jsonpath][destination] = modules/feeds_jsonpath_parser
+libraries[facebook-php-sdk][download][type] = "git"
+libraries[facebook-php-sdk][download][url] = "git://github.com/facebook/php-sdk.git"
+libraries[facebook-php-sdk][directory_name] = facebook-php-sdk

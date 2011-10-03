@@ -67,4 +67,8 @@ libraries[jqueryui][download][url] = "https://ajax.googleapis.com/ajax/libs/jque
 libraries[jsonpath][download][url] = http://jsonpath.googlecode.com/files/jsonpath-0.8.1.php
 libraries[jsonpath][download][type] = file
 libraries[jsonpath][directory_name] = feeds_jsonpath_parser
-libraries[jsonpath][destination] = modules
+libraries[jsonpath][destination] = modules/feeds_jsonpath_parser
+
+
+
+

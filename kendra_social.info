@@ -45,6 +45,7 @@ dependencies[] = services_test_resource
 dependencies[] = rest_server
 dependencies[] = xmlrpc_server
 dependencies[] = services_oauth
+dependencies[] = kendra_social_services
 
 ; -------------
 files = kendra_social.profile

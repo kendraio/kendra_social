@@ -68,7 +68,3 @@ libraries[jsonpath][download][url] = http://jsonpath.googlecode.com/files/jsonpa
 libraries[jsonpath][download][type] = file
 libraries[jsonpath][directory_name] = jsonpath
 libraries[jsonpath][destination] = modules/feeds_jsonpath_parser
-
-
-
-

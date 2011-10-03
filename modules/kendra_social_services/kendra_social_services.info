@@ -1,0 +1,7 @@
+core = "7.x"
+dependencies[] = "services"
+description = "Services configuration for Kendra Social"
+features[ctools][] = "services:services:3"
+features[services_endpoint][] = "saracen"
+name = "Kendra Social Services"
+package = "Features"

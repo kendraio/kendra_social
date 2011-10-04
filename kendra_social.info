@@ -24,6 +24,7 @@ dependencies[] = feeds
 dependencies[] = feeds_import
 dependencies[] = feeds_jsonpath_parser
 dependencies[] = feeds_ui
+dependencies[] = field_ui
 dependencies[] = help
 dependencies[] = image
 dependencies[] = job_scheduler

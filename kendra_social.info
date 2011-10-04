@@ -36,6 +36,7 @@ dependencies[] = locale
 dependencies[] = menu
 dependencies[] = messaging
 ;dependencies[] = notifications
+dependencies[] = number
 dependencies[] = oauth_common
 dependencies[] = oauth_common_providerui
 dependencies[] = openid

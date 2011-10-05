@@ -8,6 +8,9 @@ include_once('kendra_social_services.features.inc');
 
 function kendra_social_services_services_resources() {
   $resources = array();
+  $resources['profiles'] = array();  // stub for eventual profiles service
+  $resources['smart_filters'] = array(); // stub for eventual smart_filters service
+  $resources['content_items'] = array(); // stub for eventual content service
   $resources['social'] = array(
     'actions' => array(
       'connect' => array(
@@ -23,9 +26,17 @@ function kendra_social_services_services_resources() {
           ),
         ),
       ),
+      'publish' => array(
+        'access arguments' => array('access content'),
+        'callback' => '_kss_social_publish', // stub for eventual social network publish service
+      ),
     ),
   );
   return $resources;
+}
+
+function _kss_social_publish() {
+  return "OK";
 }
 
 function _kss_social_connect($network) {

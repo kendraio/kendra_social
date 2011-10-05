@@ -15,7 +15,7 @@ function kendra_social_services_default_services_endpoint() {
   $endpoint->api_version = 3;
   $endpoint->name = 'saracen';
   $endpoint->server = 'rest_server';
-  $endpoint->path = 'api';
+  $endpoint->path = 'saracen';
   $endpoint->authentication = array(
     'services' => 'services',
   );

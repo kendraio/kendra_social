@@ -15,35 +15,34 @@ function kendra_social_services_default_services_endpoint() {
   $endpoint->api_version = 3;
   $endpoint->name = 'saracen';
   $endpoint->server = 'rest_server';
-  $endpoint->path = 'api';
+  $endpoint->path = 'saracen';
   $endpoint->authentication = array(
     'services' => 'services',
   );
-  $endpoint->server_settings = '';
-  $endpoint->resources = array(
-    'node' => array(
-      'operations' => array(
-        'retrieve' => array(
-          'enabled' => 1,
-        ),
-        'create' => array(
-          'enabled' => 1,
-        ),
-        'update' => array(
-          'enabled' => 1,
-        ),
-        'delete' => array(
-          'enabled' => 1,
-        ),
-        'index' => array(
-          'enabled' => 1,
-        ),
+  $endpoint->server_settings = array(
+    'rest_server' => array(
+      'formatters' => array(
+        'bencode' => TRUE,
+        'json' => TRUE,
+        'php' => TRUE,
+        'rss' => TRUE,
+        'xml' => TRUE,
+        'yaml' => TRUE,
+        'jsonp' => FALSE,
       ),
-      'relationships' => array(
-        'files' => array(
-          'enabled' => 1,
-        ),
-        'comments' => array(
+      'parsers' => array(
+        'application/json' => TRUE,
+        'application/vnd.php.serialized' => TRUE,
+        'application/x-www-form-urlencoded' => TRUE,
+        'application/x-yaml' => TRUE,
+        'multipart/form-data' => TRUE,
+      ),
+    ),
+  );
+  $endpoint->resources = array(
+    'social' => array(
+      'actions' => array(
+        'connect' => array(
           'enabled' => 1,
         ),
       ),
@@ -74,23 +73,6 @@ function kendra_social_services_default_services_endpoint() {
           'enabled' => 1,
         ),
         'register' => array(
-          'enabled' => 1,
-        ),
-      ),
-    ),
-    'services_test' => array(
-      'operations' => array(
-        'retrieve' => array(
-          'enabled' => 1,
-        ),
-      ),
-      'actions' => array(
-        'action_retrieve' => array(
-          'enabled' => 1,
-        ),
-      ),
-      'targeted_actions' => array(
-        'test' => array(
           'enabled' => 1,
         ),
       ),

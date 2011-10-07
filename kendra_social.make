@@ -56,6 +56,10 @@ projects[] = openidadmin
 projects[] = oauth
 projects[] = services
 
+projects[kendra_saracen_trial][type] = module
+projects[kendra_saracen_trial][download][type] = git
+projects[kendra_saracen_trial][download][url] = git@github.com:kendrainitiative/kendra_saracen_trial.git
+
 ; -------------
 ; Themes
 ; -------------

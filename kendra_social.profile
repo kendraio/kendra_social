@@ -15,4 +15,3 @@ function kendra_social_install_task_configure() {
   return NULL;
 }
 
-

@@ -4,6 +4,8 @@ description = Set up a hub for social networking in minutes!
 ; -------------
 core = 7.x
 ; -------------
+files = kendra_social.profile
+; -------------
 dependencies[] = admin_menu
 dependencies[] = block
 dependencies[] = comment
@@ -57,6 +59,3 @@ dependencies[] = token
 dependencies[] = views
 dependencies[] = views_ui
 dependencies[] = xmlrpc_server
-
-; -------------
-files = kendra_social.profile

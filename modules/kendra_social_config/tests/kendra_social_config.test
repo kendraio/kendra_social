@@ -1,0 +1,24 @@
+<?php
+
+class SimpleConfigTest extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
+  function getInfo() {
+    return array(
+      'name' => t('Simple: base settings'),
+      'description' => t('Test custom base settings.'),
+      'group' => t('Simple'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('kendra_social_config');
+  }
+  
+  function test() {
+    $this->drupalGet('home');
+    $this->assertText('Welcome to Simple');
+    $this->drupalGet('');
+    $this->assertText('Welcome to Simple');
+  }
+}

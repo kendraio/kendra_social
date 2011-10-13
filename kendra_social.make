@@ -16,19 +16,3 @@ projects[drupal][type] = core
 
 ; require Kendra Social core makefile
 includes[kendra_social] = https://raw.github.com/kendrainitiative/kendra_social/master/drupal-org.make
-
-; -------------
-; Modules
-; -------------
-
-; -------------
-; Themes
-; -------------
-
-; -------------
-; Patches
-; -------------
-
-; -------------
-; Libraries
-; -------------

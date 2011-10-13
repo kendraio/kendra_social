@@ -1,13 +1,13 @@
 <?php
 
-class SimpleConfigTest extends DrupalWebTestCase {
+class KendraSocialConfigTest extends DrupalWebTestCase {
   protected $profile = 'testing';
 
   function getInfo() {
     return array(
-      'name' => t('Simple: base settings'),
+      'name' => t('KendraSocial: base settings'),
       'description' => t('Test custom base settings.'),
-      'group' => t('Simple'),
+      'group' => t('KendraSocial'),
     );
   }
 
@@ -17,8 +17,8 @@ class SimpleConfigTest extends DrupalWebTestCase {
   
   function test() {
     $this->drupalGet('home');
-    $this->assertText('Welcome to Simple');
+    $this->assertText('Welcome to Kendra Social');
     $this->drupalGet('');
-    $this->assertText('Welcome to Simple');
+    $this->assertText('Welcome to Kendra Social');
   }
 }

@@ -10,6 +10,7 @@
 function kendra_social_services_default_services_endpoint() {
   $export = array();
 
+  
   $endpoint = new stdClass;
   $endpoint->disabled = FALSE; /* Edit this to true to make a default endpoint disabled initially */
   $endpoint->api_version = 3;
@@ -28,7 +29,7 @@ function kendra_social_services_default_services_endpoint() {
         'rss' => TRUE,
         'xml' => TRUE,
         'yaml' => TRUE,
-        'jsonp' => FALSE,
+        'jsonp' => TRUE,
       ),
       'parsers' => array(
         'application/json' => TRUE,

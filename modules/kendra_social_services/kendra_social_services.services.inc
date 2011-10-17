@@ -10,13 +10,17 @@
 function kendra_social_services_default_services_endpoint() {
   $export = array();
 
+  // Endpoing configuration variables
+  // @TODO these should come from configuration
+  $project_name = 'saracen';
+  $project_version = '0.1';
   
   $endpoint = new stdClass;
   $endpoint->disabled = FALSE; /* Edit this to true to make a default endpoint disabled initially */
   $endpoint->api_version = 3;
-  $endpoint->name = 'saracen';
+  $endpoint->name = $project_name;
   $endpoint->server = 'rest_server';
-  $endpoint->path = 'saracen';
+  $endpoint->path = $project_name . '/' . $project_version;
   $endpoint->authentication = array(
     'services' => 'services',
   );
@@ -80,7 +84,7 @@ function kendra_social_services_default_services_endpoint() {
     ),
   );
   $endpoint->debug = 1;
-  $export['saracen'] = $endpoint;
+  $export[$project_name] = $endpoint;
 
   return $export;
 }

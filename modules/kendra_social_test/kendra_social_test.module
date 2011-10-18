@@ -47,24 +47,49 @@ function kendra_social_test_menu() {
  * @param unknown_type $form_state
  */
 function kendra_social_test_api($form, &$form_state) {
+	global $user;
+	$default_data = '';
+	$default_method = '';
+	$default_path = '';
+
 	$form['#attached']['css'] = array(
 	drupal_get_path('module', 'kendra_social_test') . '/kendra_social_test.css',
 	);
 	$form['#attached']['js'] = array(
 	drupal_get_path('module', 'kendra_social_test') . '/kendra_social_test.js',
+		'https://raw.github.com/klokie/prettyPrint.js/master/prettyprint.js',
 	);
 
-	$kendra_social_test_extended_params = FALSE;
+	$options_content_type = _kendra_social_test_get_content_type_options();
+	$default_content_type = isset($form_state['values']['content_type']) ? $form_state['values']['content_type'] : key($options_content_type);
+
+	$options_method = _kendra_social_test_get_method_options();
+	$default_method = (isset($form_state['values']['method'])) ? $form_state['values']['method'] : key($options_method);
+
+	$uid = $user->uid;
+	if ($uid > 0) {
+		$default_path = "/saracen/0.1/user/" . $uid;
+	} else {
+		$default_method = 'POST';
+		$default_path = (isset($form_state['values']['url'])) ? $form_state['values']['url'] : "/saracen/0.1/user/login";
+		$default_data = 'username=foo&password=bar';
+	}
 
 	$form['kendra-social-box'] = array(
     '#type' => 'markup',
     '#prefix' => '<div id="kendra-social-box">',
     '#suffix' => '</div>',
-    '#markup' => '<h1>What is your Request?</h1>',
+    '#markup' => '<h1>' . t('What is your Request?') . '</h1>',
 	);
 
-	global $user;
-	$uid = $user->uid;
+	$form['data'] = array(
+	 '#type' => 'textarea',
+	 '#title' => 'Data',
+	 '#default_value' => $default_data,
+	 '#required' => FALSE,
+		'#rows' => 1,
+		'#cols' => 20,
+	);
 
 	$form['url'] = array(
     '#type' => 'textfield',
@@ -72,24 +97,16 @@ function kendra_social_test_api($form, &$form_state) {
     '#prefix' => '<div id="replace_textfield_div">',
     '#suffix' => '</div>',
     '#required' => TRUE,
-    '#default_value' => "/saracen/0.1/user/" . $uid,
+    '#default_value' => $default_path,
     '#size' => 32,
     '#maxlength' => 32,
 	);
-
-	$options_content_type = _kendra_social_test_get_content_type_options();
-	$selected_content_type = isset($form_state['values']['content_type']) ? $form_state['values']['content_type'] : key($options_content_type);
-
-	$options_method = _kendra_social_test_get_method_options();
-	$selected_method = isset($form_state['values']['method']) ? $form_state['values']['method'] : key($options_method);
-
-	$options_url = isset($form_state['values']['url']) ? $form_state['values']['url'] : '';
 
 	$form['content_type'] = array(
     '#type' => 'select',
     '#title' => 'Content Type',
     '#options' => $options_content_type,
-    '#default_value' => $selected_content_type,
+    '#default_value' => $default_content_type,
     '#required' => TRUE,
 	);
 
@@ -97,65 +114,9 @@ function kendra_social_test_api($form, &$form_state) {
     '#type' => 'select',
     '#title' => 'HTTP Method',
     '#options' => $options_method,
-    '#default_value' => $selected_method,
+    '#default_value' => $default_method,
     '#required' => TRUE,
 	);
-
-	if ($kendra_social_test_extended_params) {
-		// Because we have many fields with the same values, we have to set
-		// #tree to be able to access them.
-		$form['#tree'] = TRUE;
-		$form['params_fieldset'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Parameters'),
-		// Set up the wrapper so that AJAX will be able to replace the fieldset.
-    '#prefix' => '<div id="params-fieldset-wrapper">',
-    '#suffix' => '</div>',
-		);
-
-		$form['params_fieldset']['add_param'] = array(
-    '#type' => 'submit',
-    '#value' => t('Add a parameter'),
-    '#submit' => array('kendra_social_test_add_more_add_one'),
-		// See the kendra_social_test in kendra_social_test.module for more details on the
-		// properties of #ajax.
-    '#ajax' => array(
-      'callback' => 'kendra_social_test_add_more_callback',
-      'wrapper' => 'params-fieldset-wrapper',
-		),
-		);
-
-		// Build the fieldset with the proper number of params. We'll use
-		// $form_state['num_params'] to determine the number of textfields to build.
-		if (empty($form_state['num_params'])) {
-			$form_state['num_params'] = 1;
-		}
-		for ($i = 0; $i < $form_state['num_params']; $i++) {
-			$form['params_fieldset']['param'][$i] = array(
-      '#type' => 'textfield',
-      '#title' => t('Parameter'),
-			);
-		}
-		if ($form_state['num_params'] > 1) {
-			$form['params_fieldset']['remove_param'] = array(
-      '#type' => 'submit',
-      '#value' => t('Remove last parameter'),
-      '#submit' => array('kendra_social_test_add_more_remove_one'),
-      '#ajax' => array(
-        'callback' => 'kendra_social_test_add_more_callback',
-        'wrapper' => 'params-fieldset-wrapper',
-			),
-			);
-		}
-	} else {
-
-		$form['data'] = array(
-	 '#type' => 'textarea',
-	 '#title' => 'Data',
-	 '#default_value' => '',
-	 '#required' => FALSE,
-	 );
-	}
 
 	$form['submit'] = array(
     '#type' => 'submit',
@@ -238,7 +199,7 @@ function kendra_social_test_validate(&$form_state, $form) {
  */
 function _kendra_social_test_get_content_type_options() {
 	// drupal_map_assoc() just makes an array('String' => 'String'...).
-	return drupal_map_assoc(array('application/x-www-form-urlencoded', 'application/json', 'application/atom+xml'));
+	return drupal_map_assoc(array('application/json', 'application/xml', 'application/x-www-form-urlencoded'));
 }
 
 /**

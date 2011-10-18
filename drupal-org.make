@@ -123,3 +123,6 @@ libraries[jsonpath][destination] = modules/contrib/feeds_jsonpath_parser
 libraries[facebook-php-sdk][download][type] = "git"
 libraries[facebook-php-sdk][download][url] = "git://github.com/facebook/php-sdk.git"
 libraries[facebook-php-sdk][directory_name] = facebook-php-sdk
+
+libraries[kendra_social_test][download][[type] = file
+libraries[kendra_social_test][download][[url] = https://raw.github.com/jamespadolsey/prettyPrint.js/master/prettyprint.js

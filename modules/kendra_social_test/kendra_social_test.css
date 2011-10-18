@@ -2,64 +2,22 @@
  * @file
  * CSS for kendra_social_test.
  */
-#response-fields .fieldset-wrapper>div,#response {
+#kendra-social-test-api .form-type-textarea {
+	float: right;
+	width: 600px;
+}
+
+#response {
 	white-space: pre;
+	white-space: pre-wrap;
 	font-family: Menlo, Consolas, "Andale Mono", "Lucida Console",
 		"Nimbus Mono L", "DejaVu Sans Mono", monospace, "Courier New";
 	font-size: 10.7833px;
 	font-weight: 400;
-	font-style: normal;
-	font-size-adjust: none;
 	color: #3B3B3B;
-	text-transform: none;
-	text-decoration: none;
-	letter-spacing: normal;
-	word-spacing: 0;
 	line-height: 16.1833px;
-	text-align: start;
-	vertical-align: baseline;
-	direction: ltr;
-	opacity: 1;
-	Box: Model;
-	width: auto;
-	height: auto;
-	top: auto;
-	right: auto;
-	bottom: auto;
-	left: auto;
-	margin-top: 0;
-	margin-right: 0;
-	margin-bottom: 0;
-	margin-left: 0;
 	padding-top: 0;
 	padding-right: 4.31667px;
 	padding-bottom: 0;
 	padding-left: 4.31667px;
-	border-top-width: 0;
-	border-right-width: 0;
-	border-bottom-width: 0;
-	border-left-width: 0;
-	border-top-color: #3B3B3B;
-	border-right-color: #3B3B3B;
-	border-bottom-color: #3B3B3B;
-	border-left-color: #3B3B3B;
-	border-top-style: none;
-	border-right-style: none;
-	border-bottom-style: none;
-	border-left-style: none;
-	box-shadow: none;
-	Layout: position static;
-	display: inline;
-	visibility: visible;
-	z-index: auto;
-	overflow-x: visible;
-	overflow-y: visible;
-	white-space: normal;
-	clip: auto;
-	float: none;
-	clear: none;
-	list-style-image: none;
-	list-style-position: outside;
-	list-style-type: disc;
-	marker-offset: auto;
 }

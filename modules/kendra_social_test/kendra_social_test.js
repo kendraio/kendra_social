@@ -102,6 +102,16 @@
 		}
 
 		try {
+			$.ajaxSetup({
+				  'error': function(e, jqXHR, ajaxSettings, thrownError) {   
+					if (typeof prettyPrint != 'undefined') {
+						html = prettyPrint(e, {
+							maxDepth : 6,
+							maxStringLength : 100
+						});
+						$('#response').html(html);
+					}
+				}});
 			$.ajax(url, options);
 		} catch (e) {
 			if (typeof prettyPrint != 'undefined') {

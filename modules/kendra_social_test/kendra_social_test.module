@@ -72,7 +72,7 @@ function kendra_social_test_api($form, &$form_state) {
     '#prefix' => '<div id="replace_textfield_div">',
     '#suffix' => '</div>',
     '#required' => TRUE,
-    '#default_value' => "/saracen/user/" . $uid,
+    '#default_value' => "/saracen/0.1/user/" . $uid,
     '#size' => 32,
     '#maxlength' => 32,
 	);

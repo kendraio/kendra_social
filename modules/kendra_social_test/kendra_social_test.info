@@ -1,0 +1,11 @@
+name = Kendra Social Test
+description = A test module for exercising features of the Kendra Social API
+package = Kendra Social Test
+core = 7.x
+files[] = kendra_social_test.test
+
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "kendra_social_test"
+datestamp = "1318680418"
+

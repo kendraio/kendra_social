@@ -1,5 +1,8 @@
 <?php
 
+variable_set('KENDRA_SOCIAL_SERVICES_ENDPOINT_NAME', 'saracen');
+variable_set('KENDRA_SOCIAL_SERVICES_ENDPOINT_PREFIX', 'saracen/0.1');
+
 include_once('kendra_social_config.features.inc');
 
 /**

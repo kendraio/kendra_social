@@ -166,7 +166,7 @@ function kendra_social_test_api($form, &$form_state) {
 	'#title' => t("Response"),
     '#prefix' => '<div id="response">',
     '#suffix' => '</div>',
-    '#markup' => '',
+    '#markup' => t('Press Submit to make your request.'),
 	);
 
 	$form['docs'] = array(

@@ -53,7 +53,7 @@ function kendra_social_test_api($form, &$form_state) {
 	$default_path = '';
 
 	$kendra_social_services_endpoint_prefix = variable_get('KENDRA_SOCIAL_SERVICES_ENDPOINT_PREFIX', 'saracen/0.1');
-	
+
 	$form['#attached']['css'] = array(
 	drupal_get_path('module', 'kendra_social_test') . '/kendra_social_test.css',
 	);
@@ -150,6 +150,7 @@ function kendra_social_test_api($form, &$form_state) {
 	//'path' => $options_url,
 	'wrapper' => 'response',
       'name' => 'submit1',
+	'progress'=>array('type'=>'throbber'),
 	),
     '#value' => t('Submit'),
 	);

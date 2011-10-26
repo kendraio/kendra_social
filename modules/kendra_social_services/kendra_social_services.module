@@ -63,7 +63,8 @@ function kendra_social_services_menu() {
   return $items;
 }
 function _kendra_social_services_connect() {
-  $form = drupal_get_form('user_register_form');
-  print drupal_render($form);
+  return "<fb:login-button scope=\"\" v=\"2\">Connect</fb:login-button>";
+  //$form = drupal_get_form('user_register_form');
+  //print drupal_render($form);
 }
 

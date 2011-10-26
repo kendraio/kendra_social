@@ -47,13 +47,12 @@ function kendra_social_test_menu() {
  * @param unknown_type $form_state
  */
 function kendra_social_test_api($form, &$form_state) {
-	global $user, $_GET;
 	$default_data = '';
 	$default_method = '';
 	$default_path = '';
 
 	$kendra_social_services_endpoint_prefix = variable_get('KENDRA_SOCIAL_SERVICES_ENDPOINT_PREFIX', 'saracen/0.1');
-	
+
 	$form['#attached']['css'] = array(
 	drupal_get_path('module', 'kendra_social_test') . '/kendra_social_test.css',
 	);
@@ -63,39 +62,46 @@ function kendra_social_test_api($form, &$form_state) {
 	);
 
 	$options_content_type = _kendra_social_test_get_content_type_options();
-	if (isset($_GET['endpoint_content_type'])) {
-		$default_content_type = check_plain(urldecode($_GET['endpoint_content_type']));
-	} else if (isset($form_state['values']['content_type'])) {
-		$default_content_type = $form_state['values']['content_type'];
-	} else {
-		$default_content_type = key($options_content_type);
+	$default_content_type = _kendra_social_test_get_url_param('endpoint_content_type');
+
+	if ($default_content_type == '') {
+		if (isset($form_state['values']['content_type'])) {
+			$default_content_type = $form_state['values']['content_type'];
+		} else {
+			$default_content_type = key($options_content_type);
+		}
 	}
 
 	$options_method = _kendra_social_test_get_method_options();
-	if (isset($_GET['endpoint_method'])) {
-		$default_method = check_plain(urldecode($_GET['endpoint_method']));
-	} else if (isset($form_state['values']['method'])) {
-		$default_method = $form_state['values']['method'];
-	} else {
-		$default_method = key($options_method);
+	$default_method = _kendra_social_test_get_url_param('endpoint_method');
+	if ($default_method == '') {
+		if (isset($form_state['values']['method'])) {
+			$default_method = $form_state['values']['method'];
+		} else {
+			$default_method = key($options_method);
+		}
 	}
 
-	if (isset($_GET['endpoint_data'])) {
-		$default_data = str_ireplace('&amp;', '&', check_plain(urldecode($_GET['endpoint_data'])));
+	$default_data = _kendra_social_test_get_url_param('endpoint_data');
+	if ($default_data != '') {
+		$default_data = str_ireplace('&amp;', '&', $default_data);
 	} else if (isset($form_state['values']['data'])) {
 		$default_data = $form_state['values']['data'];
 	}
 
+	global $user;
 	$uid = $user->uid;
-	if (!$uid) $uid = '{UID}';
-
-	if (isset($_GET['endpoint_path'])) {
-		$default_path = str_ireplace('&amp;', '&', check_plain(urldecode($_GET['endpoint_path'])));
+	
+	$default_path = _kendra_social_test_get_url_param('endpoint_path');
+	if ($default_path != '') {
+		$default_path = str_ireplace('&amp;', '&', $default_path);
+	} else if (isset($form_state['values']['url'])) {
+		$default_path = $form_state['values']['url'];
 	} else if ($uid > 0) {
 		$default_path = $kendra_social_services_endpoint_prefix . "/user/" . $uid;
 	} else {
+		$default_path = $kendra_social_services_endpoint_prefix . "/user/login";
 		$default_method = 'POST';
-		$default_path = (isset($form_state['values']['url'])) ? $form_state['values']['url'] : $kendra_social_services_endpoint_prefix . "/user/login";
 		$default_data = 'username=foo&password=bar';
 	}
 
@@ -150,6 +156,7 @@ function kendra_social_test_api($form, &$form_state) {
 	//'path' => $options_url,
 	'wrapper' => 'response',
       'name' => 'submit1',
+	'progress'=>array('type'=>'throbber'),
 	),
     '#value' => t('Submit'),
 	);
@@ -166,7 +173,7 @@ function kendra_social_test_api($form, &$form_state) {
 	'#title' => t("Response"),
     '#prefix' => '<div id="response">',
     '#suffix' => '</div>',
-    '#markup' => '',
+    '#markup' => t('Press Submit to make your request.'),
 	);
 
 	$form['docs'] = array(
@@ -181,7 +188,7 @@ function kendra_social_test_api($form, &$form_state) {
     '#prefix' => '<div id="example-links">',
     '#suffix' => '</div>',
     '#type' => 'markup',
-    '#markup' => '<ul id="samples"><li>' . join('</li><li>', _kendra_social_test_get_test_links($uid)) . '</li></ul>',
+    '#markup' => '<ul id="samples"><li>' . join('</li><li>', _kendra_social_test_get_test_links()) . '</li></ul>',
 	);
 
 	return $form;
@@ -242,6 +249,19 @@ function _kendra_social_test_get_content_type_options() {
 }
 
 /**
+ * Helper function to get a sanitized parameter from the URL query string.
+ *
+ * @return string
+ */
+function _kendra_social_test_get_url_param($key = '') {
+	global $_GET;
+	if (isset($_GET[$key])) {
+		return token_replace(check_plain(urldecode($_GET[$key])));
+	}
+	return '';
+}
+
+/**
  * Helper function to populate a dropdown.
  *
  * @return array of options
@@ -256,18 +276,18 @@ function _kendra_social_test_get_method_options() {
  *
  * @return array of links
  */
-function _kendra_social_test_get_test_links($UID = '{UID}') {
+function _kendra_social_test_get_test_links() {
 	$kendra_social_services_endpoint_prefix = variable_get('KENDRA_SOCIAL_SERVICES_ENDPOINT_PREFIX', 'saracen/0.1');
 
 	return array(
-	l("User Register","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/register", "endpoint_method"=>"POST", "endpoint_data"=>"name=testuser&mail=test@example.com&pass="))),
-	l("User Login","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/login", "endpoint_method"=>"POST", "endpoint_data"=>"username={name}&password={pass}"))),
+	l("User Register","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/register", "endpoint_method"=>"POST", "endpoint_data"=>"name=[current-user:name]&mail=[current-user:mail]&pass=xxxxxx"))),
+	l("User Login","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/login", "endpoint_method"=>"POST", "endpoint_data"=>"username=[current-user:name]&password=xxxxxx"))),
 	l("Facebook Connect","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/social/connect", "endpoint_method"=>"POST", "endpoint_data"=>"network=facebook"))),
-	l("Store user profile data","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/profile/{$UID}", "endpoint_method"=>"POST", "endpoint_data"=>"name={property_name}&value={value}"))),
-	l("Retrieve a user's profile data","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/{$UID}", "endpoint_method"=>"GET"))),
-	l("Set up a Smart Filter","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/filter", "endpoint_method"=>"PUT", "endpoint_data"=>"name={filter_name}&smart_filter={smart_filter_obj}"))),
-	l("Retrieve Smart Filter","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/profile/filter/{filter_name}", "endpoint_method"=>"GET"))),
-	l("Post content to social network","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/social/publish", "endpoint_method"=>"POST", "endpoint_data"=>"network=facebook&content={CONTENT}"))),
+	l("Store user profile data","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/profile/[current-user:uid]", "endpoint_method"=>"POST", "endpoint_data"=>"name=[property_name]&value=[value]"))),
+	l("Retrieve a user's profile data","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/[current-user:uid]", "endpoint_method"=>"GET"))),
+	l("Set up a Smart Filter","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/filter", "endpoint_method"=>"PUT", "endpoint_data"=>"name=[filter_name]&smart_filter=[smart_filter_obj]"))),
+	l("Retrieve Smart Filter","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/profile/filter/[filter_name]", "endpoint_method"=>"GET"))),
+	l("Post content to social network","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/social/publish", "endpoint_method"=>"POST", "endpoint_data"=>"network=facebook&content=[CONTENT]"))),
 	);
 }
 

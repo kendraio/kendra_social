@@ -63,6 +63,9 @@
 			} else if (typeof data == 'string' || typeof prettyPrint == 'undefined') {
 				html = data;
 				$('#response').html(html);
+            } else if (typeof data.embed == 'string') {
+                html = data.embed;
+                $('#response').html(html);
 			} else {
 				html = prettyPrint(data, {
 					maxDepth : 6

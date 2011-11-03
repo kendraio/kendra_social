@@ -29,14 +29,46 @@ function kendra_social_services_services_resources() {
       'publish' => array(
         'access arguments' => array('access content'),
         'callback' => '_kss_social_publish', // stub for eventual social network publish service
+        'args' => array(
+          array(
+            'name' => 'network',
+            'optional' => FALSE,
+            'source' => array('data' => 'network'),
+            'type' => 'string',
+            'description' => 'The social network to connect to',
+          ),
+          array(
+            'name' => 'content',
+            'optional' => FALSE,
+            'source' => array('data' => 'content'),
+            'type' => 'string',
+            'description' => 'Content to post to social network',
+          ),
+        ),
       ),
     ),
   );
   return $resources;
 }
 
-function _kss_social_publish() {
-  return "OK";
+function _kss_social_publish($network, $msg) {
+	if ($network == 'facebook') {
+	  $fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid", 
+	    array(':uid' => $user->uid))->fetchField();
+		$access_token = db_query("SELECT session_key FROM {fb_user_app} WHERE fbu = :fbu", 
+			array(':fbu' => $fbid))->fetchField();
+		$fb_feed_url = "https://graph.facebook.com/$fbid/feed";
+
+		$result = drupal_http_request($fb_feed_url, array(
+		  'method' => 'POST',
+		  'data' => "access_token={$access_token}&message={$msg}",
+		));
+  
+	  watchdog('kss_social_publish', print_r($result, TRUE));
+	  return $result->status_message;
+	} else {
+		return "Unknown Network";
+	}
 }
 
 function _kss_social_connect($network) {

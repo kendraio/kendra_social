@@ -29,7 +29,7 @@ function kendra_social_test_menu() {
 	$items = array();
 
 	// Generate different textfields based on form state.
-	$items['kendra_api_test'] = array(
+	$items['kendra-api-test'] = array(
     'title' => 'Kendra API Test',
 	    'page callback' => 'drupal_get_form',
     'page arguments' => array('kendra_social_test_api'),
@@ -280,14 +280,14 @@ function _kendra_social_test_get_test_links() {
 	$kendra_social_services_endpoint_prefix = variable_get('KENDRA_SOCIAL_SERVICES_ENDPOINT_PREFIX', 'saracen/0.1');
 
 	return array(
-	l("User Register","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/register", "endpoint_method"=>"POST", "endpoint_data"=>"name=[current-user:name]&mail=[current-user:mail]&pass=xxxxxx"))),
-	l("User Login","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/login", "endpoint_method"=>"POST", "endpoint_data"=>"username=[current-user:name]&password=xxxxxx"))),
-	l("Facebook Connect","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/social/connect", "endpoint_method"=>"POST", "endpoint_data"=>"network=facebook"))),
-	l("Store user profile data","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/profile/[current-user:uid]", "endpoint_method"=>"POST", "endpoint_data"=>"name=[property_name]&value=[value]"))),
-	l("Retrieve a user's profile data","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/[current-user:uid]", "endpoint_method"=>"GET"))),
-	l("Set up a Smart Filter","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/filter", "endpoint_method"=>"PUT", "endpoint_data"=>"name=[filter_name]&smart_filter=[smart_filter_obj]"))),
-	l("Retrieve Smart Filter","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/profile/filter/[filter_name]", "endpoint_method"=>"GET"))),
-	l("Post content to social network","kendra_api_test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/social/publish", "endpoint_method"=>"POST", "endpoint_data"=>"network=facebook&content=[CONTENT]"))),
+	l("User Register","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/register", "endpoint_method"=>"POST", "endpoint_data"=>"name=[current-user:name]&mail=[current-user:mail]&pass=xxxxxx"))),
+	l("User Login","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/login", "endpoint_method"=>"POST", "endpoint_data"=>"username=[current-user:name]&password=xxxxxx"))),
+	l("Facebook Connect","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/social/connect", "endpoint_method"=>"POST", "endpoint_data"=>"network=facebook"))),
+	l("Store user profile data","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/profile/[current-user:uid]", "endpoint_method"=>"POST", "endpoint_data"=>"name=[property_name]&value=[value]"))),
+	l("Retrieve a user's profile data","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/[current-user:uid]", "endpoint_method"=>"GET"))),
+	l("Set up a Smart Filter","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/filter", "endpoint_method"=>"PUT", "endpoint_data"=>"name=[filter_name]&smart_filter=[smart_filter_obj]"))),
+	l("Retrieve Smart Filter","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/profile/filter/[filter_name]", "endpoint_method"=>"GET"))),
+	l("Post content to social network","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/social/publish", "endpoint_method"=>"POST", "endpoint_data"=>"network=facebook&content=[CONTENT]"))),
 	);
 }
 

@@ -42,14 +42,14 @@ function kendra_social_services_default_services_endpoint() {
 	),
 	);
 	$endpoint->resources = array(
-    'social' => array(
+    'accounts' => array(
       'actions' => array(
         'connect' => array(
           'enabled' => 1,
 	),
 	),
 	),
-    'user' => array(
+	    'user' => array(
       'operations' => array(
         'retrieve' => array(
           'enabled' => 1,

@@ -9,33 +9,37 @@ include_once('kendra_social_services.features.inc');
 function kendra_social_services_services_resources() {
   $resources = array();
   $resources['profiles'] = array();  // stub for eventual profiles service
-  $resources['smart_filters'] = array(); // stub for eventual smart_filters service
-  $resources['content_items'] = array(); // stub for eventual content service
-  $resources['social'] = array(
+  $resources['smartfilters'] = array(); // stub for eventual Smart Filters service
+  $resources['contentitems'] = array(); // stub for eventual content service
+  $resources['accounts'] = array(
     'actions' => array(
       'connect' => array(
         'access arguments' => array('access content'),
         'callback' => '_kss_social_connect',
         'args' => array(
           array(
-            'name' => 'network',
+            'name' => 'domain',
             'optional' => FALSE,
-            'source' => array('data' => 'network'),
+            'source' => array('data' => 'domain'),
             'type' => 'string',
-            'description' => 'The social network to connect to',
+            'description' => 'The top-most authoritative domain for the social network to connect to',
           ),
         ),
       ),
+    ),
+  );
+  $resources['social'] = array(
+    'actions' => array(
       'publish' => array(
         'access arguments' => array('access content'),
         'callback' => '_kss_social_publish', // stub for eventual social network publish service
         'args' => array(
           array(
-            'name' => 'network',
+            'name' => 'domain',
             'optional' => FALSE,
-            'source' => array('data' => 'network'),
+            'source' => array('data' => 'domain'),
             'type' => 'string',
-            'description' => 'The social network to connect to',
+            'description' => 'The top-most authoritative domain for the social network to connect to',
           ),
           array(
             'name' => 'content',
@@ -51,8 +55,8 @@ function kendra_social_services_services_resources() {
   return $resources;
 }
 
-function _kss_social_publish($network, $msg) {
-	if ($network == 'facebook') {
+function _kss_social_publish($domain, $msg) {
+	if ($domain == 'facebook.com') {
 	  $fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid", 
 	    array(':uid' => $user->uid))->fetchField();
 		$access_token = db_query("SELECT session_key FROM {fb_user_app} WHERE fbu = :fbu", 
@@ -67,18 +71,18 @@ function _kss_social_publish($network, $msg) {
 	  watchdog('kss_social_publish', print_r($result, TRUE));
 	  return $result->status_message;
 	} else {
-		return "Unknown Network";
+		return "Unknown domain";
 	}
 }
 
-function _kss_social_connect($network) {
-  if ($network == 'facebook') {
+function _kss_social_connect($domain) {
+  if ($domain == 'facebook.com') {
     $connect_url = url('connect', array('absolute' => TRUE));
     return array(
       'embed' => "<iframe src=\"{$connect_url}\" width=\"300px\" height=\"400px\" />",
     );
   }
-  return "Kendra Social connect error: network unknown";
+  return "Kendra Social connect error: domain unknown";
 }
 
 /** 

@@ -282,12 +282,12 @@ function _kendra_social_test_get_test_links() {
 	return array(
 	l("User Register","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/register", "endpoint_method"=>"POST", "endpoint_data"=>"name=[current-user:name]&mail=[current-user:mail]&pass=xxxxxx"))),
 	l("User Login","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/login", "endpoint_method"=>"POST", "endpoint_data"=>"username=[current-user:name]&password=xxxxxx"))),
-	l("Facebook Connect","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/accounts/connect", "endpoint_method"=>"POST", "endpoint_data"=>"network=facebook"))),
+	l("Facebook Connect","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/accounts/connect", "endpoint_method"=>"POST", "endpoint_data"=>"domain=facebook.com"))),
 	l("Store user profile data","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/profile/[current-user:uid]", "endpoint_method"=>"POST", "endpoint_data"=>"name=[property_name]&value=[value]"))),
 	l("Retrieve a user's profile data","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/[current-user:uid]", "endpoint_method"=>"GET"))),
-	l("Set up a Smart Filter","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/filter", "endpoint_method"=>"PUT", "endpoint_data"=>"name=[filter_name]&smart_filter=[smart_filter_obj]"))),
-	l("Retrieve Smart Filter","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/profile/filter/[filter_name]", "endpoint_method"=>"GET"))),
-	l("Post content to social network","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/social/publish", "endpoint_method"=>"POST", "endpoint_data"=>"network=facebook&content=[CONTENT]"))),
+	l("Set up a Smart Filter","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/smartfilters", "endpoint_method"=>"PUT", "endpoint_data"=>"name=[filter_name]&smart_filter=[smart_filter_obj]"))),
+	l("Retrieve Smart Filter","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/smartfilters/[filter_name]", "endpoint_method"=>"GET"))),
+	l("Post content to social network","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/social/publish", "endpoint_method"=>"POST", "endpoint_data"=>"domain=facebook.com&content=[CONTENT]"))),
 	);
 }
 

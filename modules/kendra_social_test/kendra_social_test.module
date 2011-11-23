@@ -188,7 +188,7 @@ function kendra_social_test_api($form, &$form_state) {
     '#prefix' => '<div id="example-links">',
     '#suffix' => '</div>',
     '#type' => 'markup',
-    '#markup' => '<ul id="samples"><li>' . join('</li><li>', _kendra_social_test_get_test_links()) . '</li></ul>',
+    '#markup' => '<a href="http://saracen.kendra.org/methods">Available Methods</a>.',
 	);
 
 	return $form;
@@ -269,26 +269,6 @@ function _kendra_social_test_get_url_param($key = '') {
 function _kendra_social_test_get_method_options() {
 	// drupal_map_assoc() just makes an array('String' => 'String'...).
 	return drupal_map_assoc(array('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PROPFIND', 'COPY', 'MOVE'));
-}
-
-/**
- * Helper function to supply some test links.
- *
- * @return array of links
- */
-function _kendra_social_test_get_test_links() {
-	$kendra_social_services_endpoint_prefix = variable_get('KENDRA_SOCIAL_SERVICES_ENDPOINT_PREFIX', 'saracen/0.1');
-
-	return array(
-	l("User Register","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/register", "endpoint_method"=>"POST", "endpoint_data"=>"name=[current-user:name]&mail=[current-user:mail]&pass=xxxxxx"))),
-	l("User Login","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/login", "endpoint_method"=>"POST", "endpoint_data"=>"username=[current-user:name]&password=xxxxxx"))),
-	l("Facebook Connect","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/accounts/connect", "endpoint_method"=>"POST", "endpoint_data"=>"domain=facebook.com"))),
-	l("Store user profile data","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/profile/[current-user:uid]", "endpoint_method"=>"POST", "endpoint_data"=>"name=[property_name]&value=[value]"))),
-	l("Retrieve a user's profile data","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/user/[current-user:uid]", "endpoint_method"=>"GET"))),
-	l("Set up a Smart Filter","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/smartfilters", "endpoint_method"=>"PUT", "endpoint_data"=>"name=[filter_name]&smart_filter=[smart_filter_obj]"))),
-	l("Retrieve Smart Filter","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/smartfilters/[filter_name]", "endpoint_method"=>"GET"))),
-	l("Post content to social network","kendra-api-test",array("query"=>array("endpoint_path"=>$kendra_social_services_endpoint_prefix . "/social/publish", "endpoint_method"=>"POST", "endpoint_data"=>"domain=facebook.com&content=[CONTENT]"))),
-	);
 }
 
 /**

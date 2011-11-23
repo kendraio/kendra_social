@@ -28,6 +28,7 @@ function kendra_social_services_services_get_mappings() {
             'description' => 'The top-most authoritative domain for the social network to connect to',
 	),
 	),
+          'enabled' => 1,
 	),
 	),
 	);
@@ -55,5 +56,36 @@ function kendra_social_services_services_get_mappings() {
 	),
 	),
 	);
+	$resources['user'] = array(
+      'operations' => array(
+        'retrieve' => array(
+          'enabled' => 1,
+	),
+        'create' => array(
+          'enabled' => 1,
+	),
+        'update' => array(
+          'enabled' => 1,
+	),
+        'delete' => array(
+          'enabled' => 1,
+	),
+        'index' => array(
+          'enabled' => 1,
+	),
+	),
+      'actions' => array(
+        'login' => array(
+          'enabled' => 1,
+	),
+        'logout' => array(
+          'enabled' => 1,
+	),
+        'register' => array(
+          'enabled' => 1,
+	),
+	),
+	);
+
 	return $resources;
 }

@@ -7,6 +7,9 @@
 include_once('kendra_social_services.features.inc');
 include_once('kendra_social_services.resources.inc');
 
+/**
+ * Implementation of hook_services_resources().
+ */
 function kendra_social_services_services_resources() {
 	$resources = kendra_social_services_services_get_mappings();
 	return $resources;

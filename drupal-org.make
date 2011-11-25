@@ -134,9 +134,10 @@ libraries[facebook-php-sdk][download][url] = "git://github.com/facebook/php-sdk.
 libraries[facebook-php-sdk][directory_name] = facebook-php-sdk
 
 ; Spyc: required for Services 3.1
-libraries[spyc][download][url] = http://spyc.googlecode.com/files/spyc-0.5.zip
+#libraries[spyc][download][url] = http://spyc.googlecode.com/files/spyc-0.5.zip
+libraries[spyc][download][url] = http://spyc.googlecode.com/svn/trunk/spyc.php
 libraries[spyc][download][type] = file
-libraries[spyc][directory_name] = spyc
+#libraries[spyc][directory_name] = spyc
 libraries[spyc][destination] = modules/contrib/services/servers/rest_server/lib
 
 ; custom libraries for Kendra Social

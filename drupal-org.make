@@ -74,7 +74,7 @@ projects[views][version] = 3.0-rc1
 projects[oauth][subdir] = contrib 
 projects[oauth][version] = 3.0-alpha1
 projects[services][subdir] = contrib 
-projects[services][version] = 3.0
+projects[services][version] = 3.x
 
 ;projects[feeds_jsonpath_parser][patch][] = http://drupal.org/files/feeds_jsonpath_parser-drush_make.patch
 ;projects[feeds_jsonpath_parser][version] = 1.x-dev

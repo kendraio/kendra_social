@@ -7,6 +7,10 @@
 include_once('kendra_social_services.features.inc');
 include_once('kendra_social_services.resources.inc');
 
+function _kss_social_default_callback() {
+	return "Kendra Social default callback";
+}
+
 /**
  * Implementation of hook_services_resources().
  */
@@ -28,7 +32,7 @@ function _kss_social_publish($domain, $msg) {
 		  'data' => "access_token={$access_token}&message={$msg}",
 		));
 
-		watchdog('kss_social_publish', print_r($result, TRUE));
+		//watchdog('kss_social_publish', print_r($result, TRUE));
 		return $result->status_message;
 	} else {
 		return "Unknown domain";

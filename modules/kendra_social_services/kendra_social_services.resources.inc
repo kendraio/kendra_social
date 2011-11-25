@@ -23,7 +23,13 @@ function kendra_social_services_services_get_mappings() {
 	 * accounts service
 	 */
 	$resources['accounts'] = array(
-      'operations' => array(
+        'index' => array(
+          'enabled' => 1,
+	),
+	'create' => array(
+          'enabled' => 1,
+	),
+	'operations' => array(
         'retrieve' => array(
           'enabled' => 1,
 	),
@@ -41,7 +47,7 @@ function kendra_social_services_services_get_mappings() {
 	),
 	),
 	'actions' => array(
-      'connect' => array(
+	'connect' => array(
         'access arguments' => array('access content'),
         'callback' => '_kss_social_connect',
         'args' => array(
@@ -62,6 +68,10 @@ function kendra_social_services_services_get_mappings() {
 	 * social service
 	 */
 	$resources['social'] = array(
+      'publish' => array(
+		'enabled' => 1,
+	),
+	
 	'actions' => array(
       'publish' => array(
         'access arguments' => array('access content'),
@@ -82,6 +92,7 @@ function kendra_social_services_services_get_mappings() {
             'description' => 'Content to post to social network',
 	),
 	),
+	'enabled' => 1,
 	),
 	),
 	);

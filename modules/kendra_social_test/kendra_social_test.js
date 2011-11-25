@@ -105,8 +105,10 @@
 		}
 
 		try {
+			$('#response').prepend('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
+
 			$.ajaxSetup({
-				  'error': function(e, jqXHR, ajaxSettings, thrownError) {   
+				'error': function(e, jqXHR, ajaxSettings, thrownError) {
 					if (typeof prettyPrint != 'undefined') {
 						html = prettyPrint(e, {
 							maxDepth : 6,
@@ -114,7 +116,11 @@
 						});
 						$('#response').html(html);
 					}
-				}});
+				},
+				'complete':function(jqXHR, textStatus) {
+					$('.ajax-progress', '#response').remove();
+				}
+				});
 			$.ajax(url, options);
 		} catch (e) {
 			if (typeof prettyPrint != 'undefined') {

@@ -91,7 +91,7 @@ function kendra_social_test_api($form, &$form_state) {
 
 	global $user;
 	$uid = $user->uid;
-	
+
 	$default_path = _kendra_social_test_get_url_param('endpoint_path');
 	if ($default_path != '') {
 		$default_path = str_ireplace('&amp;', '&', $default_path);
@@ -155,10 +155,11 @@ function kendra_social_test_api($form, &$form_state) {
 	'keypress' => TRUE,
 	//'path' => $options_url,
 	'wrapper' => 'response',
-      'name' => 'submit1',
 	'progress'=>array('type'=>'throbber'),
+	'effect'=>'none',
 	),
     '#value' => t('Submit'),
+    '#validate' => array(),
 	);
 
 	$form['textfields'] = array(

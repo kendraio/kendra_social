@@ -112,19 +112,33 @@ projects[services][patch][resource_params_optional] = https://raw.github.com/ken
 ; Libraries
 ; -------------
 
+; html5-boilerplate
 libraries[html5bp][download][type] = "file"
 libraries[html5bp][download][url] = "http://github.com/paulirish/html5-boilerplate/zipball/v1.0stripped"
+
+; jquery + jqueryui
 libraries[jquery][download][type] = "file"
 libraries[jquery][download][url] = "https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"
 libraries[jqueryui][download][type] = "file"
 libraries[jqueryui][download][url] = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js"
+
+; jsonpath
 libraries[jsonpath][download][url] = http://jsonpath.googlecode.com/files/jsonpath-0.8.1.php
 libraries[jsonpath][download][type] = file
 libraries[jsonpath][directory_name] = jsonpath
 libraries[jsonpath][destination] = modules/contrib/feeds_jsonpath_parser
+
+; Facebook PHP SDK
 libraries[facebook-php-sdk][download][type] = "git"
 libraries[facebook-php-sdk][download][url] = "git://github.com/facebook/php-sdk.git"
 libraries[facebook-php-sdk][directory_name] = facebook-php-sdk
 
+; Spyc: required for Services 3.1
+libraries[spyc][download][url] = http://spyc.googlecode.com/files/spyc-0.5.zip
+libraries[spyc][download][type] = file
+libraries[spyc][directory_name] = lib
+libraries[spyc][destination] = modules/contrib/services/servers/rest_server
+
+; custom libraries for Kendra Social
 libraries[kendra_social_test][download][[type] = file
 libraries[kendra_social_test][download][[url] = https://raw.github.com/jamespadolsey/prettyPrint.js/master/prettyprint.js

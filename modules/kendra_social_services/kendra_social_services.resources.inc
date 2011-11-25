@@ -71,7 +71,7 @@ function kendra_social_services_services_get_mappings() {
       'publish' => array(
 		'enabled' => 1,
 	),
-	
+
 	'actions' => array(
       'publish' => array(
         'access arguments' => array('access content'),

@@ -1,0 +1,6 @@
+name = Feeds SPARQL Processor
+description = Feeds processor plugin to save data in triple store using SPARQL module.
+package = Feeds
+dependencies[] = feeds
+dependencies[] = sparql
+core = 7.x

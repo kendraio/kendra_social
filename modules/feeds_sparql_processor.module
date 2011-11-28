@@ -1,0 +1,21 @@
+<?php 
+
+function feeds_sparql_processor_feeds_plugins() {
+  $path = drupal_get_path('module', 'feeds_sparql_processor');
+  $info = array();
+  $info['FeedsSPARQLProcessor'] = array(
+    'name'        => t('SPARQL processor'),
+    'description' => t('Save data in triple store using SPARQL module.'),
+    'handler' => array(
+      'parent' => 'FeedsProcessor',
+      'class'  => 'FeedsSPARQLProcessor',
+      'file'   => 'FeedsSPARQLProcessor.inc',
+      'path'   => $path,
+    ),
+  );
+  return $info;
+}
+
+function feeds_sparql_processor_enable() {
+  cache_clear_all('plugins:feeds:plugins', 'cache');
+}

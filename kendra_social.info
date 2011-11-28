@@ -77,3 +77,8 @@ dependencies[] = token
 dependencies[] = views
 dependencies[] = views_ui
 dependencies[] = xmlrpc_server
+
+dependencies[] = rdfx
+dependencies[] = sparql
+dependencies[] = feeds_sparql_processor
+

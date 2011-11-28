@@ -11,6 +11,15 @@ function _kss_social_default_callback() {
 	return "Kendra Social default callback";
 }
 
+function kendra_social_services_permission() {
+  return array(
+    'access kendra social connect' => array(
+      'title' => t('Access Kendra Social Connect services'), 
+      'description' => t('Perform social connect operations via the API'),
+    ),
+  );
+}
+
 /**
  * Implementation of hook_services_resources().
  */

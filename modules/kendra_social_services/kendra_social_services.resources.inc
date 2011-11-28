@@ -48,7 +48,7 @@ function kendra_social_services_services_get_mappings() {
 	),
 	'actions' => array(
 	'connect' => array(
-        'access arguments' => array('access content'),
+        'access arguments' => array('access kendra social connect'),
         'callback' => '_kss_social_connect',
         'args' => array(
 	array(
@@ -74,7 +74,7 @@ function kendra_social_services_services_get_mappings() {
 
 	'actions' => array(
       'publish' => array(
-        'access arguments' => array('access content'),
+        'access arguments' => array('access kendra social connect'),
         'callback' => '_kss_social_publish', // stub for eventual social network publish service
         'args' => array(
 	array(

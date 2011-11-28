@@ -82,7 +82,7 @@ function kendra_social_services_services_get_mappings() {
             'optional' => FALSE,
             'source' => array('data' => 'domain'),
             'type' => 'string',
-            'description' => 'The top-most authoritative domain for the social network to connect to',
+            'description' => 'The top-most authoritative domain for the social network to publish to',
 	),
 	array(
             'name' => 'content',

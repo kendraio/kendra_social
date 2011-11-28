@@ -26,26 +26,28 @@ function kendra_social_import_feeds_importer_default() {
       ),
     ),
     'parser' => array(
-      'plugin_key' => 'FeedsSyndicationParser',
-      'config' => array(),
-    ),
-    'processor' => array(
-      'plugin_key' => 'FeedsNodeProcessor',
+      'plugin_key' => 'FeedsJSONPathParser',
       'config' => array(
-        'content_type' => 'article',
-        'expire' => -1,
-        'author' => 0,
-        'mappings' => array(),
-        'update_existing' => 0,
-        'input_format' => NULL,
+        'context' => '',
+        'sources' => array(),
+        'debug' => array(),
       ),
     ),
-    'content_type' => '',
+    'processor' => array(
+      'plugin_key' => 'FeedsSPARQLProcessor',
+      'config' => array(
+        'sparql_store_name' => 'fb_profile',
+        'mappings' => array(),
+        'update_existing' => '0',
+        'input_format' => 'plain_text',
+      ),
+    ),
+    'content_type' => 'facebook_profile',
     'update' => 0,
-    'import_period' => 1800,
+    'import_period' => '86400',
     'expire_period' => 3600,
-    'import_on_create' => TRUE,
-    'process_in_background' => FALSE,
+    'import_on_create' => 1,
+    'process_in_background' => 1,
   );
   $export['fb_profile_import'] = $feeds_importer;
 

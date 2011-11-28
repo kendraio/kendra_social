@@ -109,8 +109,8 @@ projects[rubik][patch][999582] = http://drupal.org/files/issues/999582-1_notices
 ; http://drupal.org/node/684554
 projects[markdown][patch][684554] = http://drupal.org/files/issues/markdown-684554.patch
 
-projects[services][patch][resource_params_optional] = https://raw.github.com/kendrainitiative/kendra_social/master/patches/services-resource-access-defaults.patch
 projects[services][patch][libraries_spyc] = https://raw.github.com/kendrainitiative/kendra_social/master/patches/services-libraries-spyc.patch
+projects[services][patch][resource_params_optional] = https://raw.github.com/kendrainitiative/kendra_social/master/patches/services-resource-access-defaults.patch
 
 ; -------------
 ; Libraries

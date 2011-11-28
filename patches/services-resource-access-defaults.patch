@@ -1,60 +1,16 @@
-diff --git a/services.resource_build.inc b/services.resource_build.inc
-index 7cfa703..47ebc27 100644
---- a/services.resource_build.inc
-+++ b/services.resource_build.inc
-@@ -47,7 +47,9 @@ function _services_build_resources($endpoint_name = '') {
-     }
-     if (!isset($controller['access callback'])) {
-       $controller['access callback'] = 'user_access';
-+      $controller['access arguments'] = array('access content');
-+      $controller['callback'] = '_services_resource_default_callback';
-     }
-   }
-   drupal_alter('services_resources_controller_post_processing', $controllers, $endpoint);
+diff --git servers/rest_server/rest_server.info servers/rest_server/rest_server.info
+index c05df4b..e2bee54 100644
+--- servers/rest_server/rest_server.info
++++ servers/rest_server/rest_server.info
+@@ -10,8 +10,8 @@ files[] = includes/RESTServer.inc
  
-@@ -107,9 +109,10 @@ function _services_apply_endpoint(&$resources, $endpoint, $strict = TRUE) {
-       foreach ($crud as $op) {
-         if (isset($resource[$op])) {
-           $cop = isset($cres['operations'][$op]) ? $cres['operations'][$op] : array();
--          $resource[$op]['endpoint'] = $cop;
--          if ($strict && (empty($cop) || !$cop['enabled'])) {
-+          if ($strict && (empty($cop) || empty($cop['enabled']))) {
-             unset($resource[$op]);
-+          } else {
-+	        $resource[$op]['endpoint'] = $cop;
-           }
-         }
-       }
-@@ -119,7 +122,7 @@ function _services_apply_endpoint(&$resources, $endpoint, $strict = TRUE) {
-         if (!empty($resource[$class])) {
-           foreach ($resource[$class] as $op => $def) {
-             $cop = isset($cres[$class][$op]) ? $cres[$class][$op] : array();
--            if (empty($cop) || !$cop['enabled']) {
-+            if (empty($cop) || empty($cop['enabled'])) {
-               if ($strict) {
-                 unset($resource[$class][$op]);
-               }
-@@ -192,4 +195,4 @@ function _services_core_resources() {
-   $resources += _user_resource_definition();
+ files[] = lib/bencode.php
+ files[] = lib/mimeparse.php
+-files[] = lib/spyc.php
++files[] = lib/spyc/spyc.php
  
-   return $resources;
--}
+ dependencies[] = services
+ 
+-core = 7.x
 \ No newline at end of file
-+}
-diff --git a/services.runtime.inc b/services.runtime.inc
-index 57bb7b9..de3010c 100644
---- a/services.runtime.inc
-+++ b/services.runtime.inc
-@@ -396,3 +396,12 @@ function _services_access_value($data, $fields) {
-   }
-   return $data;
- }
-+
-+/**
-+ * Provide a default callback for a resource which doesn't define one
-+ *
-+ * @return string
-+ */
-+function _services_resource_default_callback() {
-+	return t("No callback has been defined for this controller.");
-+}
++core = 7.x

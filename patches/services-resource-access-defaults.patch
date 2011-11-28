@@ -1,7 +1,7 @@
-diff --git a/services.resource_build.inc b/services.resource_build.inc
+diff --git services.resource_build.inc services.resource_build.inc
 index 7cfa703..47ebc27 100644
---- a/services.resource_build.inc
-+++ b/services.resource_build.inc
+--- services.resource_build.inc
++++ services.resource_build.inc
 @@ -47,7 +47,9 @@ function _services_build_resources($endpoint_name = '') {
      }
      if (!isset($controller['access callback'])) {
@@ -41,10 +41,10 @@ index 7cfa703..47ebc27 100644
 -}
 \ No newline at end of file
 +}
-diff --git a/services.runtime.inc b/services.runtime.inc
+diff --git services.runtime.inc services.runtime.inc
 index 57bb7b9..de3010c 100644
---- a/services.runtime.inc
-+++ b/services.runtime.inc
+--- services.runtime.inc
++++ services.runtime.inc
 @@ -396,3 +396,12 @@ function _services_access_value($data, $fields) {
    }
    return $data;

@@ -1,7 +1,7 @@
-diff --git servers/rest_server/rest_server.info servers/rest_server/rest_server.info
+diff --git a/servers/rest_server/rest_server.info b/servers/rest_server/rest_server.info
 index c05df4b..e2bee54 100644
---- servers/rest_server/rest_server.info
-+++ servers/rest_server/rest_server.info
+--- a/servers/rest_server/rest_server.info
++++ b/servers/rest_server/rest_server.info
 @@ -10,8 +10,8 @@ files[] = includes/RESTServer.inc
  
  files[] = lib/bencode.php

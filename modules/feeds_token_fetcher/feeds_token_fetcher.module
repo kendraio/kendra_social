@@ -1,0 +1,22 @@
+<?php
+
+function feeds_token_fetcher_feeds_plugins() {
+  $path = drupal_get_path('module', 'feeds_token_fetcher');
+  $info = array();
+  $info['FeedsTokenFetcher'] = array(
+    'name'        => t('Token fetcher'),
+    'description' => t('Fetch content from a tokenized URL via HTTP'),
+    'handler' => array(
+      'parent' => 'FeedsFetcher',
+      'class'  => 'FeedsTokenFetcher',
+      'file'   => 'FeedsTokenFetcher.inc',
+      'path'   => $path,
+    ),
+  );
+  return $info;
+}
+
+function feeds_token_fetcher_enable() {
+  cache_clear_all('plugins:feeds:plugins', 'cache');
+}
+

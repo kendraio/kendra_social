@@ -1,0 +1,5 @@
+name = Feeds Token Fetcher
+description = Feeds plugin to fetch content from a tokenized URL via HTTP
+core = 7.x
+package = feeds
+dependencies[] = feeds

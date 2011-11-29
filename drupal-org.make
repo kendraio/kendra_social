@@ -74,6 +74,7 @@ projects[views][version] = 3.0-rc1
 projects[oauth][subdir] = contrib 
 projects[oauth][version] = 3.0-alpha1
 
+; services
 projects[services][subdir] = contrib 
 projects[services][version] = 3.x
 projects[services][download][type] = git
@@ -84,13 +85,18 @@ projects[services][download][branch] = 7.x-3.x
 projects[rdfx][subdir] = contrib
 projects[sparql][subdir] = contrib
 
+; feeds_jsonpath_parser
 ;projects[feeds_jsonpath_parser][patch][] = http://drupal.org/files/feeds_jsonpath_parser-drush_make.patch
 ;projects[feeds_jsonpath_parser][version] = 1.x-dev
-
 projects[feeds_jsonpath_parser][subdir] = contrib
 projects[feeds_jsonpath_parser][type] = module
 projects[feeds_jsonpath_parser][download][type] = file
 projects[feeds_jsonpath_parser][download][url] = http://www.kendra.org.uk/feeds_jsonpath_parser-patched.tgz
+
+; Kendra API
+projects[kendra_api][subdir] = contrib 
+projects[kendra_api][download][type] = git
+projects[kendra_api][download][url] = https://github.com/kendrainitiative/kendra_api.git
 
 ; -------------
 ; Themes

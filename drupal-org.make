@@ -19,6 +19,12 @@ projects[drupal][version] = "7.0"
 ; Modules
 ; -------------
 
+; Kendra API
+projects[kendra_api][subdir] = features
+projects[kendra_api][download][type] = git
+projects[kendra_api][download][url] = https://github.com/kendrainitiative/kendra_api.git
+
+; contrib
 ;projects[admin][subdir] = contrib
 ;projects[admin][version] = 2.0-beta3
 projects[admin_menu][subdir] = contrib
@@ -92,11 +98,6 @@ projects[feeds_jsonpath_parser][subdir] = contrib
 projects[feeds_jsonpath_parser][type] = module
 projects[feeds_jsonpath_parser][download][type] = file
 projects[feeds_jsonpath_parser][download][url] = http://www.kendra.org.uk/feeds_jsonpath_parser-patched.tgz
-
-; Kendra API
-projects[kendra_api][subdir] = contrib 
-projects[kendra_api][download][type] = git
-projects[kendra_api][download][url] = https://github.com/kendrainitiative/kendra_api.git
 
 ; -------------
 ; Themes

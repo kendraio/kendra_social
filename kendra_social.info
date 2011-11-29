@@ -22,7 +22,8 @@ dependencies[] = taxonomy
 dependencies[] = kendra_social_profile
 dependencies[] = kendra_social_services
 dependencies[] = kendra_social_test
-dependencies[] = kendra_api_services
+;dependencies[] = kendra_api_services
+
 ; -------------
 ; Contrib
 ; -------------

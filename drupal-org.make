@@ -21,6 +21,7 @@ projects[drupal][version] = "7.0"
 
 ; Kendra API
 projects[kendra_api][subdir] = features
+projects[kendra_api][version] = 1.0
 projects[kendra_api][download][type] = git
 projects[kendra_api][download][url] = https://github.com/kendrainitiative/kendra_api.git
 

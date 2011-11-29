@@ -73,8 +73,12 @@ projects[views][subdir] = contrib
 projects[views][version] = 3.0-rc1
 projects[oauth][subdir] = contrib 
 projects[oauth][version] = 3.0-alpha1
+
 projects[services][subdir] = contrib 
-projects[services][version] = 3.1
+;projects[services][version] = 3.1
+projects[services][download][type] = git
+projects[services][download][url] = http://git.drupal.org/project/services.git
+projects[services][download][branch] = 7.x-3.x 
 
 projects[rdfx][subdir] = contrib
 projects[sparql][subdir] = contrib

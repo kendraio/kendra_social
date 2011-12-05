@@ -61,7 +61,7 @@ class FeedsSPARQLProcessor extends FeedsProcessor {
 		}
 		*/
 		//$store = _sparql_init_store($store_name);
-		$store = sparql_get_store($store_name);
+		$store = sparql_get_store($store_name, SPARQL_ENDPOINT);
 		//watchdog('process', 'Store: <pre>'. print_r($store, TRUE) .'</pre>');
 		
 		foreach ($items as $graph => $insert) { 

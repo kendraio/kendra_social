@@ -13,6 +13,16 @@ function feeds_token_fetcher_feeds_plugins() {
       'path'   => $path,
     ),
   );
+  $info['FeedsJSONTriplifier'] = array(
+  	'name' => t('JSON Triplifier'),
+    'description' => t('Turn JSON object into triples'),
+    'handler' => array(
+    	'parent' => 'FeedsParser',
+      'class' => 'FeedsJSONTriplifier',
+      'file' => 'FeedsJSONTriplifier.inc',
+      'path' => $path,
+    ),
+  );
   return $info;
 }
 

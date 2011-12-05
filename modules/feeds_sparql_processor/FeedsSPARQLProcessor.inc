@@ -48,7 +48,7 @@ class FeedsSPARQLProcessor extends FeedsProcessor {
 	    $items[trim($item[$mappings['graph']])][] = array(
 	    	'subject' => trim($item[$mappings['subject']]),
 	    	'predicate' => trim($item[$mappings['predicate']]),
-	    	'object' => trim($item[$mappings['object']]),
+	    	'object' => str_replace('"', '\"', trim($item[$mappings['object']])),
 	    );
     }
 	  //watchdog('process', 'Store: <pre>'. print_r($store_name, TRUE) .'</pre>');

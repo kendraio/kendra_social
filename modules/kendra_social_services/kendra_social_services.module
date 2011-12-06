@@ -29,7 +29,13 @@ function kendra_social_services_services_resources() {
 }
 
 function _kss_social_profile_test($id) {
-	return "Profile information for $id";
+	$fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid",
+	  array(':uid' => $user->uid))->fetchField();
+	$nid = db_query("SELECT entity_id FROM {field_data_field_fb_fbid} WHERE field_fb_fbid_value = :fbid",
+	  array(':fbid' => $fbid))->fetchField();
+	$graph = db_query("SELECT id FROM {sparql_store_fb_s2val} WHERE val = ':val'",
+	  array(':val' => url('node/'. $nid, array('absolute' => TRUE))))->fetchField();
+	return "Profile information for $id : $fbid : $nid : $graph";
 }
 
 function _kss_social_publish($domain, $msg) {

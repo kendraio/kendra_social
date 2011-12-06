@@ -28,6 +28,10 @@ function kendra_social_services_services_resources() {
 	return $resources;
 }
 
+function _kss_social_profile_test($id) {
+	return "Profile information for $id";
+}
+
 function _kss_social_publish($domain, $msg) {
 	if ($domain == 'facebook.com') {
 		$fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid",

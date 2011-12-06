@@ -23,6 +23,21 @@ function kendra_social_services_services_get_mappings() {
         'callback' => '_kss_social_profile_test',
 			)
 		),
+		'actions' => array(
+			'test' => array(
+				'enabled' => 1,
+        'callback' => '_kss_social_profile_test',
+        'args' => array(
+		      array(
+	          'name' => 'domain',
+	          'optional' => FALSE,
+	          'source' => array('data' => 'domain'),
+	          'type' => 'string',
+	          'description' => 'The top-most authoritative domain for the social network to connect to',
+	        ),
+			  ),
+			),
+		),
 	);  
 	
 	$resources['smartfilters'] = array(); // stub for eventual Smart Filters service

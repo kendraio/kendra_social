@@ -16,7 +16,15 @@ function kendra_social_services_services_get_mappings() {
 	$resources['groups'] = array(); // stub for eventual groups service
 	$resources['mediaItems'] = array(); // stub for eventual mediaItems service
 	$resources['people'] = array(); // stub for eventual people service
-	$resources['profiles'] = array();  // stub for eventual profiles service
+	$resources['profiles'] = array(
+		'actions' => array(
+			'get' => array(
+				'enabled' => 1,
+        'callback' => '_kss_social_profile_test',
+			)
+		),
+	);  
+	
 	$resources['smartfilters'] = array(); // stub for eventual Smart Filters service
 
 	/**

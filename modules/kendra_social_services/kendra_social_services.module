@@ -44,7 +44,15 @@ function _kss_social_profile_test($id) {
 				$profile = array();
 				foreach ($result as $record) {
 				  $profile[] = $record;
-				}
+				}	
+				$profile['debug'] = array(
+				  'fbid' => $fbid,
+				  'id' => $id,
+				  'url' => $url,
+				  'nid' => $nid,
+				  'graph' => $graph,
+				);
+				//return print_r($profile, TRUE);
 				return $profile; // print_r($profile, TRUE);
 }
 /*

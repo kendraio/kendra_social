@@ -12,12 +12,12 @@ function _kss_social_default_callback() {
 }
 
 function kendra_social_services_permission() {
-  return array(
+	return array(
     'access kendra social connect' => array(
       'title' => t('Access Kendra Social Connect services'), 
       'description' => t('Perform social connect operations via the API'),
-    ),
-  );
+	),
+	);
 }
 
 /**
@@ -30,31 +30,31 @@ function kendra_social_services_services_resources() {
 
 function _kss_social_profile_test($id) {
 	$fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid",
-	  array(':uid' => $id))->fetchField();
+	array(':uid' => $id))->fetchField();
 	$nid = db_query("SELECT entity_id FROM {field_data_field_fb_fbid} WHERE field_fb_fbid_value = :fbid",
-	  array(':fbid' => $fbid))->fetchField();
-        $url = url('node/'. $nid, array('absolute' => TRUE));
-        $url = 'http://trial.saracen.kendra.org'. url('node/'. $nid);
+	array(':fbid' => $fbid))->fetchField();
+	$url = url('node/'. $nid, array('absolute' => TRUE));
+	$url = 'http://trial.saracen.kendra.org'. url('node/'. $nid);
 	$graph = db_query("SELECT id FROM {sparql_store_fb_s2val} WHERE val = :val",
-	  array(':val' => $url))->fetchField();
-$result = db_query("SELECT s.val as subject,  i.val as predicate , o.val as object FROM sparql_store_fb_triple t 
+	array(':val' => $url))->fetchField();
+	$result = db_query("SELECT s.val as subject,  i.val as predicate , o.val as object FROM sparql_store_fb_triple t
   INNER JOIN sparql_store_fb_id2val i ON t.p = i.id
   INNER JOIN sparql_store_fb_s2val s ON t.s = s.id
   INNER JOIN sparql_store_fb_o2val o ON t.o = o.id
   WHERE t.s = :val", array(':val' => $graph));
-$profile = array();
-foreach ($result as $record) {
-  $profile[] = $record;
-}
-$profile['debug'] = array(
+	$profile = array();
+	foreach ($result as $record) {
+		$profile[] = $record;
+	}
+	$profile['debug'] = array(
   'fbid' => $fbid,
   'id' => $id,
   'url' => $url,
   'nid' => $nid,
   'graph' => $graph,
-);
-return $profile;
-return print_r($profile, TRUE);
+	);
+	return $profile;
+	return print_r($profile, TRUE);
 	return "Profile information for $id : $fbid : $nid : $graph \n $url \n" . print_r($result, TRUE);
 }
 

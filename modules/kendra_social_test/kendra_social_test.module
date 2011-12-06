@@ -189,7 +189,7 @@ function kendra_social_test_api($form, &$form_state) {
     '#prefix' => '<div id="example-links">',
     '#suffix' => '</div>',
     '#type' => 'markup',
-    '#markup' => '<iframe src="http://saracen.kendra.org/methods" id="kendra-api-methods-list">' . t('Available Methods') . '</iframe>',
+    '#markup' => '<iframe src="http://saracen.kendra.org/methods-narrow" id="kendra-api-methods-list">' . t('Available Methods') . '</iframe>',
 	);
 
 	return $form;

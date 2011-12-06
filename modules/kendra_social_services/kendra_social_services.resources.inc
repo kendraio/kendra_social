@@ -180,7 +180,9 @@ function _kss_social_default_callback() {
 }
 
 /**
- * Kendra API Default Access Callback
+ * Kendra Social Services Default Access Callback
+ * returns TRUE, allowing all access!!
+ * @todo don't return true, allowing all access
  */
 function _kss_default_access_callback($op, $args){
 	watchdog('Kendra Social', 'verifying access for @op, @args', array('@op'=>$op, '@args'=>print_r($args,1)));

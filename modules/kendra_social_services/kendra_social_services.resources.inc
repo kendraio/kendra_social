@@ -17,8 +17,8 @@ function kendra_social_services_services_get_mappings() {
 	$resources['mediaItems'] = array(); // stub for eventual mediaItems service
 	$resources['people'] = array(); // stub for eventual people service
 	$resources['profiles'] = array(
-		'actions' => array(
-			'get' => array(
+		'operations' => array(
+			'retrieve' => array(
 				'enabled' => 1,
         'callback' => '_kss_social_profile_test',
 			)

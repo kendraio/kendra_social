@@ -53,8 +53,6 @@ function _kss_accounts_connect($domain) {
 
 function _kss_accounts_connect_page() {
 	return "<fb:login-button scope=\"\" v=\"2\">Connect</fb:login-button>";
-	//$form = drupal_get_form('user_register_form');
-	//print drupal_render($form);
 }
 
 /**

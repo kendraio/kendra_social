@@ -9,12 +9,12 @@ include_once('kendra_social_services.resources.inc');
 include_once('kendra_social_services.callbacks.inc');
 
 function kendra_social_services_permission() {
-  return array(
+	return array(
     'access kendra social connect' => array(
       'title' => t('Access Kendra Social Connect services'), 
       'description' => t('Perform social connect operations via the API'),
-    ),
-  );
+	),
+	);
 }
 
 /**
@@ -24,4 +24,3 @@ function kendra_social_services_services_resources() {
 	$resources = kendra_social_services_services_get_mappings();
 	return $resources;
 }
-

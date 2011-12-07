@@ -263,7 +263,7 @@
         "callback": "_kss_social_publish",
         "enabled": 1,
         "access arguments": [
-          "access content"
+          "access kendra social connect"
         ],
         "access callback": "_kss_social_publish_access",
         "file": {
@@ -608,7 +608,7 @@
         "callback": "_kss_accounts_connect",
         "enabled": 1,
         "access arguments": [
-          "access content"
+                             "access kendra social connect"
         ],
         "access callback": "_kss_accounts_connect_access",
         "file": {

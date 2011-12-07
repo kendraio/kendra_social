@@ -239,7 +239,24 @@
     "actions": {
       "publish": {
         "args": [
-
+                 {
+                     "name": "domain",
+                     "optional": false,
+                     "type": "string",
+                     "description": "The top-most authoritative domain for the social network to publish to",
+                     "source": {
+                       "data": "domain"
+                     }
+                   },
+                   {
+                     "name": "content",
+                     "optional": false,
+                     "type": "string",
+                     "description": "Content to post to social network",
+                     "source": {
+                       "data": "content"
+                     }
+                   }
         ],
         "access arguments append": true,
         "help": "Post content to social network",
@@ -575,6 +592,15 @@
     "actions": {
       "connect": {
         "args": [
+                 {
+                     "name": "domain",
+                     "optional": false,
+                     "type": "string",
+                     "description": "The top-most authoritative domain for the social network to connect to",
+                     "source": {
+                       "data": "domain"
+                     }
+                   }
 
         ],
         "access arguments append": true,

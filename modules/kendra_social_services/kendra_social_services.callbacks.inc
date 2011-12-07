@@ -1,24 +1,24 @@
 <?php
 
 function _kss_profiles_retrieve($id) {
-        $fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid",
-          array(':uid' => $id))->fetchField();
-        $nid = db_query("SELECT entity_id FROM {field_data_field_fb_fbid} WHERE field_fb_fbid_value = :fbid",
-          array(':fbid' => $fbid))->fetchField();
-        $url = url('node/'. $nid, array('absolute' => TRUE));
-        $url = 'http://trial.saracen.kendra.org'. url('node/'. $nid);
-        $graph = db_query("SELECT id FROM {sparql_store_fb_s2val} WHERE val = :val",
-          array(':val' => $url))->fetchField();
-				$result = db_query("SELECT s.val as subject,  i.val as predicate , o.val as object FROM sparql_store_fb_triple t
+	$fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid",
+	array(':uid' => $id))->fetchField();
+	$nid = db_query("SELECT entity_id FROM {field_data_field_fb_fbid} WHERE field_fb_fbid_value = :fbid",
+	array(':fbid' => $fbid))->fetchField();
+	$url = url('node/'. $nid, array('absolute' => TRUE));
+	$url = 'http://trial.saracen.kendra.org'. url('node/'. $nid);
+	$graph = db_query("SELECT id FROM {sparql_store_fb_s2val} WHERE val = :val",
+	array(':val' => $url))->fetchField();
+	$result = db_query("SELECT s.val as subject,  i.val as predicate , o.val as object FROM sparql_store_fb_triple t
 				  INNER JOIN sparql_store_fb_id2val i ON t.p = i.id
 				  INNER JOIN sparql_store_fb_s2val s ON t.s = s.id
 				  INNER JOIN sparql_store_fb_o2val o ON t.o = o.id
 				  WHERE t.s = :val", array(':val' => $graph));
-				$profile = array();
-				foreach ($result as $record) {
-				  $profile[] = $record;
-				}
-				return $profile; // print_r($profile, TRUE);
+	$profile = array();
+	foreach ($result as $record) {
+		$profile[] = $record;
+	}
+	return $profile; // print_r($profile, TRUE);
 }
 
 function _kss_social_publish($domain, $msg) {

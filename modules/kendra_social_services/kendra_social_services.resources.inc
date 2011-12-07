@@ -16,31 +16,46 @@ function kendra_social_services_services_get_mappings() {
 	$resources['groups'] = array(); // stub for eventual groups service
 	$resources['mediaItems'] = array(); // stub for eventual mediaItems service
 	$resources['people'] = array(); // stub for eventual people service
-	$resources['profiles'] = array(
-		'operations' => array(
-			'retrieve' => array(
-				'enabled' => 1,
-        'callback' => '_kss_social_profile_test',
-			)
-		),
-		'actions' => array(
-			'test' => array(
-				'enabled' => 1,
-        'callback' => '_kss_social_profile_test',
-        'args' => array(
-		      array(
-	          'name' => 'domain',
-	          'optional' => FALSE,
-	          'source' => array('data' => 'domain'),
-	          'type' => 'string',
-	          'description' => 'The top-most authoritative domain for the social network to connect to',
-	        ),
-			  ),
-			),
-		),
-	);  
-	
 	$resources['smartfilters'] = array(); // stub for eventual Smart Filters service
+
+	/**
+	 * profiles
+	 */
+	$res_profiles_operations = array(
+		'retrieve' => array(
+			'enabled' => 1,
+					      'file' => array('type' => 'inc', 'module' => 'kendra_social_services', 'name' => 'kendra_social_services.callbacks'),
+		'callback' => '_kss_social_profile_test',
+			'help' => 'Retrieve a profile',
+			'args' => array(
+	),
+		'access callback' => '_kss_default_access_callback',
+		'access arguments' => array('access content'),
+		'access arguments append' => TRUE,
+
+	)	);
+	$res_profiles_actions = array(
+				'test' => array(
+				'enabled' => 1,
+		        'callback' => '_kss_social_profile_test',
+		        'args' => array(
+	array(
+		          'name' => 'userid',
+		          'optional' => FALSE,
+		          'source' => array('data' => 'userid'),
+		          'type' => 'string',
+		          'description' => 'User ID to retrieve',
+	),
+	),
+	),
+	);
+	$res_profiles_relationships = array();
+
+	$resources['profiles'] = array_merge($res_profiles_operations, array(
+						   'operations' => $res_profiles_operations,
+						   'actions' => $res_profiles_actions,
+						   'relationships' => $res_profiles_relationships,
+	));
 
 	/**
 	 * accounts service
@@ -155,4 +170,22 @@ function kendra_social_services_services_get_mappings() {
 	);
 
 	return $resources;
+}
+
+/**
+ * Kendra API Default Access Callback
+ */
+function _kss_social_default_callback() {
+	return "Kendra Social default callback";
+}
+
+/**
+ * Kendra Social Services Default Access Callback
+ * returns TRUE, allowing all access!!
+ * @todo don't return true, allowing all access
+ */
+function _kss_default_access_callback($op, $args){
+	watchdog('Kendra Social', 'verifying access for @op, @args', array('@op'=>$op, '@args'=>print_r($args,1)));
+
+	return TRUE;
 }

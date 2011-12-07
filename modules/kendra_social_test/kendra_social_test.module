@@ -128,8 +128,8 @@ function kendra_social_test_api($form, &$form_state) {
     '#suffix' => '</div>',
     '#required' => TRUE,
     '#default_value' => $default_path,
-    '#size' => 32,
-    '#maxlength' => 32,
+    '#size' => 50,
+    '#maxlength' => 80,
 	);
 
 	$form['content_type'] = array(
@@ -189,7 +189,7 @@ function kendra_social_test_api($form, &$form_state) {
     '#prefix' => '<div id="example-links">',
     '#suffix' => '</div>',
     '#type' => 'markup',
-    '#markup' => '<a href="http://saracen.kendra.org/methods">Available Methods</a>.',
+    '#markup' => '<iframe src="http://saracen.kendra.org/methods-narrow" id="kendra-api-methods-list">' . t('Available Methods') . '</iframe>',
 	);
 
 	return $form;

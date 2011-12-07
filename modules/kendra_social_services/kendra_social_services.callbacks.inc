@@ -67,3 +67,16 @@ function _kendra_social_services_connect() {
 	//print drupal_render($form);
 }
 
+/**
+ * Define a callback that displays the registration/connect form
+ */
+function kendra_social_services_menu() {
+	$items = array();
+	$items['connect'] = array(
+    'title' => 'Connect',
+    'page callback' => '_kendra_social_services_connect',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+	);
+	return $items;
+}

@@ -75,31 +75,31 @@ function kendra_social_services_menu() {
  * stub service callbacks
  * @todo replace these
  */
-function _kss_activitystreams_create () { return _kss_social_default_callback(); }
-function _kss_activitystreams_delete () { return _kss_social_default_callback(); }
-function _kss_activitystreams_retrieve () { return _kss_social_default_callback(); }
-function _kss_activitystreams_update () { return _kss_social_default_callback(); }
-function _kss_albums_create () { return _kss_social_default_callback(); }
-function _kss_albums_delete () { return _kss_social_default_callback(); }
-function _kss_albums_retrieve () { return _kss_social_default_callback(); }
-function _kss_albums_update () { return _kss_social_default_callback(); }
-function _kss_groups_create () { return _kss_social_default_callback(); }
-function _kss_groups_delete () { return _kss_social_default_callback(); }
-function _kss_groups_retrieve () { return _kss_social_default_callback(); }
-function _kss_groups_update () { return _kss_social_default_callback(); }
-function _kss_mediaitems_create () { return _kss_social_default_callback(); }
-function _kss_mediaitems_delete () { return _kss_social_default_callback(); }
-function _kss_mediaitems_retrieve () { return _kss_social_default_callback(); }
-function _kss_mediaitems_update () { return _kss_social_default_callback(); }
-function _kss_people_create () { return _kss_social_default_callback(); }
-function _kss_people_delete () { return _kss_social_default_callback(); }
-function _kss_people_retrieve () { return _kss_social_default_callback(); }
-function _kss_people_update () { return _kss_social_default_callback(); }
-function _kss_profiles_create () { return _kss_social_default_callback(); }
-function _kss_smartfilters_create () { return _kss_social_default_callback(); }
-function _kss_user_login () { return _kss_social_default_callback(); }
-function _kss_user_register () { return _kss_social_default_callback(); }
-function _kss_user_retrieve () { return _kss_social_default_callback(); }
+function _kss_activitystreams_create () { return _kss_default_callback(); }
+function _kss_activitystreams_delete () { return _kss_default_callback(); }
+function _kss_activitystreams_retrieve () { return _kss_default_callback(); }
+function _kss_activitystreams_update () { return _kss_default_callback(); }
+function _kss_albums_create () { return _kss_default_callback(); }
+function _kss_albums_delete () { return _kss_default_callback(); }
+function _kss_albums_retrieve () { return _kss_default_callback(); }
+function _kss_albums_update () { return _kss_default_callback(); }
+function _kss_groups_create () { return _kss_default_callback(); }
+function _kss_groups_delete () { return _kss_default_callback(); }
+function _kss_groups_retrieve () { return _kss_default_callback(); }
+function _kss_groups_update () { return _kss_default_callback(); }
+function _kss_mediaitems_create () { return _kss_default_callback(); }
+function _kss_mediaitems_delete () { return _kss_default_callback(); }
+function _kss_mediaitems_retrieve () { return _kss_default_callback(); }
+function _kss_mediaitems_update () { return _kss_default_callback(); }
+function _kss_people_create () { return _kss_default_callback(); }
+function _kss_people_delete () { return _kss_default_callback(); }
+function _kss_people_retrieve () { return _kss_default_callback(); }
+function _kss_people_update () { return _kss_default_callback(); }
+function _kss_profiles_create () { return _kss_default_callback(); }
+function _kss_smartfilters_create () { return _kss_default_callback(); }
+function _kss_user_login () { return _kss_default_callback(); }
+function _kss_user_register () { return _kss_default_callback(); }
+function _kss_user_retrieve () { return _kss_default_callback(); }
 
 /**
  * stub access callbacks

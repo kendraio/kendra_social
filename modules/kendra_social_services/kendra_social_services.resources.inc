@@ -23,7 +23,7 @@ function kendra_social_services_services_get_mappings() {
 /**
  * Kendra Social Default Service Callback
  */
-function _kss_social_default_callback() {
+function _kss_default_callback() {
 	return "Kendra Social default callback";
 }
 

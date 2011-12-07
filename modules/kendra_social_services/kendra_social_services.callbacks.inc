@@ -51,7 +51,7 @@ function _kss_accounts_connect($domain) {
 	return "Kendra Social connect error: domain unknown";
 }
 
-function _kendra_social_services_connect() {
+function _kss_accounts_connect_page() {
 	return "<fb:login-button scope=\"\" v=\"2\">Connect</fb:login-button>";
 	//$form = drupal_get_form('user_register_form');
 	//print drupal_render($form);
@@ -64,7 +64,7 @@ function kendra_social_services_menu() {
 	$items = array();
 	$items['connect'] = array(
     'title' => 'Connect',
-    'page callback' => '_kendra_social_services_connect',
+    'page callback' => '_kss_accounts_connect_page',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
 	);

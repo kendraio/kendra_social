@@ -1,0 +1,213 @@
+{
+  "parameters": [
+    {
+      "name": "api_key",
+      "optional": true,
+      "default": ""
+    },
+    {
+      "name": "format",
+      "optional": false,
+      "default": "json"
+    }
+  ],
+  "envelope": "URL",
+  "id": "http://api.kendra.org",
+  "SMDVersion": "2.0",
+  "services": {
+    "createPeople": {
+      "parameters": [
+
+      ],
+      "description": "Create a Relationship",
+      "target": "http://api.kendra.org/saracen/0.1/people"
+    },
+    "retrievePeople": {
+      "parameters": [
+
+      ],
+      "description": "Get a Person",
+      "target": "http://api.kendra.org/saracen/0.1/people"
+    },
+    "deleteMediaItems": {
+      "parameters": [
+
+      ],
+      "description": "Delete a Media Item",
+      "target": "http://api.kendra.org/saracen/0.1/mediaItems"
+    },
+    "retrieveActivitystreams": {
+      "parameters": [
+
+      ],
+      "description": "Get Activity Streams",
+      "target": "http://api.kendra.org/saracen/0.1/activitystreams"
+    },
+    "createSocial": {
+      "parameters": [
+
+      ],
+      "description": "Post content to social network",
+      "target": "http://api.kendra.org/saracen/0.1/social/publish"
+    },
+    "createMediaItems": {
+      "parameters": [
+
+      ],
+      "description": "Create a Media Item",
+      "target": "http://api.kendra.org/saracen/0.1/mediaItems"
+    },
+    "deleteGroups": {
+      "parameters": [
+
+      ],
+      "description": "Delete a Group",
+      "target": "http://api.kendra.org/saracen/0.1/groups"
+    },
+    "createAlbums": {
+      "parameters": [
+
+      ],
+      "description": "Create an Album",
+      "target": "http://api.kendra.org/saracen/0.1/albums"
+    },
+    "retrieveAlbums": {
+      "parameters": [
+
+      ],
+      "description": "Get Albums",
+      "target": "http://api.kendra.org/saracen/0.1/albums"
+    },
+    "deletePeople": {
+      "parameters": [
+
+      ],
+      "description": "Delete a Person",
+      "target": "http://api.kendra.org/saracen/0.1/people"
+    },
+    "updatePeople": {
+      "parameters": [
+
+      ],
+      "description": "Update a Person",
+      "target": "http://api.kendra.org/saracen/0.1/people"
+    },
+    "retrieveMediaItems": {
+      "parameters": [
+
+      ],
+      "description": "Get Media Item",
+      "target": "http://api.kendra.org/saracen/0.1/mediaItems"
+    },
+    "createSmartfilters": {
+      "parameters": [
+
+      ],
+      "description": "Create a Smart Filter",
+      "target": "http://api.kendra.org/saracen/0.1/smartfilters"
+    },
+    "deleteActivitystreams": {
+      "parameters": [
+
+      ],
+      "description": "Delete an ActivityEntry",
+      "target": "http://api.kendra.org/saracen/0.1/activitystreams"
+    },
+    "retrieveProfiles": {
+      "parameters": [
+
+      ],
+      "description": "Retrieve a user's profile data",
+      "target": "http://api.kendra.org/saracen/0.1/profiles"
+    },
+    "deleteAlbums": {
+      "parameters": [
+
+      ],
+      "description": "Delete an Album",
+      "target": "http://api.kendra.org/saracen/0.1/albums"
+    },
+    "updateAlbums": {
+      "parameters": [
+
+      ],
+      "description": "Update an Album",
+      "target": "http://api.kendra.org/saracen/0.1/albums"
+    },
+    "createAccounts": {
+      "parameters": [
+
+      ],
+      "description": "Get Account Connection Options",
+      "target": "http://api.kendra.org/saracen/0.1/accounts/connect"
+    },
+    "createProfiles": {
+      "parameters": [
+
+      ],
+      "description": "Store user profile data",
+      "target": "http://api.kendra.org/saracen/0.1/profiles"
+    },
+    "createActivitystreams": {
+      "parameters": [
+
+      ],
+      "description": "Create an ActivityEntry",
+      "target": "http://api.kendra.org/saracen/0.1/activitystreams"
+    },
+    "createUser": {
+      "parameters": [
+
+      ],
+      "description": "User Register",
+      "target": "http://api.kendra.org/saracen/0.1/user/register"
+    },
+    "retrieveUser": {
+      "parameters": [
+
+      ],
+      "description": "Get a User Profile",
+      "target": "http://api.kendra.org/saracen/0.1/user/"
+    },
+    "updateMediaItems": {
+      "parameters": [
+
+      ],
+      "description": "Update a Media Item",
+      "target": "http://api.kendra.org/saracen/0.1/mediaItems"
+    },
+    "updateGroups": {
+      "parameters": [
+
+      ],
+      "description": "Update a Group",
+      "target": "http://api.kendra.org/saracen/0.1/groups"
+    },
+    "createGroups": {
+      "parameters": [
+
+      ],
+      "description": "Create a Group",
+      "target": "http://api.kendra.org/saracen/0.1/groups"
+    },
+    "retrieveGroups": {
+      "parameters": [
+
+      ],
+      "description": "Get Groups",
+      "target": "http://api.kendra.org/saracen/0.1/groups"
+    },
+    "updateActivitystreams": {
+      "parameters": [
+
+      ],
+      "description": "Update an ActivityEntry",
+      "target": "http://api.kendra.org/saracen/0.1/activitystreams"
+    }
+  },
+  "target": "http://api.kendra.org/saracen/0.1",
+  "description": "Kendra API",
+  "transport": "JSONP",
+  "additionalParameters": true,
+  "callbackParamName": "callback"
+}

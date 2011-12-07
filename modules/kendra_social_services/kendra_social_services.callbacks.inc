@@ -1,6 +1,6 @@
 <?php
 
-function _kss_social_profile_test($id) {
+function _kss_profiles_retrieve($id) {
         $fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid",
           array(':uid' => $id))->fetchField();
         $nid = db_query("SELECT entity_id FROM {field_data_field_fb_fbid} WHERE field_fb_fbid_value = :fbid",
@@ -20,16 +20,6 @@ function _kss_social_profile_test($id) {
 				}
 				return $profile; // print_r($profile, TRUE);
 }
-/*
-function _kss_social_profile_test($id) {
-	$fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid",
-	  array(':uid' => $id))->fetchField();
-	$nid = db_query("SELECT entity_id FROM {field_data_field_fb_fbid} WHERE field_fb_fbid_value = :fbid",
-	  array(':fbid' => $fbid))->fetchField();
-	$graph = db_query("SELECT id FROM {sparql_store_fb_s2val} WHERE val = ':val'",
-	  array(':val' => url('node/'. $nid, array('absolute' => TRUE))))->fetchField();
-	return "Profile information for $id : $fbid : $nid : $graph";
-} */
 
 function _kss_social_publish($domain, $msg) {
 	if ($domain == 'facebook.com') {
@@ -51,7 +41,7 @@ function _kss_social_publish($domain, $msg) {
 	}
 }
 
-function _kss_social_connect($domain) {
+function _kss_accounts_connect($domain) {
 	if ($domain == 'facebook.com') {
 		$connect_url = url('connect', array('absolute' => TRUE));
 		return array(
@@ -80,3 +70,66 @@ function kendra_social_services_menu() {
 	);
 	return $items;
 }
+
+/**
+ * stub service callbacks
+ * @todo replace these
+ */
+function _kss_activitystreams_create () { return _kss_social_default_callback(); }
+function _kss_activitystreams_delete () { return _kss_social_default_callback(); }
+function _kss_activitystreams_retrieve () { return _kss_social_default_callback(); }
+function _kss_activitystreams_update () { return _kss_social_default_callback(); }
+function _kss_albums_create () { return _kss_social_default_callback(); }
+function _kss_albums_delete () { return _kss_social_default_callback(); }
+function _kss_albums_retrieve () { return _kss_social_default_callback(); }
+function _kss_albums_update () { return _kss_social_default_callback(); }
+function _kss_groups_create () { return _kss_social_default_callback(); }
+function _kss_groups_delete () { return _kss_social_default_callback(); }
+function _kss_groups_retrieve () { return _kss_social_default_callback(); }
+function _kss_groups_update () { return _kss_social_default_callback(); }
+function _kss_mediaitems_create () { return _kss_social_default_callback(); }
+function _kss_mediaitems_delete () { return _kss_social_default_callback(); }
+function _kss_mediaitems_retrieve () { return _kss_social_default_callback(); }
+function _kss_mediaitems_update () { return _kss_social_default_callback(); }
+function _kss_people_create () { return _kss_social_default_callback(); }
+function _kss_people_delete () { return _kss_social_default_callback(); }
+function _kss_people_retrieve () { return _kss_social_default_callback(); }
+function _kss_people_update () { return _kss_social_default_callback(); }
+function _kss_profiles_create () { return _kss_social_default_callback(); }
+function _kss_smartfilters_create () { return _kss_social_default_callback(); }
+function _kss_user_login () { return _kss_social_default_callback(); }
+function _kss_user_register () { return _kss_social_default_callback(); }
+function _kss_user_retrieve () { return _kss_social_default_callback(); }
+
+/**
+ * stub access callbacks
+ * @todo replace these
+ */
+function _kss_accounts_connect_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_activitystreams_create_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_activitystreams_delete_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_activitystreams_retrieve_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_activitystreams_update_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_albums_create_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_albums_delete_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_albums_retrieve_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_albums_update_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_groups_create_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_groups_delete_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_groups_retrieve_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_groups_update_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_mediaitems_create_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_mediaitems_delete_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_mediaitems_retrieve_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_mediaitems_update_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_people_create_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_people_delete_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_people_retrieve_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_people_update_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_profiles_create_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_profiles_retrieve_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_smartfilters_create_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_social_publish_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_user_login_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_user_register_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_user_retrieve_access ($op, $args) { return _kss_default_access_callback($op, $args); }

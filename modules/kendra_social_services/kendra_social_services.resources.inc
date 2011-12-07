@@ -10,170 +10,18 @@
  * @returns Array of mappings
  */
 function kendra_social_services_services_get_mappings() {
-	$resources = array();
-	$resources['activitystreams'] = array(); // stub for eventual activitystreams service
-	$resources['albums'] = array(); // stub for eventual albums service
-	$resources['groups'] = array(); // stub for eventual groups service
-	$resources['mediaItems'] = array(); // stub for eventual mediaItems service
-	$resources['people'] = array(); // stub for eventual people service
-	$resources['smartfilters'] = array(); // stub for eventual Smart Filters service
-
-	/**
-	 * profiles
-	 */
-	$res_profiles_operations = array(
-		'retrieve' => array(
-			'enabled' => 1,
-					      'file' => array('type' => 'inc', 'module' => 'kendra_social_services', 'name' => 'kendra_social_services.callbacks'),
-		'callback' => '_kss_social_profile_test',
-			'help' => 'Retrieve a profile',
-			'args' => array(
-	),
-		'access callback' => '_kss_default_access_callback',
-		'access arguments' => array('access content'),
-		'access arguments append' => TRUE,
-
-	)	);
-	$res_profiles_actions = array(
-				'test' => array(
-				'enabled' => 1,
-		        'callback' => '_kss_social_profile_test',
-		        'args' => array(
-	array(
-		          'name' => 'userid',
-		          'optional' => FALSE,
-		          'source' => array('data' => 'userid'),
-		          'type' => 'string',
-		          'description' => 'User ID to retrieve',
-	),
-	),
-	),
-	);
-	$res_profiles_relationships = array();
-
-	$resources['profiles'] = array_merge($res_profiles_operations, array(
-						   'operations' => $res_profiles_operations,
-						   'actions' => $res_profiles_actions,
-						   'relationships' => $res_profiles_relationships,
-	));
-
-	/**
-	 * accounts service
-	 */
-	$resources['accounts'] = array(
-        'index' => array(
-          'enabled' => 1,
-	),
-	'create' => array(
-          'enabled' => 1,
-	),
-	'operations' => array(
-        'retrieve' => array(
-          'enabled' => 1,
-	),
-        'create' => array(
-          'enabled' => 1,
-	),
-        'update' => array(
-          'enabled' => 1,
-	),
-        'delete' => array(
-          'enabled' => 1,
-	),
-        'index' => array(
-          'enabled' => 1,
-	),
-	),
-	'actions' => array(
-	'connect' => array(
-        'access arguments' => array('access kendra social connect'),
-        'callback' => '_kss_social_connect',
-        'args' => array(
-	array(
-            'name' => 'domain',
-            'optional' => FALSE,
-            'source' => array('data' => 'domain'),
-            'type' => 'string',
-            'description' => 'The top-most authoritative domain for the social network to connect to',
-	),
-	),
-          'enabled' => 1,
-	),
-	),
-	);
-
-	/**
-	 * social service
-	 */
-	$resources['social'] = array(
-      'publish' => array(
-		'enabled' => 1,
-	),
-
-	'actions' => array(
-      'publish' => array(
-        'access arguments' => array('access kendra social connect'),
-        'callback' => '_kss_social_publish', // stub for eventual social network publish service
-        'args' => array(
-	array(
-            'name' => 'domain',
-            'optional' => FALSE,
-            'source' => array('data' => 'domain'),
-            'type' => 'string',
-            'description' => 'The top-most authoritative domain for the social network to publish to',
-	),
-	array(
-            'name' => 'content',
-            'optional' => FALSE,
-            'source' => array('data' => 'content'),
-            'type' => 'string',
-            'description' => 'Content to post to social network',
-	),
-	),
-	'enabled' => 1,
-	),
-	),
-	);
-
-	/**
-	 * user service
-	 */
-	$resources['user'] = array(
-      'operations' => array(
-        'retrieve' => array(
-          'enabled' => 1,
-	),
-        'create' => array(
-          'enabled' => 1,
-	),
-        'update' => array(
-          'enabled' => 1,
-	),
-        'delete' => array(
-          'enabled' => 1,
-	),
-        'index' => array(
-          'enabled' => 1,
-	),
-	),
-      'actions' => array(
-        'login' => array(
-          'enabled' => 1,
-	),
-        'logout' => array(
-          'enabled' => 1,
-	),
-        'register' => array(
-          'enabled' => 1,
-	),
-	),
-	);
-
+	ob_start();
+	require DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/services/kendra_api_method.methods.json' ;
+	$services_definition = ob_get_clean();
+	
+	$resources = json_decode($services_definition, true); // convert JSON to associative arrays
+	
+	//die(json_encode(print_r($resources,1)));
 	return $resources;
 }
 
 /**
- * Kendra API Default Access Callback
+ * Kendra Social Default Service Callback
  */
 function _kss_social_default_callback() {
 	return "Kendra Social default callback";

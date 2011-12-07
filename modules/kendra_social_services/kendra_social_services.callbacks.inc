@@ -130,6 +130,7 @@ function _kss_profiles_create_access ($op, $args) { return _kss_default_access_c
 function _kss_profiles_retrieve_access ($op, $args) { return _kss_default_access_callback($op, $args); }
 function _kss_smartfilters_create_access ($op, $args) { return _kss_default_access_callback($op, $args); }
 function _kss_social_publish_access ($op, $args) { return _kss_default_access_callback($op, $args); }
-function _kss_user_login_access ($op, $args) { return _kss_default_access_callback($op, $args); }
-function _kss_user_register_access ($op, $args) { return _kss_default_access_callback($op, $args); }
 function _kss_user_retrieve_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+
+function _kss_user_login_access ($op, $args) { return TRUE; }
+function _kss_user_register_access ($op, $args) { return TRUE; }

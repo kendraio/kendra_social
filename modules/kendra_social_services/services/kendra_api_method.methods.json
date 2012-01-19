@@ -263,7 +263,7 @@
         "callback": "_kss_social_publish",
         "enabled": 1,
         "access arguments": [
-          "access kendra social connect"
+          "access content"
         ],
         "access callback": "_kss_social_publish_access",
         "file": {
@@ -608,7 +608,7 @@
         "callback": "_kss_accounts_connect",
         "enabled": 1,
         "access arguments": [
-                             "access kendra social connect"
+          "access content"
         ],
         "access callback": "_kss_accounts_connect_access",
         "file": {
@@ -1000,22 +1000,40 @@
         }
       },
       "login": {
-        "args": [
+          "args": [
 
-        ],
-        "access arguments append": true,
-        "help": "User Login",
-        "callback": "_kss_user_login",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_user_login_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
+          ],
+          "help": "User Login",
+          "enabled": 1,
+          "access arguments": [
+            "access content"
+          ],
+          "callback": "_user_resource_login",
+          "access arguments append": true,
+          "access callback": "services_access_menu",
+          "file": {
+            "name": "resources/user_resource",
+            "module": "services",
+            "type": "inc"
+          }
+      },
+      "logout": {
+          "args": [
+
+          ],
+          "access arguments append": true,
+          "help": "User Logout",
+          "callback": "_kss_user_logout",
+          "enabled": 1,
+          "access arguments": [
+            "access content"
+          ],
+          "access callback": "services_access_menu",
+          "file": {
+            "name": "kendra_social_services.callbacks",
+            "module": "kendra_social_services",
+            "type": "inc"
+          }
       }
     },
     "operations": {

@@ -1,1081 +1,1195 @@
 {
-  "groups": {
-    "actions": [
-
-    ],
-    "delete": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Delete a Group",
-      "callback": "_kss_groups_delete",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_groups_delete_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "operations": {
-      "delete": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Delete a Group",
-        "callback": "_kss_groups_delete",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_groups_delete_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
+    "accounts": {
+        "actions": {
+            "connect": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_accounts_connect_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [
+                    {
+                        "description": "The top-most authoritative domain for the social network to connect to", 
+                        "name": "domain", 
+                        "optional": false, 
+                        "source": {
+                            "data": "domain"
+                        }, 
+                        "type": "string"
+                    }
+                ], 
+                "callback": "_kss_accounts_connect", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Get Account Connection Options"
+            }
+        }, 
+        "operations": [], 
+        "relationships": []
+    }, 
+    "activitystreams": {
+        "actions": [], 
+        "create": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_activitystreams_create_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_activitystreams_create", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Create an ActivityEntry"
+        }, 
+        "delete": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_activitystreams_delete_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_activitystreams_delete", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Delete an ActivityEntry"
+        }, 
+        "operations": {
+            "create": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_activitystreams_create_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_activitystreams_create", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Create an ActivityEntry"
+            }, 
+            "delete": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_activitystreams_delete_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_activitystreams_delete", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Delete an ActivityEntry"
+            }, 
+            "retrieve": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_activitystreams_retrieve_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_activitystreams_retrieve", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Get Activity Streams"
+            }, 
+            "update": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_activitystreams_update_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_activitystreams_update", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Update an ActivityEntry"
+            }
+        }, 
+        "relationships": [], 
+        "retrieve": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_activitystreams_retrieve_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_activitystreams_retrieve", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Get Activity Streams"
+        }, 
+        "update": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_activitystreams_update_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_activitystreams_update", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Update an ActivityEntry"
         }
-      },
-      "create": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Create a Group",
-        "callback": "_kss_groups_create",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_groups_create_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
+    }, 
+    "albums": {
+        "actions": [], 
+        "create": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_albums_create_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_albums_create", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Create an Album"
+        }, 
+        "delete": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_albums_delete_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_albums_delete", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Delete an Album"
+        }, 
+        "operations": {
+            "create": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_albums_create_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_albums_create", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Create an Album"
+            }, 
+            "delete": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_albums_delete_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_albums_delete", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Delete an Album"
+            }, 
+            "retrieve": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_albums_retrieve_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_albums_retrieve", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Get Albums"
+            }, 
+            "update": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_albums_update_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_albums_update", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Update an Album"
+            }
+        }, 
+        "relationships": [], 
+        "retrieve": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_albums_retrieve_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_albums_retrieve", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Get Albums"
+        }, 
+        "update": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_albums_update_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_albums_update", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Update an Album"
         }
-      },
-      "retrieve": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Get Groups",
-        "callback": "_kss_groups_retrieve",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_groups_retrieve_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
+    }, 
+    "groups": {
+        "actions": [], 
+        "create": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_groups_create_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_groups_create", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Create a Group"
+        }, 
+        "delete": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_groups_delete_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_groups_delete", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Delete a Group"
+        }, 
+        "operations": {
+            "create": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_groups_create_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_groups_create", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Create a Group"
+            }, 
+            "delete": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_groups_delete_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_groups_delete", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Delete a Group"
+            }, 
+            "retrieve": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_groups_retrieve_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_groups_retrieve", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Get Groups"
+            }, 
+            "update": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_groups_update_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_groups_update", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Update a Group"
+            }
+        }, 
+        "relationships": [], 
+        "retrieve": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_groups_retrieve_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_groups_retrieve", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Get Groups"
+        }, 
+        "update": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_groups_update_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_groups_update", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Update a Group"
         }
-      },
-      "update": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Update a Group",
-        "callback": "_kss_groups_update",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_groups_update_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
+    }, 
+    "mediaItems": {
+        "actions": [], 
+        "create": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_mediaitems_create_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_mediaitems_create", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Create a Media Item"
+        }, 
+        "delete": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_mediaitems_delete_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_mediaitems_delete", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Delete a Media Item"
+        }, 
+        "operations": {
+            "create": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_mediaitems_create_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_mediaitems_create", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Create a Media Item"
+            }, 
+            "delete": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_mediaitems_delete_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_mediaitems_delete", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Delete a Media Item"
+            }, 
+            "retrieve": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_mediaitems_retrieve_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_mediaitems_retrieve", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Get Media Item"
+            }, 
+            "update": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_mediaitems_update_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_mediaitems_update", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Update a Media Item"
+            }
+        }, 
+        "relationships": [], 
+        "retrieve": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_mediaitems_retrieve_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_mediaitems_retrieve", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Get Media Item"
+        }, 
+        "update": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_mediaitems_update_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_mediaitems_update", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Update a Media Item"
         }
-      }
-    },
-    "relationships": [
-
-    ],
-    "create": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Create a Group",
-      "callback": "_kss_groups_create",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_groups_create_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "retrieve": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Get Groups",
-      "callback": "_kss_groups_retrieve",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_groups_retrieve_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "update": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Update a Group",
-      "callback": "_kss_groups_update",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_groups_update_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
+    }, 
+    "people": {
+        "actions": [], 
+        "create": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_people_create_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_people_create", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Create a Relationship"
+        }, 
+        "delete": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_people_delete_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_people_delete", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Delete a Person"
+        }, 
+        "operations": {
+            "create": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_people_create_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_people_create", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Create a Relationship"
+            }, 
+            "delete": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_people_delete_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_people_delete", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Delete a Person"
+            }, 
+            "retrieve": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_people_retrieve_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_people_retrieve", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Get a Person"
+            }, 
+            "update": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_people_update_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_people_update", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Update a Person"
+            }
+        }, 
+        "relationships": [], 
+        "retrieve": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_people_retrieve_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_people_retrieve", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Get a Person"
+        }, 
+        "update": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_people_update_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_people_update", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Update a Person"
+        }
+    }, 
+    "profiles": {
+        "actions": [], 
+        "create": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_profiles_create_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_profiles_create", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Store user profile data"
+        }, 
+        "operations": {
+            "create": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_profiles_create_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_profiles_create", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Store user profile data"
+            }, 
+            "retrieve": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_profiles_retrieve_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_profiles_retrieve", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Retrieve a user's profile data"
+            }
+        }, 
+        "relationships": [], 
+        "retrieve": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_profiles_retrieve_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_profiles_retrieve", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Retrieve a user's profile data"
+        }
+    }, 
+    "smartfilters": {
+        "actions": [], 
+        "create": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_smartfilters_create_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_smartfilters_create", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Create a Smart Filter"
+        }, 
+        "operations": {
+            "create": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_smartfilters_create_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_smartfilters_create", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Create a Smart Filter"
+            }
+        }, 
+        "relationships": []
+    }, 
+    "social": {
+        "actions": {
+            "publish": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_social_publish_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [
+                    {
+                        "description": "The top-most authoritative domain for the social network to publish to", 
+                        "name": "domain", 
+                        "optional": false, 
+                        "source": {
+                            "data": "domain"
+                        }, 
+                        "type": "string"
+                    }, 
+                    {
+                        "description": "Content to post to social network", 
+                        "name": "content", 
+                        "optional": false, 
+                        "source": {
+                            "data": "content"
+                        }, 
+                        "type": "string"
+                    }
+                ], 
+                "callback": "_kss_social_publish", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Post content to social network"
+            }
+        }, 
+        "operations": [], 
+        "relationships": []
+    }, 
+    "user": {
+        "actions": {
+            "login": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "services_access_menu", 
+                "args": [], 
+                "callback": "_user_resource_login", 
+                "enabled": 1, 
+                "file": {
+                    "module": "services", 
+                    "name": "resources/user_resource", 
+                    "type": "inc"
+                }, 
+                "help": "User Login"
+            }, 
+            "logout": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "services_access_menu", 
+                "args": [], 
+                "callback": "_kss_user_logout", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "User Logout"
+            }, 
+            "register": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_user_register_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_user_register", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "User Register"
+            }
+        }, 
+        "operations": {
+            "retrieve": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kss_user_retrieve_access", 
+                "access callback file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "args": [], 
+                "callback": "_kss_user_retrieve", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": "Get a User Profile"
+            }
+        }, 
+        "relationships": [], 
+        "retrieve": {
+            "access arguments": [
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "access callback": "_kss_user_retrieve_access", 
+            "access callback file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "args": [], 
+            "callback": "_kss_user_retrieve", 
+            "enabled": 1, 
+            "file": {
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
+                "type": "inc"
+            }, 
+            "help": "Get a User Profile"
+        }
     }
-  },
-  "profiles": {
-    "actions": [
-
-    ],
-    "operations": {
-      "retrieve": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Retrieve a user's profile data",
-        "callback": "_kss_profiles_retrieve",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_profiles_retrieve_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "create": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Store user profile data",
-        "callback": "_kss_profiles_create",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_profiles_create_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      }
-    },
-    "relationships": [
-
-    ],
-    "retrieve": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Retrieve a user's profile data",
-      "callback": "_kss_profiles_retrieve",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_profiles_retrieve_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "create": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Store user profile data",
-      "callback": "_kss_profiles_create",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_profiles_create_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    }
-  },
-  "social": {
-    "actions": {
-      "publish": {
-        "args": [
-                 {
-                     "name": "domain",
-                     "optional": false,
-                     "type": "string",
-                     "description": "The top-most authoritative domain for the social network to publish to",
-                     "source": {
-                       "data": "domain"
-                     }
-                   },
-                   {
-                     "name": "content",
-                     "optional": false,
-                     "type": "string",
-                     "description": "Content to post to social network",
-                     "source": {
-                       "data": "content"
-                     }
-                   }
-        ],
-        "access arguments append": true,
-        "help": "Post content to social network",
-        "callback": "_kss_social_publish",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_social_publish_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      }
-    },
-    "operations": [
-
-    ],
-    "relationships": [
-
-    ]
-  },
-  "albums": {
-    "actions": [
-
-    ],
-    "delete": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Delete an Album",
-      "callback": "_kss_albums_delete",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_albums_delete_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "operations": {
-      "delete": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Delete an Album",
-        "callback": "_kss_albums_delete",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_albums_delete_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "create": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Create an Album",
-        "callback": "_kss_albums_create",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_albums_create_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "retrieve": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Get Albums",
-        "callback": "_kss_albums_retrieve",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_albums_retrieve_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "update": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Update an Album",
-        "callback": "_kss_albums_update",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_albums_update_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      }
-    },
-    "relationships": [
-
-    ],
-    "create": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Create an Album",
-      "callback": "_kss_albums_create",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_albums_create_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "retrieve": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Get Albums",
-      "callback": "_kss_albums_retrieve",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_albums_retrieve_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "update": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Update an Album",
-      "callback": "_kss_albums_update",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_albums_update_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    }
-  },
-  "activitystreams": {
-    "actions": [
-
-    ],
-    "delete": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Delete an ActivityEntry",
-      "callback": "_kss_activitystreams_delete",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_activitystreams_delete_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "operations": {
-      "delete": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Delete an ActivityEntry",
-        "callback": "_kss_activitystreams_delete",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_activitystreams_delete_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "create": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Create an ActivityEntry",
-        "callback": "_kss_activitystreams_create",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_activitystreams_create_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "retrieve": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Get Activity Streams",
-        "callback": "_kss_activitystreams_retrieve",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_activitystreams_retrieve_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "update": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Update an ActivityEntry",
-        "callback": "_kss_activitystreams_update",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_activitystreams_update_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      }
-    },
-    "relationships": [
-
-    ],
-    "create": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Create an ActivityEntry",
-      "callback": "_kss_activitystreams_create",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_activitystreams_create_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "retrieve": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Get Activity Streams",
-      "callback": "_kss_activitystreams_retrieve",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_activitystreams_retrieve_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "update": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Update an ActivityEntry",
-      "callback": "_kss_activitystreams_update",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_activitystreams_update_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    }
-  },
-  "accounts": {
-    "actions": {
-      "connect": {
-        "args": [
-                 {
-                     "name": "domain",
-                     "optional": false,
-                     "type": "string",
-                     "description": "The top-most authoritative domain for the social network to connect to",
-                     "source": {
-                       "data": "domain"
-                     }
-                   }
-
-        ],
-        "access arguments append": true,
-        "help": "Get Account Connection Options",
-        "callback": "_kss_accounts_connect",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_accounts_connect_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      }
-    },
-    "operations": [
-
-    ],
-    "relationships": [
-
-    ]
-  },
-  "smartfilters": {
-    "actions": [
-
-    ],
-    "operations": {
-      "create": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Create a Smart Filter",
-        "callback": "_kss_smartfilters_create",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_smartfilters_create_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      }
-    },
-    "relationships": [
-
-    ],
-    "create": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Create a Smart Filter",
-      "callback": "_kss_smartfilters_create",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_smartfilters_create_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    }
-  },
-  "people": {
-    "actions": [
-
-    ],
-    "delete": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Delete a Person",
-      "callback": "_kss_people_delete",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_people_delete_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "operations": {
-      "delete": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Delete a Person",
-        "callback": "_kss_people_delete",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_people_delete_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "create": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Create a Relationship",
-        "callback": "_kss_people_create",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_people_create_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "retrieve": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Get a Person",
-        "callback": "_kss_people_retrieve",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_people_retrieve_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "update": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Update a Person",
-        "callback": "_kss_people_update",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_people_update_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      }
-    },
-    "relationships": [
-
-    ],
-    "create": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Create a Relationship",
-      "callback": "_kss_people_create",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_people_create_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "retrieve": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Get a Person",
-      "callback": "_kss_people_retrieve",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_people_retrieve_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "update": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Update a Person",
-      "callback": "_kss_people_update",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_people_update_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    }
-  },
-  "mediaItems": {
-    "actions": [
-
-    ],
-    "delete": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Delete a Media Item",
-      "callback": "_kss_mediaitems_delete",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_mediaitems_delete_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "operations": {
-      "delete": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Delete a Media Item",
-        "callback": "_kss_mediaitems_delete",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_mediaitems_delete_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "create": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Create a Media Item",
-        "callback": "_kss_mediaitems_create",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_mediaitems_create_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "retrieve": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Get Media Item",
-        "callback": "_kss_mediaitems_retrieve",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_mediaitems_retrieve_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "update": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Update a Media Item",
-        "callback": "_kss_mediaitems_update",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_mediaitems_update_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      }
-    },
-    "relationships": [
-
-    ],
-    "create": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Create a Media Item",
-      "callback": "_kss_mediaitems_create",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_mediaitems_create_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "retrieve": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Get Media Item",
-      "callback": "_kss_mediaitems_retrieve",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_mediaitems_retrieve_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    },
-    "update": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Update a Media Item",
-      "callback": "_kss_mediaitems_update",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_mediaitems_update_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    }
-  },
-  "user": {
-    "actions": {
-      "register": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "User Register",
-        "callback": "_kss_user_register",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_user_register_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      },
-      "login": {
-          "args": [
-
-          ],
-          "help": "User Login",
-          "enabled": 1,
-          "access arguments": [
-            "access content"
-          ],
-          "callback": "_user_resource_login",
-          "access arguments append": true,
-          "access callback": "services_access_menu",
-          "file": {
-            "name": "resources/user_resource",
-            "module": "services",
-            "type": "inc"
-          }
-      },
-      "logout": {
-          "args": [
-
-          ],
-          "access arguments append": true,
-          "help": "User Logout",
-          "callback": "_kss_user_logout",
-          "enabled": 1,
-          "access arguments": [
-            "access content"
-          ],
-          "access callback": "services_access_menu",
-          "file": {
-            "name": "kendra_social_services.callbacks",
-            "module": "kendra_social_services",
-            "type": "inc"
-          }
-      }
-    },
-    "operations": {
-      "retrieve": {
-        "args": [
-
-        ],
-        "access arguments append": true,
-        "help": "Get a User Profile",
-        "callback": "_kss_user_retrieve",
-        "enabled": 1,
-        "access arguments": [
-          "access content"
-        ],
-        "access callback": "_kss_user_retrieve_access",
-        "file": {
-          "name": "kendra_social_services.callbacks",
-          "module": "kendra_social_services",
-          "type": "inc"
-        }
-      }
-    },
-    "relationships": [
-
-    ],
-    "retrieve": {
-      "args": [
-
-      ],
-      "access arguments append": true,
-      "help": "Get a User Profile",
-      "callback": "_kss_user_retrieve",
-      "enabled": 1,
-      "access arguments": [
-        "access content"
-      ],
-      "access callback": "_kss_user_retrieve_access",
-      "file": {
-        "name": "kendra_social_services.callbacks",
-        "module": "kendra_social_services",
-        "type": "inc"
-      }
-    }
-  }
 }

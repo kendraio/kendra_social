@@ -1092,37 +1092,13 @@
     }, 
     "user": {
         "actions": {
-            "login": {
-                "access arguments": [
-                    "access content"
-                ], 
-                "access arguments append": true, 
-                "access callback": "services_access_menu", 
-                "args": [], 
-                "callback": "_user_resource_login", 
+	        "login": {
                 "enabled": 1, 
-                "file": {
-                    "module": "services", 
-                    "name": "resources/user_resource", 
-                    "type": "inc"
-                }, 
-                "help": "User Login"
-            }, 
+		        "help": "Login a user for a new session"
+		    }, 
             "logout": {
-                "access arguments": [
-                    "access content"
-                ], 
-                "access arguments append": true, 
-                "access callback": "services_access_menu", 
-                "args": [], 
-                "callback": "_kss_user_logout", 
                 "enabled": 1, 
-                "file": {
-                    "module": "kendra_social_services", 
-                    "name": "kendra_social_services.callbacks", 
-                    "type": "inc"
-                }, 
-                "help": "User Logout"
+                "help": "Logout a user session"
             }, 
             "register": {
                 "access arguments": [

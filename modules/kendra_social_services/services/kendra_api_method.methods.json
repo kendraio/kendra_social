@@ -1081,9 +1081,13 @@
                 "enabled": 1, 
                 "help": "User Delete"
             }, 
-            "retrieve": {
+            "index": {
                 "enabled": 1, 
                 "help": "User Index"
+            }, 
+            "retrieve": {
+                "enabled": 1, 
+                "help": "Get a User Profile"
             }, 
             "update": {
                 "enabled": 1, 

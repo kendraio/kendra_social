@@ -4,9 +4,9 @@
  * Code for the Kendra Social Services feature.
  */
 
-include_once('kendra_social_services.features.inc');
-include_once('kendra_social_services.resources.inc');
-include_once('kendra_social_services.callbacks.inc');
+include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/kendra_social_services.features.inc';
+include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/kendra_social_services.resources.inc';
+include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/kendra_social_services.callbacks.inc';
 
 function kendra_social_services_permission() {
 	return array(

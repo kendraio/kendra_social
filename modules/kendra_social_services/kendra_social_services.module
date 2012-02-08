@@ -17,10 +17,23 @@ function kendra_social_services_permission() {
 	);
 }
 
-/**
- * Implementation of hook_services_resources().
- */
-function kendra_social_services_services_resources() {
-	$resources = kendra_social_services_services_get_mappings();
-	return $resources;
+function kendra_social_services_services_resources_controller_post_processing_alter(&$services) {
+  $services['user/retrieve']['args'][0]['type'] = 'string';
+  $services['user/retrieve']['access callback'] = '_kss_user_retrieve_access_check';
+  $services['user/retrieve']['callback'] = '_kss_user_retrieve_callback';
+}
+
+function _kss_user_retrieve_access_check($op = 'view', $args = array()) {
+       if ($args[0] == 'me') { 
+	         return TRUE; 
+       } else {
+         return _user_resource_access($op, $args);
+       }
+}
+function _kss_user_retrieve_callback($uid) {
+       if ($uid == 'me') {
+	               global $user;
+               $uid = $user->uid;
+       }
+       return _user_resource_retrieve($uid);
 }

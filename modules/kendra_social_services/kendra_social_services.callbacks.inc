@@ -1,5 +1,9 @@
 <?php
 
+//function _user_resource_retrieve3($uid) {
+//  return "ok";
+//}
+
 function _kss_profiles_retrieve($id) {
 	$fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid",
 	array(':uid' => $id))->fetchField();

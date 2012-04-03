@@ -1,5 +1,9 @@
 <?php
 
+//function _user_resource_retrieve3($uid) {
+//  return "ok";
+//}
+
 function _kss_profiles_retrieve($id) {
 	$fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid",
 	array(':uid' => $id))->fetchField();
@@ -41,7 +45,7 @@ function _kss_social_publish($domain, $msg) {
 	}
 }
 
-function _kss_accounts_connect($domain) {
+function _kss_accounts_connect($domain = 'facebook.com') {
 	if ($domain == 'facebook.com') {
 		$connect_url = url('connect', array('absolute' => TRUE));
 		return array(
@@ -85,9 +89,12 @@ function _kss_groups_create () { return _kss_default_callback(); }
 function _kss_groups_delete () { return _kss_default_callback(); }
 function _kss_groups_retrieve () { return _kss_default_callback(); }
 function _kss_groups_update () { return _kss_default_callback(); }
-function _kss_mediaitems_create () { return _kss_default_callback(); }
+function _kss_mediaitems_create () { 
+  watchdog('debug', '<pre>' . print_r(func_get_args(), TRUE) . '</pre>');
+  return _kss_default_callback(); 
+}
 function _kss_mediaitems_delete () { return _kss_default_callback(); }
-function _kss_mediaitems_retrieve () { return _kss_default_callback(); }
+function _kss_mediaitems_retrieve () { return "mediaitem"; return _kss_default_callback(); }
 function _kss_mediaitems_update () { return _kss_default_callback(); }
 function _kss_people_create () { return _kss_default_callback(); }
 function _kss_people_delete () { return _kss_default_callback(); }
@@ -118,8 +125,8 @@ function _kss_groups_retrieve_access ($op, $args) { return _kss_default_access_c
 function _kss_groups_update_access ($op, $args) { return _kss_default_access_callback($op, $args); }
 function _kss_mediaitems_create_access ($op, $args) { return _kss_default_access_callback($op, $args); }
 function _kss_mediaitems_delete_access ($op, $args) { return _kss_default_access_callback($op, $args); }
-function _kss_mediaitems_retrieve_access ($op, $args) { return _kss_default_access_callback($op, $args); }
-function _kss_mediaitems_update_access ($op, $args) { return _kss_default_access_callback($op, $args); }
+function _kss_mediaitems_retrieve_access ($op, $args) { return TRUE; return _kss_default_access_callback($op, $args); }
+function _kss_mediaitems_update_access ($op, $args) { return TRUE; return _kss_default_access_callback($op, $args); }
 function _kss_people_create_access ($op, $args) { return _kss_default_access_callback($op, $args); }
 function _kss_people_delete_access ($op, $args) { return _kss_default_access_callback($op, $args); }
 function _kss_people_retrieve_access ($op, $args) { return _kss_default_access_callback($op, $args); }

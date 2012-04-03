@@ -1,0 +1,714 @@
+<?php
+
+/* PLEASE NOTE: I renamed this file from the GitHub version 
+because it had same name as install profile. This code needs further refactoring */
+
+// utility function to put data into recommender input table
+function _kendra_saracen_save_recommend($uid = NULL, $nid = NULL, $type = 'rating', $value, $drop = TRUE, $extid = NULL, $source = 'explicit') {
+	if ($drop) {
+	  db_delete('recommender_in_values')
+		  ->condition('nid', $nid)
+			->condition('uid', $uid)
+			->condition('type', $type)
+		  ->execute();
+  } 
+	$fvalue = NULL;
+	$svalue = NULL;
+	if (is_numeric($value)) {
+		$fvalue = floatval($value);
+	} else {
+		$svalue = $value;
+	}
+	if ($type == 'vote' && $value == 0) {
+		return;
+	}
+  $id = db_insert('recommender_in_values')
+    ->fields(array(
+      'nid' => $nid,
+      'uid' => $uid,
+			'type' => $type,
+			'floatval' => $fvalue,
+			'stringval' => $svalue,
+			'source' => $source,
+			'external_id' => "{$extid}",
+    ))
+    ->execute();
+  return $id;
+}
+
+function _kendra_saracen_cache_external_data($external_id, $key = 'facebook') {
+	db_delete('external_data_cache')->condition('external_id', $external_id)->execute();
+	$url = "https://graph.facebook.com/{$external_id}";
+	$response = drupal_http_request($url);
+	if ($response->code == 200) {
+  	$id = db_insert('external_data_cache')->fields(
+	    array('external_id' => $external_id, 'json' => $response->data)
+	  )->execute();
+  } else {
+	  watchdog('external data', 'error fetching external data: ' . print_r($response, TRUE));
+  }
+}
+
+function _kendra_saracen_cache_external_data_queue($external_id, $key = 'facebook') {
+	$queue = DrupalQueue::get('kendra_saracen_trial');
+	$item = new stdClass();
+	$item->type = 'fetch_external_data';
+	$item->external_id = $external_id;
+	$queue->createItem($item);
+}
+
+function kendra_saracen_trial_mod_cron_queue_info() {
+  return array('kendra_saracen_trial' => array(
+  	'worker callback' => '_kendra_saracen_queue_worker',
+		'time' => 180,
+  ));
+}
+function _kendra_saracen_queue_worker($item) {
+	watchdog('queue', "do {$item->type} for {$item->uid}: " . print_r($item, TRUE));
+	if ($item->type == 'fetch_external_data') {
+		_kendra_saracen_cache_external_data($item->external_id);
+	}
+	if ($item->type == 'facebook_profile') {
+		_kendra_saracen_update_facebook_profile($item);
+	}
+}
+
+function _kendra_saracen_update_facebook_profile($item) {
+	$connections = array('likes', 'movies', 'music');
+	$first = TRUE;
+	foreach ($connections as $connection) {
+		$key = "fb_{$connection}";
+		$response = drupal_http_request("https://graph.facebook.com/{$item->fbu}/{$connection}?access_token={$item->access_token}");
+		if ($response->code == 200) {
+			$data = json_decode($response->data);
+			foreach ($data->data as $like) {
+				_kendra_saracen_save_recommend($item->uid, NULL, 'profile', $like->name, $first, $like->id);
+				$first = FALSE;
+				$like->connection = $key;
+				_kendra_saracen_save_sparql_fb($item, $like);
+			}
+		} else {
+			watchdog('fb debug', 'failed to import: ' . print_r($response, TRUE) . ' for ' . print_r($item, TRUE));
+		}
+	}
+}
+
+function _kendra_saracen_save_sparql_fb($item, $like) {
+	watchdog('debug', 'item: ' . print_r($item, TRUE) . ' <br />like: ' . print_r($like, TRUE));
+	$id_url = url('user/' . $item->uid, array('absolute' => TRUE));
+	$data = array('like' => $like->name);
+	//_kendra_saracen_sparql_util('fblikes', $like->connection, $id_url, $data);
+	db_delete('sparql_store_fblike_temp')->condition('uid', $item->uid)
+	  ->condition('external_id', $like->id)->condition('connection', $like->connection)->execute();
+	db_insert('sparql_store_fblike_temp')->fields(array(
+		'uid' => $item->uid, 'external_id' => $like->id, 'name' => $like->name, 'connection' => $like->connection,
+	))->execute();
+}
+
+
+function _kendra_saracen_sparql_util($store, $graph, $id_url, $data) {
+	$store = sparql_get_store($store, SPARQL_ENDPOINT);
+	$query = "INSERT INTO <{$graph}> { \n";
+	foreach ($data as $key => $value) {
+		$value = str_replace('"', '\"', trim($value));
+		$predicate = $id_url . '#' . $key;
+		$query .= "  <{$id_url}> <{$predicate}> \"{$value}\" . \n";
+	}
+	$query .= "} \n";
+	watchdog('sparql', 'query: ' . $query);
+  return $store->query($query);
+}
+
+function _kendra_saracen_trial_lookup_id($id) {
+  $result = db_query("SELECT entity_id FROM {field_data_field_mediaitem_identifier} 
+    WHERE field_mediaitem_identifier_value=:identifier LIMIT 1", array(':identifier' => $id));
+	$nid = 0;
+	foreach ($result as $record) {
+	  if (isset($record->entity_id)) {
+	    $nid = $record->entity_id;
+	  }
+	}
+	return $nid;
+}
+
+function _kendra_saracen_trial_get_mediaitem($id) {
+	//watchdog('d','r');
+	// lookup node based on identifier
+  $result = db_query("SELECT entity_id FROM {field_data_field_mediaitem_identifier}
+    WHERE field_mediaitem_identifier_value=:identifier LIMIT 1", array(':identifier' => $id));
+  //watchdog('d', 'rr: '. print_r($result->rowCount(), TRUE));
+  if ($result->rowCount() == 0) {
+  	$node = node_load(intval($id));
+	  if (!empty($node)) {
+		  $result = array($node);
+  	}
+  }
+  foreach ($result as $node) {
+	  if (!isset($node->nid)) {
+      $node = node_load($node->entity_id);
+    }
+
+    // lookup extra properties from sparql
+	  $store = sparql_get_store(variable_get('kendra_saracen_mediaitem_store','mediaItems'), SPARQL_ENDPOINT);
+	  $url = url('node/' . $node->nid, array('absolute' => TRUE));
+	  $node->debug = $url;
+	  $result = $store->query("SELECT * WHERE { GRAPH <http://localhost/saracen/saracen/0.2/mediaitems> { <{$url}> ?p ?o . } } ");
+    $node->data = array();
+    foreach ($result['result']['rows'] as $row) {
+	    $node->data[str_replace($url . '#','',$row['p'])] = $row['o'];
+    }
+    //watchdog('d', '<pre>' . print_r($node, TRUE) . '</pre>');
+    foreach ($node->field_mediaitem_tags[$node->language] as $key => $term) {
+	    $term = taxonomy_term_load($term['tid']);
+	    $node->field_mediaitem_tags[$node->language][$key] = array('tid' => $term->tid, 'name' => $term->name);
+    }
+
+    if (isset($node->field_mediaitem_info[$node->language][0]['value'])) {
+	    $node->field_mediaitem_info[$node->language] = unserialize($node->field_mediaitem_info[$node->language][0]['value']);
+    }
+
+    $devquery = new EntityFieldQuery();
+		$derivatives = $devquery->entityCondition('entity_type', 'node')
+		    ->entityCondition('bundle', 'derivative')
+		    ->fieldCondition('field_derivative_uuid', 'value', $node->field_mediaitem_identifier['und'][0]['value'], 'like')
+		    ->execute();
+		foreach ($derivatives['node'] as $deriv) {
+			$deriv = node_load($deriv->nid);
+			$uuid = $deriv->field_derivative_uuid[$deriv->language][0]['value'];
+			$deriv->derivativeID = $uuid . ':' . $deriv->nid;
+			$node->field_mediaitem_derivatives['und'][] = $deriv;
+		}
+
+    return $node;
+  }
+  return array('status' => 'error', 'message' => 'unknown identifier ' . var_export($id, TRUE));
+  //return 'unknown identifier: ' . var_export($id, TRUE);
+}
+
+function _kendra_saracen_trial_update_mediaitem($id, $data) {
+	$data['identifier'] = $id;
+	return _kendra_saracen_trial_register_mediaitem($data);
+}
+
+function _kendra_saracen_trial_register_mediaitem($data = NULL) {
+	
+	/* TODO: refactor this mess! */
+  global $user;
+  $op = 'unknown';
+
+  if (!isset($data['identifier'])) {
+    if (!isset($data['title'])) {
+	    return (array('status' => 'error', 'message' => 'Media item Title or Identifier is required.'));
+    }
+	  $data['identifier'] = uniqid($data['title']);
+  }
+	if (!isset($data['title'])) {
+		$data['title'] = $data['identifier'];
+	}
+	
+	// Load the node if it exists, or create a new one
+	$result = db_query("SELECT entity_id FROM {field_data_field_mediaitem_identifier} 
+    WHERE field_mediaitem_identifier_value=:identifier LIMIT 1", array(':identifier' => $data['identifier']));
+	$nid = NULL;
+	foreach ($result as $record) {
+	  if (isset($record->entity_id)) {
+	    $nid = $record->entity_id;
+	  }
+	}
+	if (isset($nid)) {
+		$op = 'updated';
+	  $node = node_load($nid);
+    if (!node_access('update', $node, $user)) {
+	    return array('status' => 'error', 'message' => 'user does not have permission to update ' . $data['identifier']);
+    }
+	} else {
+		$op = 'registered';
+	  $node = new StdClass();
+	  $node->type = 'mediaitem';
+	  $node->status = 1;
+	  $node->title = $data['title'];
+	  $node->uid = $user->uid;
+	  if (isset($data['userid'])) {
+	    // $node->uid = $data['userid'];
+	    $node->uid = $user->uid;
+	  }
+	  $node->language = 'und';
+	}
+	$node->field_mediaitem_identifier['und'][0]['value'] = $data['identifier'];
+	if (isset($data['description'])) {
+		$node->field_mediaitem_description['und'][0]['value'] = $data['description'];
+	}
+	if (isset($data['duration'])) {
+		$node->field_mediaitem_duration['und'][0]['value'] = $data['duration'];
+	}
+	if (isset($data['3d'])) {
+		$node->field_mediaitem_3d['und'][0]['value'] = $data['3d'];
+	}
+	if (isset($data['info'])) {
+		if (isset($node->field_mediaitem_info['und'][0]['value'])) {
+			$current_info = unserialize($node->field_mediaitem_info['und'][0]['value']);
+			$node->field_mediaitem_info['und'][0]['value'] = serialize(array_merge($current_info, $data['info']));
+		} else {
+  		$node->field_mediaitem_info['und'][0]['value'] = serialize($data['info']);
+    }
+	}
+	if (isset($data['category'])) {
+		$vocab = taxonomy_vocabulary_machine_name_load('media_category');
+		$terms = taxonomy_get_term_by_name($data['category'], $vocab->vid);
+		watchdog('d', print_r($terms, TRUE));
+		if (!empty($terms)) {
+			$term = array_shift($terms);
+  		$node->field_mediaitem_category['und'][0]['tid'] = $term->tid;
+    } else {
+	    $term = new StdClass();
+	    $term->name = $data['category'];
+	    $term->vid = $vocab->vid;
+	    taxonomy_term_save($term);
+			$terms = taxonomy_get_term_by_name($data['category'], $vocab->vid);
+			if (!empty($terms)) {
+				$term = array_shift($terms);
+     		$node->field_mediaitem_category['und'][0]['tid'] = $term->tid;
+      }
+    }
+	}
+	node_object_prepare($node);
+	node_save($node);
+	
+	if (isset($data['keywords'])) {
+		$tags = split(',',$data['keywords']);
+		foreach ($tags as $tag) {
+			_kendra_saracen_trial_tag_mediaitem($data['identifier'], array('tag' => $tag));
+		}
+	}
+	
+	// save data items to triple store
+  $store = sparql_get_store(variable_get('kendra_saracen_mediaitem_store','mediaItems'), SPARQL_ENDPOINT);
+  foreach ($data as $key => $value) {
+	  $value = str_replace('"', '\"', trim($value));
+	  $url = url('node/' . $node->nid, array('absolute' => TRUE));
+	  $predicate = url('node/' . $node->nid, array('fragment' => $key, 'absolute' => TRUE));
+	  $store->query("INSERT INTO <mediaitems> {\n" . 
+	    "  <{$url}> <{$predicate}> \"{$value}\" .\n" . "}\n");
+  }
+
+
+
+  if (isset($data['codec']) && isset($data['quality'])) {
+	  $query = new EntityFieldQuery();
+	  $derivative = $query->entityCondition('entity_type', 'node')
+	    ->entityCondition('bundle', 'derivative')
+	    ->fieldCondition('field_derivative_quality', 'value', $data['quality'], 'like')
+	    ->fieldCondition('field_derivative_codec', 'value', $data['codec'], 'like')
+	    ->fieldCondition('field_derivative_uuid', 'value', $data['identifier'], 'like')
+	    ->execute();
+	  if (isset($derivative['node'][0])) {
+		  $derivative = node_load($derivative['node'][0]);
+	  } else {
+		  $derivative = new StdClass();
+		  $derivative->type = 'derivative';
+		  $derivative->status = 1;
+		  $derivative->uid = isset($data['userid']) ? $data['userid'] : 1;
+		  $derivative->title = $data['title'] . ':' . $data['codec'] . ':' . $data['quality'];
+		  $derivative->language = 'und';
+	  }
+	  $derivative->field_derivative_codec['und'][0]['value'] = $data['codec'];
+	  $derivative->field_derivative_uuid['und'][0]['value'] = $data['identifier'];
+	  $derivative->field_derivative_quality['und'][0]['value'] = $data['quality'];
+	  if (isset($data['link'])) {
+   	  $derivative->field_derivative_url['und'][0]['value'] = $data['link'];
+    }
+		node_object_prepare($derivative);
+		node_save($derivative);
+		$derivative_id = $derivative->nid;
+  }
+
+  if (isset($derivative_id)) {
+    $endpoints = array(
+      array('entity_type' => 'node', 'entity_id' => $node->nid),
+      array('entity_type' => 'node', 'entity_id' => $derivative->nid),
+    );
+    $relation = relation_create('derivative', $endpoints);
+    $rid = relation_save($relation);
+  }
+
+  // return notification of registered node
+  return array('status' => 'OK', 'message' => 'Media item ' . $op, 'identifier' => $data['identifier']);
+  //return 'registered: ' . $data['identifier'];
+}
+
+function _kendra_saracen_trial_annotate_mediaitem($id, $data) {
+	global $user;
+	$org = node_load(_kendra_saracen_trial_lookup_id($id));
+	if (!isset($org->nid)) {
+		return array('status' => 'error', 'message' => 'unknown identifier');
+	}
+  $node = new StdClass();
+  $node->type = 'annotation';
+  $node->status = 1;
+  $node->title = 'User annotation for ' . $org->title;
+  $node->uid = $user->uid;
+  $node->language = 'und';
+  $node->field_annotation_mediaitem['und'][0]['value'] = $id;
+	if (isset($data['derivative'])) {
+		$node->field_annotation_derivative['und'][0]['value'] = $data['derivative'];
+	}
+	if (isset($data['start'])) {
+		$node->field_annotation_start['und'][0]['value'] = $data['start'];
+	}
+	if (isset($data['length'])) {
+		$node->field_annotation_length['und'][0]['value'] = $data['length'];
+	}
+	if (isset($data['type'])) {
+		$node->field_annotation_type['und'][0]['value'] = $data['type'];
+	}
+	if (isset($data['text'])) {
+		$node->field_annotation_text['und'][0]['value'] = $data['text'];
+	}
+  
+	node_object_prepare($node);
+	node_save($node);
+	
+	return array('status' => 'OK', 'message' => 'created user annotation');
+}
+
+function _kendra_saracen_trial_tag_mediaitem($id, $data) {
+	global $user;
+	$node = node_load(_kendra_saracen_trial_lookup_id($id));
+	$vid = array_shift(community_tags_vids_for_node($node));
+  $tags = community_tags_flatten(community_tags_get_user_node_tags($user->uid, $node->nid, $vid));
+	$tags = array_merge($tags, array($data['tag']));
+	community_tags_taxonomy_node_save($node, array('tags' => array($vid => $tags)), FALSE, $user->uid);
+  $tags = community_tags_flatten(community_tags_get_user_node_tags($user->uid, $node->nid, $vid));
+  _kendra_saracen_save_recommend($user->uid, $node->nid, 'tag', $data['tag']);
+	return $tags;
+}
+
+function _kendra_saracen_trial_delete_mediaitem($id) {
+	$nid = _kendra_saracen_trial_lookup_id($id);
+	$node = node_load($nid);
+	global $user;
+	if (!isset($node->nid)) {
+		return array('status' => 'error', 'message' => 'unknown identifier');
+	}
+	if (user_access('delete', $node, $user)) {
+		$node->status = 0;
+		node_save($node);
+		return array('status' => 'ok', 'message' => 'unpublished media item ' . $title);
+	}
+	return array('status' => 'error', 'message' => 'permission denied');
+}
+
+function _kendra_saracen_trial_rate_mediaitem($id, $data) {
+	$nid = _kendra_saracen_trial_lookup_id($id);
+	global $user;
+  _kendra_saracen_save_recommend($user->uid, $nid, 'rating', $data['value']);
+	return _fivestar_cast_vote('node', $nid, $data['value'], 'vote', $user->uid);
+	return func_get_args();
+}
+
+function _kendra_saracen_trial_get_annotations($id) {
+	//$nid = _kendra_saracen_trial_lookup_id($id);
+	//$node = node_load($nid);
+	//if (!isset($node->nid)) {
+	//	return array('status' => 'error', 'message' => 'unknown identifier');
+	//}
+	//return $id;
+  $query = new EntityFieldQuery();
+  $annotations = $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'annotation')
+    ->fieldCondition('field_annotation_mediaitem', 'value', $id, 'like')
+    ->execute();
+  $output = array();
+  if (isset($annotations['node'])) {
+	  foreach ($annotations['node'] as $node) {
+		  $output[] = node_load($node->nid);
+	  }
+  }
+  return $output;
+}
+
+function _kendra_saracen_trial_list_mediaitem($page = 0, $page_size = 10) {
+	if ($page_size == 0) {
+		$page_size = 10;
+	}
+	//watchdog('d', "page {$page} page_size {$page_size}");
+	$page1 = intval($page) * $page_size;
+	$page2 = $page1 + $page_size;
+	//watchdog('d', "page1 {$page1} page2 {$page2}");
+	// change to entity query
+	$result = db_query("SELECT nid FROM {node} WHERE type = 'mediaitem' AND status = 1 ORDER BY changed DESC LIMIT {$page1}, {$page2}");
+	$output = array();
+	foreach ($result as $node) {
+		$output[] = _kendra_saracen_trial_get_mediaitem($node->nid);
+	}
+	return $output;
+}
+
+function _kendra_saracen_trial_temp_callback() {
+  return TRUE;
+}
+
+function kendra_saracen_trial_mod_services_resources() {
+	return array(
+		'mediaItems' => array(
+			'targeted_actions' => array(
+				'rate' => array(
+					'help' => 'Rate a mediaitem',
+					'callback' => '_kendra_saracen_trial_rate_mediaitem',
+					'access callback' => '_kendra_saracen_trial_temp_callback',
+					'access arguments' => array('access content'),
+					'access arguments append' => FALSE,
+					'args' => array(
+						array(
+							'name' => 'id',
+							'type' => 'string',
+							'source' => array('path' => 0),
+							'optional' => FALSE,
+						),
+						array(
+							'name' => 'rate',
+							'type' => 'string',
+							'source' => 'data',
+							'optional' => TRUE,
+						),
+					),
+				),
+				'tag' => array(
+					'help' => 'Tag a mediaitem',
+					'callback' => '_kendra_saracen_trial_tag_mediaitem',
+					'access callback' => '_kendra_saracen_trial_temp_callback',
+					'access arguments' => array('access content'),
+					'access arguments append' => FALSE,
+					'args' => array(
+						array(
+							'name' => 'id',
+							'type' => 'string',
+							'source' => array('path' => 0),
+							'optional' => FALSE,
+						),
+						array(
+							'name' => 'tag',
+							'type' => 'string',
+							'source' => 'data',
+							'optional' => TRUE,
+						),
+					),
+				),
+				'annotate' => array(
+					'help' => 'User annotation for a mediaitem',
+					'callback' => '_kendra_saracen_trial_annotate_mediaitem',
+					'access callback' => '_kendra_saracen_trial_temp_callback',
+					'access arguments' => array('access content'),
+					'access arguments append' => FALSE,
+					'args' => array(
+						array(
+							'name' => 'id',
+							'type' => 'string',
+							'source' => array('path' => 0),
+							'optional' => FALSE,
+						),
+						array(
+							'name' => 'annotate',
+							'type' => 'string',
+							'source' => 'data',
+							'optional' => TRUE,
+						),
+					),
+				),
+				
+				
+			),
+			'relationships' => array(
+				'annotations' => array(
+					'help' => 'returns all annotations for a media item',
+					'access callback' => '_kendra_saracen_trial_temp_callback',
+					'callback' => '_kendra_saracen_trial_get_annotations',
+					'args' => array(
+						array(
+							'name' => 'id',
+							'optional' => FALSE,
+							'source' => array('path' => 0),
+							'type' => 'string',
+							'description' => 'the uuid of the mediaitem to get annotations for',
+						),
+					),
+				),
+			),
+			
+			'operations' => array(
+				'retrieve' => array(
+					'help' => 'Retrieves a media item',
+					'callback' => '_kendra_saracen_trial_get_mediaitem',
+					'access callback' => '_kendra_saracen_trial_temp_callback',
+					'access arguments' => array('access content'),
+					'access arguments append' => FALSE,
+					'args' => array(
+						array(
+							'name' => 'id',
+							'description' => 'The media identifier',
+							'type' => 'string',
+							'source' => array('path' => 0),
+							'optional' => FALSE,
+						),
+					),
+				),
+				
+				
+				'update' => array(
+					'help' => 'update a media item',
+					'callback' => '_kendra_saracen_trial_update_mediaitem',
+					'access callback' => '_kendra_saracen_trial_temp_callback',
+					'access arguments' => array('access content'),
+					'access arguments append' => FALSE,
+					'args' => array(
+						array(
+							'name' => 'id',
+							'description' => 'The media identifier',
+							'type' => 'string',
+							'source' => array('path' => 0),
+							'optional' => FALSE,
+						),
+						array(
+							'name' => 'data',
+							'type' => 'struct',
+							'description' => 'The media item object',
+							'source' => 'data',
+							'optional' => FALSE,
+						),
+					),
+				),
+				
+				'delete' => array(
+					'help' => 'Deletes a media item',
+					'callback' => '_kendra_saracen_trial_delete_mediaitem',
+					'access callback' => '_kendra_saracen_trial_temp_callback',
+					'access arguments' => array('access content'),
+					'access arguments append' => FALSE,
+					'args' => array(
+						array(
+							'name' => 'id',
+							'description' => 'The media identifier',
+							'type' => 'string',
+							'source' => array('path' => 0),
+							'optional' => FALSE,
+						),
+					),
+				),
+				
+				'index' => array(
+					'callback' => '_kendra_saracen_trial_list_mediaitem',
+					'access arguments' => array('access content'),
+					'args' => array(
+						array(
+							'name' => 'page',
+							'optional' => TRUE,
+							'type' => 'int',
+							'description' => 'zero-indexed page of results requested',
+							'default_value' => 0,
+							'source' => array('param' => 'page'),
+						), 
+						array(
+							'name' => 'page_size',
+							'optional' => TRUE,
+							'type' => 'int',
+							'description' => 'size of page',
+							'default_value' => 10, 
+							'source' => array('param' => 'page_size'),
+						),
+					),
+				),
+				'create' => array(
+					'help' => 'register a media item',
+					'callback' => '_kendra_saracen_trial_register_mediaitem',
+					'access arguments' => array('access content'),
+					'access arguments append' => FALSE,
+					'args' => array(
+						array(
+							'name' => 'data',
+							'type' => 'struct',
+							'description' => 'The media item object',
+							'source' => 'data',
+							'optional' => FALSE,
+						),
+					),
+				),
+			),
+		),
+		'search' => array(
+			'index' => array(
+				'help' => 'search content and users',
+				'callback' => '_kendra_saracen_trial_search_content',
+				'access arguments' => array('access content'),
+				'access arguments append' => TRUE,
+				'args' => array(
+					array(
+						'name' => 'query',
+						'type' => 'string',
+						'description' => 'The search query',
+						'source' => 'query',
+						'optional' => TRUE,
+					),
+					array(
+						'name' => 'type',
+						'type' => 'string',
+						'description' => 'The search type',
+						'source' => 'type',
+						'optional' => TRUE,
+					),
+					array(
+						'name' => 'filter',
+						'type' => 'string',
+						'description' => 'The search filter',
+						'source' => 'filter',
+						'optional' => TRUE,
+					),
+					array(
+						'name' => 'sort',
+						'type' => 'string',
+						'description' => 'The search sort',
+						'source' => 'sort',
+						'optional' => TRUE,
+					),
+				),
+			),
+		),
+	);
+}
+
+
+function _kendra_saracen_trial_search_content($query, $type, $filter, $sort) {
+        return "search result";
+}
+
+
+
+function kendra_saracen_trial_mod_services_resources_controller_post_processing_alter(&$services) {
+  $services['user/operation/retrieve']['args'][0]['type'] = 'string';
+  $services['user/operation/retrieve']['access callback'] = '_kst_user_retrieve_access_check';
+  $services['user/operation/retrieve']['callback'] = '_kst_user_retrieve_callback';
+}
+
+function _kst_user_retrieve_access_check($op = 'view', $args = array()) {
+  if ($args[0] == 'me') { 
+    return TRUE; 
+  } else {
+    return _user_resource_access($op, $args);
+  }
+}
+function _kst_user_retrieve_callback($uid) {
+  if ($uid == 'me') {
+	  global $user;
+    $uid = $user->uid;
+  }
+  return _user_resource_retrieve($uid);
+}
+
+
+
+
+
+
+
+
+
+

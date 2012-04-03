@@ -1,7 +1,156 @@
 <?php
-/**
- * @file
- * Code for the Kendra Social Media feature.
- */
 
-include_once('kendra_social_media.features.inc');
+// NB::: Need to replace with refactored version...
+
+function _kendra_social_media_getitem($id) {
+  $result = db_query("SELECT nid FROM {node} WHERE title=:title LIMIT 1", array(':title' => $id));
+  foreach ($result as $node) {
+    $node = node_load($node->nid);
+    $node->predicates = unserialize($node->field_media_tmp['und'][0]['value']);
+    unset($node->field_media_tmp);
+    return $node;
+  }
+  return $node;
+/*
+  $data = cache_get('temp_kendra_store_' . $id);
+  if (!isset($data->data)) {
+    return "Item not found";
+  }
+  return $data->data;
+*/
+}
+function _kendra_social_media_register($identifier = NULL, $userid = NULL, $album_id = NULL, $data = NULL) {
+//	return "registered content";
+//	return func_get_args();
+$result = db_query("SELECT nid FROM {node} WHERE title=:title LIMIT 1", array(':title' => $data['identifier']));
+$nid = NULL;
+foreach ($result as $record) {
+  if (isset($record->nid)) {
+    $nid = $record->nid;
+  }
+}
+if (isset($nid)) {
+  $node = node_load($nid); 
+} else {
+  $node = new StdClass();
+  $node->type = 'kendra_mediaitem';
+  $node->status = 1;
+  $node->title = $data['identifier'];
+  $node->uid = 1;
+  if (isset($userid)) {
+    $node->uid = $userid;
+  }
+  $node->language = 'und';
+}
+$node->field_media_id['und'][0]['value'] = $data['identifier'];
+$node->field_media_tmp['und'][0]['value'] = serialize($data);
+node_object_prepare($node);
+node_save($node);
+cache_set('temp_kendra_store_'. $data['identifier'], $data);
+return "registered: ". $data['identifier'];
+
+
+}
+function _kendra_social_media_search_content($query, $type, $filter, $sort) {
+	return "search result";
+}
+
+function _kendra_media_temp_callback() {
+  return TRUE;
+}
+
+function kendra_social_media_services_resources() {
+	return array(
+		'mediaItems' => array(
+			'retrieve' => array(
+				'help' => 'Retrieves a media item',
+				'callback' => '_kendra_social_media_getitem',
+				'access callback' => '_kendra_media_temp_callback',
+				'access arguments' => array('access content'),
+				'access arguments append' => FALSE,
+				'args' => array(
+					array(
+						'name' => 'id',
+						'description' => 'The media identifier',
+						'type' => 'string',
+						'source' => array('path' => 0),
+						'optional' => FALSE,
+					)
+				),
+			),
+			'create' => array(				
+         'help' => 'register a media item',
+         'callback' => '_kendra_social_media_register',
+         'access arguments' => array('access content'),
+         'access arguments append' => FALSE,
+         'args' => array(
+           array(
+             'name' => 'identifier',
+             'type' => 'string',
+             'description' => 'The media identifier',
+             'source' => 'identifier',
+             'optional' => TRUE,
+           ),
+           array(
+             'name' => 'userid',
+             'type' => 'int',
+             'description' => 'The user Id related to this media item',
+             'source' => 'userid',
+             'optional' => TRUE,
+           ),
+           array(
+             'name' => 'album_id',
+             'type' => 'int',
+             'description' => 'An album/box to assign the media item to',
+             'source' => 'album_id',
+             'optional' => TRUE,
+           ),
+
+           array(
+             'name' => 'data',
+             'type' => 'struct',
+             'description' => 'The media item object',
+             'source' => 'data',
+             'optional' => FALSE,
+           ),
+         ),
+			),
+		),
+		'search' => array(
+			'help' => 'search content and users',
+			'callback' => '_kendra_social_media_search_content',
+			'access arguments' => array('access content'),
+			'access arguments append' => TRUE,
+			'args' => array(
+      array(
+        'name' => 'query',
+        'type' => 'string',
+        'description' => 'The search query',
+        'source' => 'query',
+        'optional' => TRUE,
+      ),array(
+        'name' => 'type',
+        'type' => 'string',
+        'description' => 'The search type',
+        'source' => 'type',
+        'optional' => TRUE,
+      ),array(
+        'name' => 'filter',
+        'type' => 'string',
+        'description' => 'The search filter',
+        'source' => 'filter',
+        'optional' => TRUE,
+      ),array(
+        'name' => 'sort',
+        'type' => 'string',
+        'description' => 'The search sort',
+        'source' => 'sort',
+        'optional' => TRUE,
+      ),
+					
+			),
+		),
+	);
+}
+
+

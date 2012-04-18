@@ -187,7 +187,22 @@ function _kendra_saracen_trial_get_mediaitem($id) {
 				'user' => $user_vote,
 			);
 		}
-    //$node->tmp = $votes;
+		
+		// Lookup annotation details
+		
+    $annotationquery = new EntityFieldQuery();
+		$annotations = $annotationquery->entityCondition('entity_type', 'node')
+		    ->entityCondition('bundle', 'annotation')
+		    ->fieldCondition('field_annotation_mediaitem', 'value', $node->field_mediaitem_identifier['und'][0]['value'], 'like')
+		    ->execute();
+		foreach ($annotations['node'] as $annot) {
+		  $annot = node_load($annot->nid);
+		  $node->annotations[$annot->field_annotation_type['und'][0]['value']]++;
+		}
+		if (isset($node->annotations['Rate'])) {
+			unset($node->annotations['Rate']);
+		}
+		
     return $node;
   }
   return array('status' => 'error', 'message' => 'unknown identifier ' . var_export($id, TRUE));

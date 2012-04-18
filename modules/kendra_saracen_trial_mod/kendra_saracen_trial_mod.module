@@ -351,6 +351,9 @@ function _kendra_saracen_trial_annotate_mediaitem($id, $data) {
 	if (!isset($org->nid)) {
 		return array('status' => 'error', 'message' => 'unknown identifier');
 	}
+	if (strtolower($data['type']) == 'rate') {
+		return array('status' => 'error', 'message' => 'use the dedicated rating API resource');
+	}
   $node = new StdClass();
   $node->type = 'annotation';
   $node->status = 1;
@@ -377,7 +380,8 @@ function _kendra_saracen_trial_annotate_mediaitem($id, $data) {
 	node_object_prepare($node);
 	node_save($node);
 	
-	return array('status' => 'OK', 'message' => 'created user annotation');
+	return array('status' => 'OK', 'message' => 'created user annotation for ' . $org->title, 
+	  'type' => $data['type']);
 }
 
 function _kendra_saracen_trial_tag_mediaitem($id, $data) {

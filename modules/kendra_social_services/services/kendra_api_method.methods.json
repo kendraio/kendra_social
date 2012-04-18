@@ -5,7 +5,7 @@
                 "access arguments": [
                     "access content"
                 ], 
-                "access arguments append": true, 
+                "access arguments append": false, 
 
                 "args": [], 
                 "callback": "_kss_accounts_connect", 
@@ -495,6 +495,7 @@
                     "access content"
                 ], 
                 "access arguments append": true, 
+		"access callback": "_kss_mediaitems_retrieve_access",
 
                 "args": [], 
                 "callback": "_kss_mediaitems_retrieve", 

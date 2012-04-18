@@ -1,4 +1,7 @@
 <?php
+
+// Hacked version of master - replace with refactored branch for 0.2
+
 /**
  * @file
  * Code for the Kendra Social Services feature.
@@ -7,6 +10,76 @@
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/kendra_social_services.features.inc';
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/kendra_social_services.resources.inc';
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/kendra_social_services.callbacks.inc';
+
+// This function adds the recommender word cloud into user profiles when loading them
+function kendra_social_services_user_load($users) {
+	$recommendation = db_query("SELECT * FROM {recommender_out_tags} t WHERE t.uid IN (:uids)", array(':uids' => array_keys($users)));
+	foreach ($recommendation as $record) {
+		$users[$record->uid]->profile_tags[] = array('name' => $record->tag, 'score' => $record->weight, 'type' => 'explicit');
+	}
+	$fb_users = db_query("SELECT u.uid, u.fbu, a.session_key FROM {fb_user_app} a INNER JOIN {fb_user} u ON a.fbu = u.fbu WHERE uid IN (:uids)",
+	  array(':uids' => array_keys($users)));
+	foreach ($fb_users as $fbuser) {
+		$users[$fbuser->uid]->fbu = $fbuser->fbu;
+		$queue = DrupalQueue::get('kendra_saracen_trial');
+		$item = new stdClass();
+		$item->type = 'facebook_profile';
+		$item->uid = $fbuser->uid;
+		$item->fbu = $fbuser->fbu;
+		$item->access_token = $fbuser->session_key;
+		$queue->createItem($item);
+	}
+	// DEBUG: load fb likes for this user into profile
+	$fblikes = db_query("SELECT * FROM {sparql_store_fblike_temp} f WHERE f.uid IN (:uids)", array(':uids' => array_keys($users)));
+	foreach ($fblikes as $like) {
+		$users[$like->uid]->{$like->connection}[] = $like->name;
+	}
+}
+
+// old hacked version of user profile load hook
+function kendra_social_services_user_load_noqueue($users) {
+	$recommend = db_query("SELECT * FROM {recommender_out_tags} t WHERE t.uid IN (:uids)", 
+	  array(':uids' => array_keys($users)));
+	foreach ($recommend as $record) {
+		$users[$record->uid]->profile_tags[] = array('name' => $record->tag, 'score' => $record->weight,
+		  'type' => 'explicit'); 
+	}
+  $result = db_query('SELECT u.uid, u.fbu, a.session_key FROM {fb_user_app} a INNER JOIN {fb_user} u ON a.fbu = u.fbu WHERE uid IN (:uids)',
+    array(':uids' => array_keys($users)));
+  foreach ($result as $record) {
+    $users[$record->uid]->fbu = $record->fbu;
+    //$users[$record->uid]->access_token = $record->session_key;
+    $connections = array('likes', 'movies', 'music');
+    $first = TRUE;
+    foreach ($connections as $connection) {
+      $test = drupal_http_request('https://graph.facebook.com/' . $record->fbu . '/' . $connection . '?access_token=' . $record->session_key);
+      if ($test->code == 200) {
+        $data = json_decode($test->data);
+        foreach ($data->data as $like) {
+          $key = "fb_{$connection}";
+          $users[$record->uid]->{$key}[] = $like->name;
+					if ($first) {
+						// if first, drop all profile tags from recommender input
+  				  _kendra_saracen_save_recommend($record->uid, NULL, 'profile', $like->name, TRUE, $like->id);
+					} else {	
+  				  _kendra_saracen_save_recommend($record->uid, NULL, 'profile', $like->name, FALSE, $like->id);
+					}
+					$first = FALSE;
+					_kendra_saracen_sparql_util('userFb', $key, url('user/' . $record->uid, array('absolute' => TRUE)), $users[$record->uid]->{$key});
+        }
+      } else {
+        if (isset($test->data)) {
+          $data = json_decode($test->data);
+          $users[$record->uid]->fb_error[$connection] = $data->error->message;
+          // $users[$record->uid]->fb_error_debug[$connection] = print_r($test, TRUE);
+        } else {
+          $users[$record->uid]->fb_error[$connection] = print_r($test, TRUE);
+        }
+      } 
+    }
+  }
+}
+
 
 function kendra_social_services_permission() {
 	return array(
@@ -22,5 +95,29 @@ function kendra_social_services_permission() {
  */
 function kendra_social_services_services_resources() {
 	$resources = kendra_social_services_services_get_mappings();
+unset($resources['mediaItems']);
 	return $resources;
 }
+
+
+function kendra_social_services_services_resources_controller_post_processing_alter(&$services) {
+  $services['user/retrieve']['args'][0]['type'] = 'string';
+  $services['user/retrieve']['access callback'] = '_kss_user_retrieve_access_check';
+  $services['user/retrieve']['callback'] = '_kss_user_retrieve_callback';
+}
+
+function _kss_user_retrieve_access_check($op = 'view', $args = array()) {
+	if ($args[0] == 'me') { 
+	  return TRUE; 
+	} else {
+	  return _user_resource_access($op, $args);
+	}
+}
+function _kss_user_retrieve_callback($uid) {
+	if ($uid == 'me') {
+		global $user;
+		$uid = $user->uid;
+	}
+	return _user_resource_retrieve($uid);
+}
+

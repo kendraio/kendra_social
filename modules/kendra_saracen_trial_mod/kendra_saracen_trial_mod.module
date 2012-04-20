@@ -4,6 +4,7 @@ because it had same name as install profile. This code needs further refactoring
 
 
 
+
 // utility function to put data into recommender input table
 function _kendra_saracen_save_recommend($uid = NULL, $nid = NULL, $type = 'rating', $value, $drop = TRUE, $extid = NULL, $source = 'explicit') {
   if ($drop) {
@@ -212,6 +213,7 @@ function _kendra_saracen_trial_update_mediaitem($id, $data) {
 function _kendra_saracen_trial_register_mediaitem($data = NULL) {
 
   /* TODO: refactor this mess! */
+
 
 
   global $user;
@@ -693,8 +695,9 @@ function kendra_saracen_trial_mod_services_resources() {
   );
 }
 
-function _kendra_saracen_trial_search_content($query = '', $type = '', $filter = '', $sort = '') {
-  return compact('query', 'type', 'filter', 'sort');
+function _kendra_saracen_trial_search_content($query = NULL, $type = NULL, $filter = NULL, $sort = NULL) {
+  $output = compact('query', 'type', 'filter', 'sort');
+  return $output;
 }
 
 function kendra_saracen_trial_mod_services_resources_controller_post_processing_alter(&$services) {

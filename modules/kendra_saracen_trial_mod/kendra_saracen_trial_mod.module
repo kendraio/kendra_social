@@ -2,8 +2,9 @@
 /* PLEASE NOTE: I renamed this file from the GitHub version 
 because it had same name as install profile. This code needs further refactoring */
 
-
-
+function kendra_saracen_init() {
+    drupal_add_css('#header {background-color:#323D77;background-image:none;}',array('type'=>'inline'));
+}
 
 // utility function to put data into recommender input table
 function _kendra_saracen_save_recommend($uid = NULL, $nid = NULL, $type = 'rating', $value, $drop = TRUE, $extid = NULL, $source = 'explicit') {

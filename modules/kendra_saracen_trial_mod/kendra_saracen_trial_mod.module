@@ -3,6 +3,7 @@
 because it had same name as install profile. This code needs further refactoring */
 
 
+
 // utility function to put data into recommender input table
 function _kendra_saracen_save_recommend($uid = NULL, $nid = NULL, $type = 'rating', $value, $drop = TRUE, $extid = NULL, $source = 'explicit') {
   if ($drop) {
@@ -188,13 +189,13 @@ function _kendra_saracen_trial_get_mediaitem($id) {
     $annotationquery = new EntityFieldQuery();
     $annotations = $annotationquery->entityCondition('entity_type', 'node')->entityCondition('bundle', 'annotation')->fieldCondition('field_annotation_mediaitem', 'value', $node->field_mediaitem_identifier['und'][0]['value'], 'like')->execute();
     if (isset($annotations['node'])) {
-        foreach ($annotations['node'] as $annot) {
-          $annot = node_load($annot->nid);
-          $node->annotations[$annot->field_annotation_type['und'][0]['value']]++;
-        }
-        if (isset($node->annotations['Rate'])) {
-          unset($node->annotations['Rate']);
-        }
+      foreach ($annotations['node'] as $annot) {
+        $annot = node_load($annot->nid);
+        $node->annotations[$annot->field_annotation_type['und'][0]['value']]++;
+      }
+      if (isset($node->annotations['Rate'])) {
+        unset($node->annotations['Rate']);
+      }
     }
 
     return $node;
@@ -211,6 +212,7 @@ function _kendra_saracen_trial_update_mediaitem($id, $data) {
 function _kendra_saracen_trial_register_mediaitem($data = NULL) {
 
   /* TODO: refactor this mess! */
+
 
   global $user;
   $op = 'unknown';
@@ -649,39 +651,41 @@ function kendra_saracen_trial_mod_services_resources() {
       ),
     ),
     'search' => array(
-      'index' => array(
-        'help' => 'search content and users',
-        'callback' => '_kendra_saracen_trial_search_content',
-        'access arguments' => array('access content'),
-        'access arguments append' => FALSE,
-        'args' => array(
-          array(
-            'name' => 'query',
-            'type' => 'string',
-            'description' => 'The search query',
-            'source' => 'query',
-            'optional' => TRUE,
-          ),
-          array(
-            'name' => 'type',
-            'type' => 'string',
-            'description' => 'The search type',
-            'source' => 'type',
-            'optional' => TRUE,
-          ),
-          array(
-            'name' => 'filter',
-            'type' => 'string',
-            'description' => 'The search filter',
-            'source' => 'filter',
-            'optional' => TRUE,
-          ),
-          array(
-            'name' => 'sort',
-            'type' => 'string',
-            'description' => 'The search sort',
-            'source' => 'sort',
-            'optional' => TRUE,
+      'operations' => array(
+        'index' => array(
+          'help' => 'search content and users',
+          'callback' => '_kendra_saracen_trial_search_content',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'query',
+              'type' => 'string',
+              'description' => 'The search query',
+              'source' => 'query',
+              'optional' => TRUE,
+            ),
+            array(
+              'name' => 'type',
+              'type' => 'string',
+              'description' => 'The search type',
+              'source' => 'type',
+              'optional' => TRUE,
+            ),
+            array(
+              'name' => 'filter',
+              'type' => 'string',
+              'description' => 'The search filter',
+              'source' => 'filter',
+              'optional' => TRUE,
+            ),
+            array(
+              'name' => 'sort',
+              'type' => 'string',
+              'description' => 'The search sort',
+              'source' => 'sort',
+              'optional' => TRUE,
+            ),
           ),
         ),
       ),

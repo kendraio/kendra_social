@@ -2,7 +2,7 @@
 /* PLEASE NOTE: I renamed this file from the GitHub version 
 because it had same name as install profile. This code needs further refactoring */
 
-function kendra_saracen_init() {
+function kendra_social_init() {
     drupal_add_css('#header {background-color:#323D77;background-image:none;}',array('type'=>'inline'));
 }
 

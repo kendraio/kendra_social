@@ -693,8 +693,8 @@ function kendra_saracen_trial_mod_services_resources() {
   );
 }
 
-function _kendra_saracen_trial_search_content($query, $type, $filter, $sort) {
-  return "search result";
+function _kendra_saracen_trial_search_content($query = '', $type = '', $filter = '', $sort = '') {
+  return compact('query', 'type', 'filter', 'sort');
 }
 
 function kendra_saracen_trial_mod_services_resources_controller_post_processing_alter(&$services) {

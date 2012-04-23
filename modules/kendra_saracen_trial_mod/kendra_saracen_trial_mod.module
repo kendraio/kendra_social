@@ -2,7 +2,9 @@
 /* PLEASE NOTE: I renamed this file from the GitHub version 
 because it had same name as install profile. This code needs further refactoring */
 
-
+function kendra_social_init() {
+    drupal_add_css('#header {background-color:#323D77;background-image:none;}',array('type'=>'inline'));
+}
 
 // utility function to put data into recommender input table
 function _kendra_saracen_save_recommend($uid = NULL, $nid = NULL, $type = 'rating', $value, $drop = TRUE, $extid = NULL, $source = 'explicit') {
@@ -148,7 +150,7 @@ function _kendra_saracen_trial_get_mediaitem($id) {
     // lookup extra properties from sparql
     $store       = sparql_get_store(variable_get('kendra_saracen_mediaitem_store', 'mediaItems'), SPARQL_ENDPOINT);
     $url         = url('node/' . $node->nid, array('absolute' => TRUE));
-    $node->debug = $url;
+    //$node->debug = $url;
     $result      = $store->query("SELECT * WHERE { GRAPH <http://localhost/saracen/saracen/0.2/mediaitems> { <{$url}> ?p ?o . } } ");
     $node->data  = array();
     foreach ($result['result']['rows'] as $row) {
@@ -212,6 +214,7 @@ function _kendra_saracen_trial_update_mediaitem($id, $data) {
 function _kendra_saracen_trial_register_mediaitem($data = NULL) {
 
   /* TODO: refactor this mess! */
+
 
 
   global $user;
@@ -662,28 +665,28 @@ function kendra_saracen_trial_mod_services_resources() {
               'name' => 'query',
               'type' => 'string',
               'description' => 'The search query',
-              'source' => 'query',
+              'source' => array('param' => 'query'),
               'optional' => TRUE,
             ),
             array(
               'name' => 'type',
               'type' => 'string',
               'description' => 'The search type',
-              'source' => 'type',
+              'source' => array('param' => 'type'),
               'optional' => TRUE,
             ),
             array(
               'name' => 'filter',
               'type' => 'string',
               'description' => 'The search filter',
-              'source' => 'filter',
+              'source' => array('param' => 'filter'),
               'optional' => TRUE,
             ),
             array(
               'name' => 'sort',
               'type' => 'string',
               'description' => 'The search sort',
-              'source' => 'sort',
+              'source' => array('param' => 'sort'),
               'optional' => TRUE,
             ),
           ),
@@ -693,8 +696,9 @@ function kendra_saracen_trial_mod_services_resources() {
   );
 }
 
-function _kendra_saracen_trial_search_content($query, $type, $filter, $sort) {
-  return "search result";
+function _kendra_saracen_trial_search_content($query = NULL, $type = NULL, $filter = NULL, $sort = NULL) {
+  $output = compact('query', 'type', 'filter', 'sort');
+  return $output;
 }
 
 function kendra_saracen_trial_mod_services_resources_controller_post_processing_alter(&$services) {

@@ -150,7 +150,7 @@ function _kendra_saracen_trial_get_mediaitem($id) {
     // lookup extra properties from sparql
     $store       = sparql_get_store(variable_get('kendra_saracen_mediaitem_store', 'mediaItems'), SPARQL_ENDPOINT);
     $url         = url('node/' . $node->nid, array('absolute' => TRUE));
-    $node->debug = $url;
+    //$node->debug = $url;
     $result      = $store->query("SELECT * WHERE { GRAPH <http://localhost/saracen/saracen/0.2/mediaitems> { <{$url}> ?p ?o . } } ");
     $node->data  = array();
     foreach ($result['result']['rows'] as $row) {

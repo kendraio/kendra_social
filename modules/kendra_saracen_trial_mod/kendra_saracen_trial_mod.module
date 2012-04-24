@@ -765,7 +765,6 @@ function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $s
        ORDER BY weight DESC, time DESC LIMIT %s, %s
        ", $uid, $page, $page_size);
        
-   return $sql;
   $result = db_query($sql);
 
   $uids = array();

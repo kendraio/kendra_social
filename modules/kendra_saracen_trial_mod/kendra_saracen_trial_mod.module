@@ -820,10 +820,7 @@ function _kendra_saracen_trial_search_users($query = NULL, $filter = NULL, $sort
   // Invoke the search hook to generate results
   // @todo incorporate $safe_sort, $safe_filter
   $results = module_invoke('user', 'search_execute', $safe_query);
-  if ($results && is_array($results) && count($results)) {
-    return $results;
-  }
-  return services_error(t('Search returned no results.'), 401);
+  return $results;
 }
 
 /**
@@ -837,17 +834,7 @@ function _kendra_saracen_trial_search_content($query = NULL, $filter = NULL, $so
 
   // Invoke the search hook to generate results.
   $results = module_invoke('node', 'search_execute', $query);
-  if ($results && is_array($results) && count($results)) {
-    foreach ($results as & $result) {
-      // The 'date' attribute returned by node_search_execute() represents the
-      // node's 'updated' timestamp. Also add the 'created' timestamp.
-      $result['created'] = $result['node']->created;
-
-      $result['node'] = services_node_load($result['node']);
-    }
-    return $results;
-  }
-  return services_error(t('Search returned no results.'), 404);
+  return $results;
 }
 
 function kendra_saracen_trial_mod_services_resources_controller_post_processing_alter(&$services) {

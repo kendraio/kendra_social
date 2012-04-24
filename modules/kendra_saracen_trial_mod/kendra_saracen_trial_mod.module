@@ -1,9 +1,8 @@
 <?php
 /* PLEASE NOTE: I renamed this file from the GitHub version 
 because it had same name as install profile. This code needs further refactoring */
-
 function kendra_social_init() {
-    drupal_add_css('#header {background-color:#323D77;background-image:none;}',array('type'=>'inline'));
+  drupal_add_css('#header {background-color:#323D77;background-image:none;}', array('type' => 'inline'));
 }
 
 // utility function to put data into recommender input table
@@ -214,6 +213,8 @@ function _kendra_saracen_trial_update_mediaitem($id, $data) {
 function _kendra_saracen_trial_register_mediaitem($data = NULL) {
 
   /* TODO: refactor this mess! */
+
+
 
 
 
@@ -444,13 +445,13 @@ function _kendra_saracen_trial_get_annotations($id) {
   //return $id;
   $query       = new EntityFieldQuery();
   $annotations = $query->entityCondition('entity_type', 'node')->entityCondition('bundle', 'annotation')->fieldCondition('field_annotation_mediaitem', 'value', $id, 'like')->execute();
-  $output      = array();
+  $results     = array();
   if (isset($annotations['node'])) {
     foreach ($annotations['node'] as $node) {
-      $output[] = node_load($node->nid);
+      $results[] = node_load($node->nid);
     }
   }
-  return $output;
+  return $results;
 }
 
 function _kendra_saracen_trial_list_mediaitem($page = 0, $page_size = 10) {
@@ -463,11 +464,11 @@ function _kendra_saracen_trial_list_mediaitem($page = 0, $page_size = 10) {
   //watchdog('d', "page1 {$page1} page2 {$page2}");
   // change to entity query
   $result = db_query("SELECT nid FROM {node} WHERE type = 'mediaitem' AND status = 1 ORDER BY changed DESC LIMIT {$page1}, {$page2}");
-  $output = array();
+  $results = array();
   foreach ($result as $node) {
-    $output[] = _kendra_saracen_trial_get_mediaitem($node->nid);
+    $results[] = _kendra_saracen_trial_get_mediaitem($node->nid);
   }
-  return $output;
+  return $results;
 }
 
 function _kendra_saracen_trial_temp_callback() {
@@ -657,22 +658,22 @@ function kendra_saracen_trial_mod_services_resources() {
       'operations' => array(
         'index' => array(
           'help' => 'search content and users',
-          'callback' => '_kendra_saracen_trial_search_content',
+          'callback' => '_kendra_saracen_trial_search_general',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
-            array(
-              'name' => 'query',
-              'type' => 'string',
-              'description' => 'The search query',
-              'source' => array('param' => 'query'),
-              'optional' => TRUE,
-            ),
             array(
               'name' => 'type',
               'type' => 'string',
               'description' => 'The search type',
               'source' => array('param' => 'type'),
+              'optional' => TRUE,
+            ),
+            array(
+              'name' => 'query',
+              'type' => 'string',
+              'description' => 'The search query',
+              'source' => array('param' => 'query'),
               'optional' => TRUE,
             ),
             array(
@@ -689,6 +690,22 @@ function kendra_saracen_trial_mod_services_resources() {
               'source' => array('param' => 'sort'),
               'optional' => TRUE,
             ),
+            array(
+              'name' => 'page',
+              'optional' => TRUE,
+              'type' => 'int',
+              'description' => 'zero-indexed page of results requested',
+              'default_value' => 0,
+              'source' => array('param' => 'page'),
+            ),
+            array(
+              'name' => 'page_size',
+              'optional' => TRUE,
+              'type' => 'int',
+              'description' => 'size of page',
+              'default_value' => 10,
+              'source' => array('param' => 'page_size'),
+            ),
           ),
         ),
       ),
@@ -696,9 +713,125 @@ function kendra_saracen_trial_mod_services_resources() {
   );
 }
 
-function _kendra_saracen_trial_search_content($query = NULL, $type = NULL, $filter = NULL, $sort = NULL) {
-  $output = compact('query', 'type', 'filter', 'sort');
-  return $output;
+function _kendra_saracen_trial_search_general($type = NULL, $query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
+  $results = array();
+  switch (strtolower($type)) {
+    case 'mediaitem':
+      if (empty($query)) {
+        $results = _kendra_saracen_trial_recommend_content($query, $filter, $sort, $page, $page_size);
+      }
+      else {
+        $results = _kendra_saracen_trial_search_content($query, $filter, $sort, $page, $page_size);
+      }
+      break;
+
+    case 'user':
+      if (empty($query)) {
+        $results = _kendra_saracen_trial_recommend_users($query, $filter, $sort, $page, $page_size);
+      }
+      else {
+        $results = _kendra_saracen_trial_search_users($query, $filter, $sort, $page, $page_size);
+      }
+      break;
+
+    default:
+      // echo input
+      $results = compact('type', 'query', 'filter', 'sort');
+  }
+  return $results;
+}
+
+/**
+ * pull recommended users from `recommender_out_user_to_user` for the current user
+ */
+function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
+  $results     = array();
+  $safe_query  = check_plain($query);
+  $safe_sort   = check_plain($sort);
+  $safe_filter = check_plain($filter);
+
+  global $user;
+  $uid = $user->uid;
+
+  $sql = sprintf("SELECT users.name, recommended_uid, weight, source, time FROM {recommender_out_user_to_user}
+       INNER JOIN users ON users.uid=recommended_uid
+       WHERE uid = %d and status = 1 
+       ORDER BY weight DESC, time DESC LIMIT %s, %s
+       ", $uid, $page, $page_size);
+  $result = db_query($sql);
+
+  $uids = array();
+  
+  foreach ($result as $node) {
+    $uids[] = $node->recommended_uid;
+  }
+  
+  $results = user_load_multiple($uids);
+
+  return $results;
+}
+
+/**
+ * pull recommended content from `recommender_out_user_to_item` for the current user
+ */
+function _kendra_saracen_trial_recommend_content($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
+  $results     = array();
+  $safe_query  = check_plain($query);
+  $safe_sort   = check_plain($sort);
+  $safe_filter = check_plain($filter);
+
+  // @FIXME = similar nid
+  $nid    = 0;
+  $sql    = sprintf("SELECT recommended_nid, weight, source, time FROM {recommender_out_user_to_item} WHERE nid = %d ORDER BY weight DESC, time DESC LIMIT %s, %s", $nid, $page, $page_size);
+  $result = db_query($sql);
+
+  foreach ($result as $node) {
+    $results[] = node_load($node->recommended_nid);
+  }
+
+  return $results;
+}
+
+/**
+ * search users
+ */
+function _kendra_saracen_trial_search_users($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
+  $results     = array();
+  $safe_query  = check_plain($query);
+  $safe_sort   = check_plain($sort);
+  $safe_filter = check_plain($filter);
+
+  // Invoke the search hook to generate results
+  // @todo incorporate $safe_sort, $safe_filter
+  $results = module_invoke('user', 'search_execute', $safe_query);
+  if ($results && is_array($results) && count($results)) {
+    return $results;
+  }
+  return services_error(t('Search returned no results.'), 401);
+}
+
+/**
+ * search content
+ */
+function _kendra_saracen_trial_search_content($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
+  $results     = array();
+  $safe_query  = check_plain($query);
+  $safe_sort   = check_plain($sort);
+  $safe_filter = check_plain($filter);
+
+  // Invoke the search hook to generate results.
+  $results = module_invoke('node', 'search_execute', $query);
+  if ($results && is_array($results) && count($results)) {
+    foreach ($results as & $result) {
+      // The 'date' attribute returned by node_search_execute() represents the
+      // node's 'updated' timestamp. Also add the 'created' timestamp.
+      $result['created'] = $result['node']->created;
+
+      $result['node'] = services_node_load($result['node']);
+    }
+    return $results;
+  }
+  return services_error(t('Search returned no results.'), 404);
 }
 
 function kendra_saracen_trial_mod_services_resources_controller_post_processing_alter(&$services) {

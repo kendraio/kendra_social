@@ -382,10 +382,10 @@ function _kendra_saracen_trial_annotate_mediaitem($id, $data) {
   if (isset($data['derivative'])) {
     $node->field_annotation_derivative['und'][0]['value'] = $data['derivative'];
   }
-  if (isset($data['start'])) {
+  if (isset($data['start']) && $data['start'] > 0) {
     $node->field_annotation_start['und'][0]['value'] = $data['start'];
   }
-  if (isset($data['length'])) {
+  if (isset($data['length']) && $data['length'] > 0) {
     $node->field_annotation_length['und'][0]['value'] = $data['length'];
   }
   if (isset($data['type'])) {
@@ -752,14 +752,19 @@ function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $s
   $safe_sort   = check_plain($sort);
   $safe_filter = check_plain($filter);
 
+  //@FIXME: override paging vars, that appear to be NULL
+  $page =   0;
+  $page_size =  5;
+  
   global $user;
   $uid = $user->uid;
 
   $sql = sprintf("SELECT users.name, recommended_uid, weight, source, time FROM {recommender_out_user_to_user}
-       INNER JOIN users ON users.uid=recommended_uid
-       WHERE uid = %d and status = 1 
+       INNER JOIN users ON users.uid=recommender_out_user_to_user.uid                                                                                                                                                                      
+       WHERE users.uid = %d and status = 1 
        ORDER BY weight DESC, time DESC LIMIT %s, %s
        ", $uid, $page, $page_size);
+       
   $result = db_query($sql);
 
   $uids = array();
@@ -782,9 +787,18 @@ function _kendra_saracen_trial_recommend_content($query = NULL, $filter = NULL, 
   $safe_sort   = check_plain($sort);
   $safe_filter = check_plain($filter);
 
-  // @FIXME = similar nid
-  $nid    = 0;
-  $sql    = sprintf("SELECT recommended_nid, weight, source, time FROM {recommender_out_user_to_item} WHERE nid = %d ORDER BY weight DESC, time DESC LIMIT %s, %s", $nid, $page, $page_size);
+  //@FIXME: override paging vars, that appear to be NULL
+  $page =   0;
+  $page_size =  5;
+
+  global $user;
+  $uid = $user->uid;
+
+  $sql    = sprintf("SELECT recommended_nid, weight, source, time FROM {recommender_out_user_to_item}
+      WHERE uid = %d ORDER BY weight
+      DESC, time DESC LIMIT %s, %s
+      ", $uid, $page, $page_size);
+
   $result = db_query($sql);
 
   foreach ($result as $node) {

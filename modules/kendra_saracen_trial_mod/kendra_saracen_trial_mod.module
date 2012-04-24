@@ -325,8 +325,10 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
   if (isset($data['codec']) && isset($data['quality'])) {
     $query = new EntityFieldQuery();
     $derivative = $query->entityCondition('entity_type', 'node')->entityCondition('bundle', 'derivative')->fieldCondition('field_derivative_quality', 'value', $data['quality'], 'like')->fieldCondition('field_derivative_codec', 'value', $data['codec'], 'like')->fieldCondition('field_derivative_uuid', 'value', $data['identifier'], 'like')->execute();
-    if (isset($derivative['node'][0])) {
-      $derivative = node_load($derivative['node'][0]);
+    //watchdog('debug derivative', '<pre>' . print_r($derivative, TRUE) . '</pre>');
+    if (isset($derivative['node']) && count($derivative['node'] > 0)) {
+	    $derivative_nid = array_keys($derivative['node']);
+      $derivative = node_load($derivative_nid[0]);
     }
     else {
       $derivative = new StdClass();

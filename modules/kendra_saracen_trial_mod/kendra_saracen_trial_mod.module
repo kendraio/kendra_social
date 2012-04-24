@@ -382,10 +382,10 @@ function _kendra_saracen_trial_annotate_mediaitem($id, $data) {
   if (isset($data['derivative'])) {
     $node->field_annotation_derivative['und'][0]['value'] = $data['derivative'];
   }
-  if (isset($data['start'])) {
+  if (isset($data['start']) && $data['start'] > 0) {
     $node->field_annotation_start['und'][0]['value'] = $data['start'];
   }
-  if (isset($data['length'])) {
+  if (isset($data['length']) && $data['length'] > 0) {
     $node->field_annotation_length['und'][0]['value'] = $data['length'];
   }
   if (isset($data['type'])) {

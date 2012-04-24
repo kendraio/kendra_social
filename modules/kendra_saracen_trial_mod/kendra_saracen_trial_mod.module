@@ -327,6 +327,7 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
     $derivative = $query->entityCondition('entity_type', 'node')->entityCondition('bundle', 'derivative')->fieldCondition('field_derivative_quality', 'value', $data['quality'], 'like')->fieldCondition('field_derivative_codec', 'value', $data['codec'], 'like')->fieldCondition('field_derivative_uuid', 'value', $data['identifier'], 'like')->execute();
     if (isset($derivative['node'][0])) {
       $derivative = node_load($derivative['node'][0]);
+      watchdog('debug', '<pre>' . print_r($derivative, TRUE) . '</pre>');
     }
     else {
       $derivative = new StdClass();

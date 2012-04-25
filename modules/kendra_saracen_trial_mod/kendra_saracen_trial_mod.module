@@ -754,7 +754,7 @@ function _kendra_saracen_trial_search_general($type = NULL, $query = NULL, $filt
 /**
  * pull recommended users from `recommender_out_user_to_user` for the current user
  */
-function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
+function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 3) {
   $results     = array();
   $safe_query  = check_plain($query);
   $safe_sort   = check_plain($sort);
@@ -762,7 +762,7 @@ function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $s
 
   //@FIXME: override paging vars, that appear to be NULL
   $page =   0;
-  $page_size =  5;
+  $page_size = 3;
   
   global $user;
   $uid = $user->uid;
@@ -789,7 +789,7 @@ function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $s
 /**
  * pull recommended content from `recommender_out_user_to_item` for the current user
  */
-function _kendra_saracen_trial_recommend_content($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
+function _kendra_saracen_trial_recommend_content($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 3) {
   $results     = array();
   $safe_query  = check_plain($query);
   $safe_sort   = check_plain($sort);
@@ -797,7 +797,7 @@ function _kendra_saracen_trial_recommend_content($query = NULL, $filter = NULL, 
 
   //@FIXME: override paging vars, that appear to be NULL
   $page =   0;
-  $page_size =  5;
+  $page_size =  3;
 
   global $user;
   $uid = $user->uid;

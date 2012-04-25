@@ -1,0 +1,3 @@
+name = Kendra Social Albums
+description = API calls for dealing with Albums
+core = 7.x

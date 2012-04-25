@@ -719,6 +719,7 @@ function _kendra_saracen_trial_search_general($type = NULL, $query = NULL, $filt
   $results = array();
   switch (strtolower($type)) {
     case 'mediaitem':
+    case 'mediaitems':
       if (empty($query)) {
         $results = _kendra_saracen_trial_recommend_content($query, $filter, $sort, $page, $page_size);
       }
@@ -833,7 +834,7 @@ function _kendra_saracen_trial_search_content($query = NULL, $filter = NULL, $so
   $safe_filter = check_plain($filter);
 
   // Invoke the search hook to generate results.
-  $results = module_invoke('node', 'search_execute', $query);
+  $results = module_invoke('node', 'search_execute', $safe_query);
   return $results;
 }
 

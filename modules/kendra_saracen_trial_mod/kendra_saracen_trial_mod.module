@@ -377,7 +377,13 @@ function _kendra_saracen_trial_annotate_mediaitem($id, $data) {
   if (!isset($org->nid)) {
     return array('status' => 'error', 'message' => 'unknown identifier');
   }
-  if (strtolower($data['type']) == 'rate') {
+  if (!isset($data['type'])) {
+    return array('status' => 'error', 'message' => 'required attribute "type" is missing');
+  }
+  // force 'type' attribute to Start Case
+  $data['type'] = ucwords($data['type']);
+  
+  if ($data['type'] == 'rate' || $data['type'] == 'rating') {
     return array('status' => 'error', 'message' => 'use the dedicated rating API resource');
   }
   $node = new StdClass();
@@ -767,7 +773,7 @@ function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $s
   global $user;
   $uid = $user->uid;
 
-  $sql = sprintf("SELECT users.name, recommended_uid, weight, source, time FROM {recommender_out_user_to_user}
+  $sql = sprintf("SELECT users.name, recommended_uid FROM {recommender_out_user_to_user}
        INNER JOIN users ON users.uid=recommender_out_user_to_user.uid                                                                                                                                                                      
        WHERE users.uid = %d and status = 1 
        ORDER BY weight DESC, time DESC LIMIT %s, %s
@@ -802,8 +808,9 @@ function _kendra_saracen_trial_recommend_content($query = NULL, $filter = NULL, 
   global $user;
   $uid = $user->uid;
 
-  $sql    = sprintf("SELECT recommended_nid, weight, source, time FROM {recommender_out_user_to_item}
-      WHERE uid = %d ORDER BY weight
+  $sql    = sprintf("SELECT DISTINCT recommended_nid FROM {recommender_out_user_to_item}
+      WHERE uid = %d AND NOT ISNULL(recommended_nid)
+      ORDER BY weight
       DESC, time DESC LIMIT %s, %s
       ", $uid, $page, $page_size);
 

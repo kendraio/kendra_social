@@ -844,9 +844,13 @@ function _kendra_saracen_trial_search_users($query = NULL, $filter = NULL, $sort
  */
 function _kendra_saracen_trial_search_content($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
   $results     = array();
+  $search_allowed_types = array('mediaitem');
   $safe_query  = check_plain($query);
   $safe_sort   = check_plain($sort);
   $safe_filter = check_plain($filter);
+  
+  // restrict content types in search results
+  $safe_query .= ' ' . join(',', $search_allowed_types);
 
   // Invoke the search hook to generate results.
   $results = module_invoke('node', 'search_execute', $safe_query);

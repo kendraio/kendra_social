@@ -1,7 +1,7 @@
-diff --git a/servers/rest_server/rest_server.module b/servers/rest_server/rest_server.module
+diff --git servers/rest_server/rest_server.module servers/rest_server/rest_server.module
 index 6f23fac..5f96237 100755
---- a/servers/rest_server/rest_server.module
-+++ b/servers/rest_server/rest_server.module
+--- servers/rest_server/rest_server.module
++++ servers/rest_server/rest_server.module
 @@ -228,6 +228,6 @@ function _rest_server_get_spyc_location() {
    }
  

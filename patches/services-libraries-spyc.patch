@@ -1,12 +1,3 @@
-From 10f2c868beb572709f803abe595511becf1780ed Mon Sep 17 00:00:00 2001
-From: Hudson Continuous Integration Robot <team@kendra.org.uk>
-Date: Wed, 23 May 2012 13:45:04 +0100
-Subject: [PATCH] attempted fix for issue #1355952
-
----
- servers/rest_server/rest_server.module |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
 diff --git a/servers/rest_server/rest_server.module b/servers/rest_server/rest_server.module
 index 6f23fac..5f96237 100755
 --- a/servers/rest_server/rest_server.module
@@ -19,6 +10,3 @@ index 6f23fac..5f96237 100755
 +  $services_spyc_loc = dirname(__FILE__) . '/lib/spyc/spyc.php';
    return file_exists($services_spyc_loc) ? $services_spyc_loc : false;
  }
--- 
-1.7.0.4
-

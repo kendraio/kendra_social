@@ -160,7 +160,7 @@ libraries[facebook-php-sdk][directory_name] = facebook-php-sdk
 libraries[spyc][download][url] = http://spyc.googlecode.com/svn/trunk/spyc.php
 libraries[spyc][download][type] = file
 ;libraries[spyc][directory_name] = spyc
-libraries[spyc][destination] = modules/contrib/services/servers/rest_server/lib
+libraries[spyc][destination] = libraries
 
 ; custom libraries for Kendra Social
 libraries[kendra_social_test][download][[type] = file

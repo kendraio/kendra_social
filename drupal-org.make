@@ -89,7 +89,7 @@ projects[oauth][version] = 3.0-alpha1
 
 ; services
 projects[services][subdir] = contrib 
-projects[services][version] = 3.x
+projects[services][version] = 3.x-dev
 ;projects[services][download][type] = git
 ;projects[services][download][url] = http://git.drupal.org/project/services.git
 ;projects[services][download][url] = https://github.com/kendrainitiative/drupal_services.git

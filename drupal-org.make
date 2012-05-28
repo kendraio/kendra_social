@@ -89,7 +89,7 @@ projects[oauth][version] = 3.0-alpha1
 
 ; services
 projects[services][subdir] = contrib 
-projects[services][version] = 3.x
+projects[services][version] = 3.x-dev
 ;projects[services][download][type] = git
 ;projects[services][download][url] = http://git.drupal.org/project/services.git
 ;projects[services][download][url] = https://github.com/kendrainitiative/drupal_services.git
@@ -129,7 +129,7 @@ projects[rubik][patch][999582] = http://drupal.org/files/issues/999582-1_notices
 projects[markdown][patch][684554] = http://drupal.org/files/issues/markdown-684554.patch
 
 ;projects[services][patch][] = "https://raw.github.com/kendrainitiative/kendra_social/master/patches/services-resource-access-defaults.patch"
-projects[services][patch][] = "https://raw.github.com/kendrainitiative/kendra_social/master/patches/services-libraries-spyc.patch"
+projects[services][patch][1355952][url] = "https://raw.github.com/kendrainitiative/kendra_social/master/patches/services-libraries-spyc.patch"
 
 ; -------------
 ; Libraries

@@ -13,7 +13,7 @@ include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_servic
 
 // This function adds the recommender word cloud into user profiles when loading them
 function kendra_social_services_user_load($users) {
-	$recommendation = db_query("SELECT * FROM {recommender_out_tags} t WHERE t.uid IN (:uids)", array(':uids' => array_keys($users)));
+	$recommendation = db_query("SELECT * FROM {kendra_match_recommender_out_tags} t WHERE t.uid IN (:uids)", array(':uids' => array_keys($users)));
 	foreach ($recommendation as $record) {
 		$users[$record->uid]->profile_tags[] = array('name' => $record->tag, 'score' => $record->weight, 'type' => 'explicit');
 	}
@@ -38,7 +38,7 @@ function kendra_social_services_user_load($users) {
 
 // old hacked version of user profile load hook
 function kendra_social_services_user_load_noqueue($users) {
-	$recommend = db_query("SELECT * FROM {recommender_out_tags} t WHERE t.uid IN (:uids)", 
+	$recommend = db_query("SELECT * FROM {kendra_match_recommender_out_tags} t WHERE t.uid IN (:uids)", 
 	  array(':uids' => array_keys($users)));
 	foreach ($recommend as $record) {
 		$users[$record->uid]->profile_tags[] = array('name' => $record->tag, 'score' => $record->weight,

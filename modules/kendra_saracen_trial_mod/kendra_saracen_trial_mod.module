@@ -1,13 +1,13 @@
 <?php
 /* PLEASE NOTE: I renamed this file from the GitHub version 
 because it had same name as install profile. This code needs further refactoring */
-function kendra_social_init() {
+function kendra_saracen_trial_init() {
   drupal_add_css('#header {background-color:#323D77;background-image:none;}', array('type' => 'inline'));
 }
 
-// Delete recommender_in_values when node is deleted:
+// Delete kendra_match_recommender_in_values when node is deleted:
 function kendra_saracen_trial_node_delete($node) {
-  db_delete('recommender_in_values')
+  db_delete('kendra_match_recommender_in_values')
     ->condition('nid', $node->nid)
     ->execute();
 }
@@ -15,7 +15,7 @@ function kendra_saracen_trial_node_delete($node) {
 // utility function to put data into recommender input table
 function _kendra_saracen_save_recommend($uid = NULL, $nid = NULL, $type = 'rating', $value, $drop = TRUE, $extid = NULL, $source = 'explicit') {
   if ($drop) {
-    db_delete('recommender_in_values')->condition('nid', $nid)->condition('uid', $uid)->condition('type', $type)->execute();
+    db_delete('kendra_match_recommender_in_values')->condition('nid', $nid)->condition('uid', $uid)->condition('type', $type)->execute();
   }
   $fvalue = NULL;
   $svalue = NULL;
@@ -28,7 +28,7 @@ function _kendra_saracen_save_recommend($uid = NULL, $nid = NULL, $type = 'ratin
   if ($type == 'vote' && $value == 0) {
     return;
   }
-  $id = db_insert('recommender_in_values')->fields(array(
+  $id = db_insert('kendra_match_recommender_in_values')->fields(array(
       'nid' => $nid,
       'uid' => $uid,
       'type' => $type,

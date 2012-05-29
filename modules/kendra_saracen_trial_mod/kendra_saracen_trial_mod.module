@@ -241,7 +241,7 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
 
   // Load the node if it exists, or create a new one
   $result = db_query("SELECT entity_id FROM {field_data_field_mediaitem_identifier} 
-    WHERE field_mediaitem_identifier_value=':identifier' LIMIT 1", array(':identifier' => $data['identifier']));
+    WHERE field_mediaitem_identifier_value=:identifier LIMIT 1", array(':identifier' => $data['identifier']));
   $nid = NULL;
   foreach ($result as $record) {
     if (isset($record->entity_id)) {

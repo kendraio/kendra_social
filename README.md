@@ -1,1 +1,11 @@
-Kendra Social is a Drupal installation profile which contains pretty much all you need to set up a hub for social networking.
+# Kendra Social
+
+Kendra Social is a [Drupal 7](http://drupal.org) [installation profile](http://drupal.org/documentation/build/distributions) which contains pretty much all you need to set up a hub for social networking.
+
+## Overview
+
+Abstracting the parameters for integrating with various social network APIs, the Kendra Social subsystem provides a common interface for communicating with social networking services. Modular abstraction of methods to import and post content to various social networking APIs allows for a flexible base architecture that can be expanded to support future social networking platforms and functionality. Imported data from social network become part of a user’s profile. Internal mappings are therefore required in order to relate profile fields between different the various schemes employed on different social networks. Custom modules manage the service resource definitions, permissions integration, and user request brokering as well as implementation of all the various methods required for Terminal usage and OpenSocial compatibility.
+
+The profile import process uses an intermediate format (RDF) to perform this mapping, where the mappings are defined as configuration parameters to Kendra Social and may be changed at runtime. The choice to create a prototype implementation of the API for user and media profile storage using Drupal 7 core, running on a standard web server stack of Linux, Apache, MySQL and PHP (LAMP) has allowed for rapid development of custom modules to implement project requirements. The advanced Drupal “core” framework and large variety of contributed modules collectively implement many common functions such as session management, OAuth-based authentication and authorisation, and JSON and XML parsing. Leveraging this robust platform allows developers to shift efforts from meeting fundamental SOA-related requirements to project-specific functionality.
+
+Kendra API Builder is free software developed by Kendra Foundation in collaboration with SARACEN and co-funded by the European Union under the Seventh Framework programme. Sample code and the validation tool will be released under the GNU General Public License. Additionally, Kendra will Creative Commons license all of the API documentation, so users will be welcome to reuse and remix as appropriate.

@@ -241,14 +241,14 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
 
   // Load the node if it exists, or create a new one
   $result = db_query("SELECT entity_id FROM {field_data_field_mediaitem_identifier} 
-    WHERE field_mediaitem_identifier_value=:identifier LIMIT 1", array(':identifier' => $data['identifier']));
+    WHERE field_mediaitem_identifier_value=':identifier' LIMIT 1", array(':identifier' => $data['identifier']));
   $nid = NULL;
   foreach ($result as $record) {
     if (isset($record->entity_id)) {
       $nid = $record->entity_id;
     }
   }
-  if (isset($nid)) {
+  if (!empty($nid)) {
     $op = 'updated';
     $node = node_load($nid);
     if (!node_access('update', $node, $user)) {
@@ -260,7 +260,6 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
     $node         = new StdClass();
     $node->type   = 'mediaitem';
     $node->status = 1;
-    $node->title  = $data['title'];
     $node->uid    = $user->uid;
     if (isset($data['userid'])) {
       // $node->uid = $data['userid'];
@@ -268,6 +267,9 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
     }
     $node->language = 'und';
   }
+
+  $node->title  = $data['title'];
+
   $node->field_mediaitem_identifier['und'][0]['value'] = $data['identifier'];
   if (isset($data['description'])) {
     $node->field_mediaitem_description['und'][0]['value'] = $data['description'];
@@ -368,7 +370,6 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
 
   // return notification of registered node
   return array('status' => 'OK', 'message' => 'Media item ' . $op, 'identifier' => $data['identifier']);
-  //return 'registered: ' . $data['identifier'];
 }
 
 function _kendra_saracen_trial_annotate_mediaitem($id, $data) {

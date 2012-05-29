@@ -10,8 +10,8 @@
 function kendra_social_profile_default_profile2_type() {
   $items = array();
   $items['facebook'] = entity_import('profile2_type', '{
-    "userCategory" : false,
-    "userView" : false,
+    "userCategory" : true,
+    "userView" : true,
     "type" : "facebook",
     "label" : "Facebook",
     "weight" : "0",
@@ -19,8 +19,8 @@ function kendra_social_profile_default_profile2_type() {
     "rdf_mapping" : []
   }');
   $items['main'] = entity_import('profile2_type', '{
-    "userCategory" : false,
-    "userView" : false,
+    "userCategory" : true,
+    "userView" : true,
     "type" : "main",
     "label" : "Main profile",
     "weight" : "0",

@@ -760,7 +760,7 @@ function _kendra_saracen_trial_search_general($type = NULL, $query = NULL, $filt
 }
 
 /**
- * pull recommended users from `recommender_out_user_to_user` for the current user
+ * pull recommended users from `kendra_match_recommender_out_user_to_user` for the current user
  */
 function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 3) {
   $results     = array();
@@ -775,8 +775,8 @@ function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $s
   global $user;
   $uid = $user->uid;
 
-  $sql = sprintf("SELECT users.name, recommended_uid FROM {recommender_out_user_to_user}
-       INNER JOIN users ON users.uid=recommender_out_user_to_user.uid                                                                                                                                                                      
+  $sql = sprintf("SELECT users.name, recommended_uid FROM {kendra_match_recommender_out_user_to_user}
+       INNER JOIN users ON users.uid=kendra_match_recommender_out_user_to_user.uid                                                                                                                                                                      
        WHERE users.uid = %d and status = 1 
        ORDER BY weight DESC, time DESC LIMIT %s, %s
        ", $uid, $page, $page_size);
@@ -795,7 +795,7 @@ function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $s
 }
 
 /**
- * pull recommended content from `recommender_out_user_to_item` for the current user
+ * pull recommended content from `kendra_match_recommender_out_user_to_item` for the current user
  */
 function _kendra_saracen_trial_recommend_content($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 3) {
   $results     = array();
@@ -810,7 +810,7 @@ function _kendra_saracen_trial_recommend_content($query = NULL, $filter = NULL, 
   global $user;
   $uid = $user->uid;
 
-  $sql    = sprintf("SELECT DISTINCT recommended_nid FROM {recommender_out_user_to_item}
+  $sql    = sprintf("SELECT DISTINCT recommended_nid FROM {kendra_match_recommender_out_user_to_item}
       WHERE uid = %d AND NOT ISNULL(recommended_nid)
       ORDER BY weight
       DESC, time DESC LIMIT %s, %s

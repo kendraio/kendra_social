@@ -167,3 +167,9 @@ libraries[spyc][destination] = libraries
 ; custom libraries for Kendra Social
 libraries[kendra_social_test][download][[type] = file
 libraries[kendra_social_test][download][[url] = https://raw.github.com/jamespadolsey/prettyPrint.js/master/prettyprint.js
+
+; ARC2 libraries for SPARQL
+libraries[arc][download][type]= "git"
+libraries[arc][download][url] = "https://github.com/semsol/arc2.git"
+libraries[arc][directory_name] = "arc"
+libraries[arc][destination] = "libraries"

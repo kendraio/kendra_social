@@ -122,7 +122,7 @@ function _kendra_saracen_sparql_util($store, $graph, $id_url, $data) {
   return $store->query($query);
 }
 
-function _kendra_saracen_trial_lookup_id($id) {
+function _kendra_saracen_trial_mod_lookup_id($id) {
   $result = db_query("SELECT entity_id FROM {field_data_field_mediaitem_identifier} 
     WHERE field_mediaitem_identifier_value=:identifier LIMIT 1", array(':identifier' => $id));
   $nid = 0;
@@ -134,7 +134,7 @@ function _kendra_saracen_trial_lookup_id($id) {
   return $nid;
 }
 
-function _kendra_saracen_trial_get_mediaitem($id) {
+function _kendra_saracen_trial_mod_get_mediaitem($id) {
   //watchdog('d','r');
   // lookup node based on identifier
   $result = db_query("SELECT entity_id FROM {field_data_field_mediaitem_identifier}
@@ -210,12 +210,12 @@ function _kendra_saracen_trial_get_mediaitem($id) {
   //return 'unknown identifier: ' . var_export($id, TRUE);
 }
 
-function _kendra_saracen_trial_update_mediaitem($id, $data) {
+function _kendra_saracen_trial_mod_update_mediaitem($id, $data) {
   $data['identifier'] = $id;
-  return _kendra_saracen_trial_register_mediaitem($data);
+  return _kendra_saracen_trial_mod_register_mediaitem($data);
 }
 
-function _kendra_saracen_trial_register_mediaitem($data = NULL) {
+function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
 
   /* TODO: refactor this mess! */
 
@@ -314,7 +314,7 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
     $tags = split(',', $data['keywords']);
     foreach ($tags as $tag) {
         $tag = trim($tag);
-      _kendra_saracen_trial_tag_mediaitem($data['identifier'], array('tag' => $tag));
+      _kendra_saracen_trial_mod_tag_mediaitem($data['identifier'], array('tag' => $tag));
     }
   }
 
@@ -371,9 +371,9 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
   return array('status' => 'OK', 'message' => 'Media item ' . $op, 'identifier' => $data['identifier']);
 }
 
-function _kendra_saracen_trial_annotate_mediaitem($id, $data) {
+function _kendra_saracen_trial_mod_annotate_mediaitem($id, $data) {
   global $user;
-  $org = node_load(_kendra_saracen_trial_lookup_id($id));
+  $org = node_load(_kendra_saracen_trial_mod_lookup_id($id));
   if (!isset($org->nid)) {
     return array('status' => 'error', 'message' => 'unknown identifier');
   }
@@ -417,9 +417,9 @@ function _kendra_saracen_trial_annotate_mediaitem($id, $data) {
   );
 }
 
-function _kendra_saracen_trial_tag_mediaitem($id, $data) {
+function _kendra_saracen_trial_mod_tag_mediaitem($id, $data) {
   global $user;
-  $node = node_load(_kendra_saracen_trial_lookup_id($id));
+  $node = node_load(_kendra_saracen_trial_mod_lookup_id($id));
   $vid  = array_shift(community_tags_vids_for_node($node));
   $tags = community_tags_flatten(community_tags_get_user_node_tags($user->uid, $node->nid, $vid));
   $tags = array_merge($tags, array($data['tag']));
@@ -429,8 +429,8 @@ function _kendra_saracen_trial_tag_mediaitem($id, $data) {
   return $tags;
 }
 
-function _kendra_saracen_trial_delete_mediaitem($id) {
-  $nid = _kendra_saracen_trial_lookup_id($id);
+function _kendra_saracen_trial_mod_delete_mediaitem($id) {
+  $nid = _kendra_saracen_trial_mod_lookup_id($id);
   $node = node_load($nid);
   global $user;
   if (!isset($node->nid)) {
@@ -444,16 +444,16 @@ function _kendra_saracen_trial_delete_mediaitem($id) {
   return array('status' => 'error', 'message' => 'permission denied');
 }
 
-function _kendra_saracen_trial_rate_mediaitem($id, $data) {
-  $nid = _kendra_saracen_trial_lookup_id($id);
+function _kendra_saracen_trial_mod_rate_mediaitem($id, $data) {
+  $nid = _kendra_saracen_trial_mod_lookup_id($id);
   global $user;
   _kendra_saracen_save_recommend($user->uid, $nid, 'rating', $data['value']);
   return _fivestar_cast_vote('node', $nid, $data['value'], 'vote', $user->uid);
   return func_get_args();
 }
 
-function _kendra_saracen_trial_get_annotations($id) {
-  //$nid = _kendra_saracen_trial_lookup_id($id);
+function _kendra_saracen_trial_mod_get_annotations($id) {
+  //$nid = _kendra_saracen_trial_mod_lookup_id($id);
   //$node = node_load($nid);
   //if (!isset($node->nid)) {
   //	return array('status' => 'error', 'message' => 'unknown identifier');
@@ -470,7 +470,7 @@ function _kendra_saracen_trial_get_annotations($id) {
   return $results;
 }
 
-function _kendra_saracen_trial_list_mediaitem($page = 0, $page_size = 10) {
+function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10) {
   if ($page_size == 0) {
     $page_size = 10;
   }
@@ -482,12 +482,12 @@ function _kendra_saracen_trial_list_mediaitem($page = 0, $page_size = 10) {
   $result = db_query("SELECT nid FROM {node} WHERE type = 'mediaitem' AND status = 1 ORDER BY changed DESC LIMIT {$page1}, {$page2}");
   $results = array();
   foreach ($result as $node) {
-    $results[] = _kendra_saracen_trial_get_mediaitem($node->nid);
+    $results[] = _kendra_saracen_trial_mod_get_mediaitem($node->nid);
   }
   return $results;
 }
 
-function _kendra_saracen_trial_temp_callback() {
+function _kendra_saracen_trial_mod_temp_callback() {
   return TRUE;
 }
 
@@ -497,8 +497,8 @@ function kendra_saracen_trial_mod_services_resources() {
       'targeted_actions' => array(
         'rate' => array(
           'help' => 'Rate a mediaitem',
-          'callback' => '_kendra_saracen_trial_rate_mediaitem',
-          'access callback' => '_kendra_saracen_trial_temp_callback',
+          'callback' => '_kendra_saracen_trial_mod_rate_mediaitem',
+          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -518,8 +518,8 @@ function kendra_saracen_trial_mod_services_resources() {
         ),
         'tag' => array(
           'help' => 'Tag a mediaitem',
-          'callback' => '_kendra_saracen_trial_tag_mediaitem',
-          'access callback' => '_kendra_saracen_trial_temp_callback',
+          'callback' => '_kendra_saracen_trial_mod_tag_mediaitem',
+          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -539,8 +539,8 @@ function kendra_saracen_trial_mod_services_resources() {
         ),
         'annotate' => array(
           'help' => 'User annotation for a mediaitem',
-          'callback' => '_kendra_saracen_trial_annotate_mediaitem',
-          'access callback' => '_kendra_saracen_trial_temp_callback',
+          'callback' => '_kendra_saracen_trial_mod_annotate_mediaitem',
+          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -562,8 +562,8 @@ function kendra_saracen_trial_mod_services_resources() {
       'relationships' => array(
         'annotations' => array(
           'help' => 'returns all annotations for a media item',
-          'access callback' => '_kendra_saracen_trial_temp_callback',
-          'callback' => '_kendra_saracen_trial_get_annotations',
+          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
+          'callback' => '_kendra_saracen_trial_mod_get_annotations',
           'args' => array(
             array(
               'name' => 'id',
@@ -578,8 +578,8 @@ function kendra_saracen_trial_mod_services_resources() {
       'operations' => array(
         'retrieve' => array(
           'help' => 'Retrieves a media item',
-          'callback' => '_kendra_saracen_trial_get_mediaitem',
-          'access callback' => '_kendra_saracen_trial_temp_callback',
+          'callback' => '_kendra_saracen_trial_mod_get_mediaitem',
+          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -594,8 +594,8 @@ function kendra_saracen_trial_mod_services_resources() {
         ),
         'update' => array(
           'help' => 'update a media item',
-          'callback' => '_kendra_saracen_trial_update_mediaitem',
-          'access callback' => '_kendra_saracen_trial_temp_callback',
+          'callback' => '_kendra_saracen_trial_mod_update_mediaitem',
+          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -617,8 +617,8 @@ function kendra_saracen_trial_mod_services_resources() {
         ),
         'delete' => array(
           'help' => 'Deletes a media item',
-          'callback' => '_kendra_saracen_trial_delete_mediaitem',
-          'access callback' => '_kendra_saracen_trial_temp_callback',
+          'callback' => '_kendra_saracen_trial_mod_delete_mediaitem',
+          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -632,7 +632,7 @@ function kendra_saracen_trial_mod_services_resources() {
           ),
         ),
         'index' => array(
-          'callback' => '_kendra_saracen_trial_list_mediaitem',
+          'callback' => '_kendra_saracen_trial_mod_list_mediaitem',
           'access arguments' => array('access content'),
           'args' => array(
             array(
@@ -655,7 +655,7 @@ function kendra_saracen_trial_mod_services_resources() {
         ),
         'create' => array(
           'help' => 'register a media item',
-          'callback' => '_kendra_saracen_trial_register_mediaitem',
+          'callback' => '_kendra_saracen_trial_mod_register_mediaitem',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -674,7 +674,7 @@ function kendra_saracen_trial_mod_services_resources() {
       'operations' => array(
         'index' => array(
           'help' => 'search content and users',
-          'callback' => '_kendra_saracen_trial_search_general',
+          'callback' => '_kendra_saracen_trial_mod_search_general',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -729,25 +729,25 @@ function kendra_saracen_trial_mod_services_resources() {
   );
 }
 
-function _kendra_saracen_trial_search_general($type = NULL, $query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
+function _kendra_saracen_trial_mod_search_general($type = NULL, $query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
   $results = array();
   switch (strtolower($type)) {
     case 'mediaitem':
     case 'mediaitems':
       if (empty($query)) {
-        $results = _kendra_saracen_trial_recommend_content($query, $filter, $sort, $page, $page_size);
+        $results = _kendra_saracen_trial_mod_recommend_content($query, $filter, $sort, $page, $page_size);
       }
       else {
-        $results = _kendra_saracen_trial_search_content($query, $filter, $sort, $page, $page_size);
+        $results = _kendra_saracen_trial_mod_search_content($query, $filter, $sort, $page, $page_size);
       }
       break;
 
     case 'user':
       if (empty($query)) {
-        $results = _kendra_saracen_trial_recommend_users($query, $filter, $sort, $page, $page_size);
+        $results = _kendra_saracen_trial_mod_recommend_users($query, $filter, $sort, $page, $page_size);
       }
       else {
-        $results = _kendra_saracen_trial_search_users($query, $filter, $sort, $page, $page_size);
+        $results = _kendra_saracen_trial_mod_search_users($query, $filter, $sort, $page, $page_size);
       }
       break;
 
@@ -761,7 +761,7 @@ function _kendra_saracen_trial_search_general($type = NULL, $query = NULL, $filt
 /**
  * pull recommended users from `kendra_match_recommender_out_user_to_user` for the current user
  */
-function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 3) {
+function _kendra_saracen_trial_mod_recommend_users($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 3) {
   $results     = array();
   $safe_query  = check_plain($query);
   $safe_sort   = check_plain($sort);
@@ -796,7 +796,7 @@ function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $s
 /**
  * pull recommended content from `kendra_match_recommender_out_user_to_item` for the current user
  */
-function _kendra_saracen_trial_recommend_content($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 3) {
+function _kendra_saracen_trial_mod_recommend_content($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 3) {
   $results     = array();
   $safe_query  = check_plain($query);
   $safe_sort   = check_plain($sort);
@@ -827,7 +827,7 @@ function _kendra_saracen_trial_recommend_content($query = NULL, $filter = NULL, 
 /**
  * search users
  */
-function _kendra_saracen_trial_search_users($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
+function _kendra_saracen_trial_mod_search_users($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
   $results     = array();
   $safe_query  = check_plain($query);
   $safe_sort   = check_plain($sort);
@@ -842,7 +842,7 @@ function _kendra_saracen_trial_search_users($query = NULL, $filter = NULL, $sort
 /**
  * search content
  */
-function _kendra_saracen_trial_search_content($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
+function _kendra_saracen_trial_mod_search_content($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
   $results = array();
   $search_allowed_types = array('mediaitem');
   $safe_query = check_plain($query);
@@ -859,11 +859,11 @@ function _kendra_saracen_trial_search_content($query = NULL, $filter = NULL, $so
 
 function kendra_saracen_trial_mod_services_resources_controller_post_processing_alter(&$services) {
   $services['user/operation/retrieve']['args'][0]['type'] = 'string';
-  $services['user/operation/retrieve']['access callback'] = '_kst_user_retrieve_access_check';
-  $services['user/operation/retrieve']['callback'] = '_kst_user_retrieve_callback';
+  $services['user/operation/retrieve']['access callback'] = '_kendra_saracen_trial_mod_user_retrieve_access_check';
+  $services['user/operation/retrieve']['callback'] = '_kendra_saracen_trial_mod_user_retrieve_callback';
 }
 
-function _kst_user_retrieve_access_check($op = 'view', $args = array()) {
+function _kendra_saracen_trial_mod_user_retrieve_access_check($op = 'view', $args = array()) {
   if ($args[0] == 'me') {
     return TRUE;
   }
@@ -872,7 +872,7 @@ function _kst_user_retrieve_access_check($op = 'view', $args = array()) {
   }
 }
 
-function _kst_user_retrieve_callback($uid) {
+function _kendra_saracen_trial_mod_user_retrieve_callback($uid) {
   if ($uid == 'me') {
     global $user;
     $uid = $user->uid;

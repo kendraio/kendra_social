@@ -7,9 +7,7 @@ function kendra_saracen_trial_init() {
 
 // Delete kendra_match_recommender_in_values when node is deleted:
 function kendra_saracen_trial_node_delete($node) {
-  db_delete('kendra_match_recommender_in_values')
-    ->condition('nid', $node->nid)
-    ->execute();
+  db_delete('kendra_match_recommender_in_values')->condition('nid', $node->nid)->execute();
 }
 
 // utility function to put data into recommender input table
@@ -154,11 +152,11 @@ function _kendra_saracen_trial_get_mediaitem($id) {
     }
 
     // lookup extra properties from sparql
-    $store       = sparql_get_store(variable_get('kendra_saracen_mediaitem_store', 'mediaItems'), SPARQL_ENDPOINT);
-    $url         = url('node/' . $node->nid, array('absolute' => TRUE));
+    $store = sparql_get_store(variable_get('kendra_saracen_mediaitem_store', 'mediaItems'), SPARQL_ENDPOINT);
+    $url = url('node/' . $node->nid, array('absolute' => TRUE));
     //$node->debug = $url;
-    $result      = $store->query("SELECT * WHERE { GRAPH <http://localhost/saracen/saracen/0.2/mediaitems> { <{$url}> ?p ?o . } } ");
-    $node->data  = array();
+    $result = $store->query("SELECT * WHERE { GRAPH <http://localhost/saracen/saracen/0.2/mediaitems> { <{$url}> ?p ?o . } } ");
+    $node->data = array();
     foreach ($result['result']['rows'] as $row) {
       $node->data[str_replace($url . '#', '', $row['p'])] = $row['o'];
     }
@@ -217,10 +215,10 @@ function _kendra_saracen_trial_update_mediaitem($id, $data) {
   return _kendra_saracen_trial_register_mediaitem($data);
 }
 
-
 function _kendra_saracen_trial_register_mediaitem($data = NULL) {
 
   /* TODO: refactor this mess! */
+
 
 
 
@@ -268,7 +266,7 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
     $node->language = 'und';
   }
 
-  $node->title  = $data['title'];
+  $node->title = $data['title'];
 
   $node->field_mediaitem_identifier['und'][0]['value'] = $data['identifier'];
   if (isset($data['description'])) {
@@ -315,6 +313,7 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
   if (isset($data['keywords'])) {
     $tags = split(',', $data['keywords']);
     foreach ($tags as $tag) {
+        $tag = trim($tag);
       _kendra_saracen_trial_tag_mediaitem($data['identifier'], array('tag' => $tag));
     }
   }
@@ -337,7 +336,7 @@ function _kendra_saracen_trial_register_mediaitem($data = NULL) {
     $derivative = $query->entityCondition('entity_type', 'node')->entityCondition('bundle', 'derivative')->fieldCondition('field_derivative_quality', 'value', $data['quality'], 'like')->fieldCondition('field_derivative_codec', 'value', $data['codec'], 'like')->fieldCondition('field_derivative_uuid', 'value', $data['identifier'], 'like')->execute();
     //watchdog('debug derivative', '<pre>' . print_r($derivative, TRUE) . '</pre>');
     if (isset($derivative['node']) && count($derivative['node'] > 0)) {
-	    $derivative_nid = array_keys($derivative['node']);
+      $derivative_nid = array_keys($derivative['node']);
       $derivative = node_load($derivative_nid[0]);
     }
     else {
@@ -383,7 +382,7 @@ function _kendra_saracen_trial_annotate_mediaitem($id, $data) {
   }
   // force 'type' attribute to Start Case
   $data['type'] = ucwords($data['type']);
-  
+
   if ($data['type'] == 'rate' || $data['type'] == 'rating') {
     return array('status' => 'error', 'message' => 'use the dedicated rating API resource');
   }
@@ -769,9 +768,9 @@ function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $s
   $safe_filter = check_plain($filter);
 
   //@FIXME: override paging vars, that appear to be NULL
-  $page =   0;
+  $page = 0;
   $page_size = 3;
-  
+
   global $user;
   $uid = $user->uid;
 
@@ -780,15 +779,15 @@ function _kendra_saracen_trial_recommend_users($query = NULL, $filter = NULL, $s
        WHERE users.uid = %d and status = 1 
        ORDER BY weight DESC, time DESC LIMIT %s, %s
        ", $uid, $page, $page_size);
-       
+
   $result = db_query($sql);
 
   $uids = array();
-  
+
   foreach ($result as $node) {
     $uids[] = $node->recommended_uid;
   }
-  
+
   $results = user_load_multiple($uids);
 
   return $results;
@@ -804,13 +803,13 @@ function _kendra_saracen_trial_recommend_content($query = NULL, $filter = NULL, 
   $safe_filter = check_plain($filter);
 
   //@FIXME: override paging vars, that appear to be NULL
-  $page =   0;
-  $page_size =  3;
+  $page = 0;
+  $page_size = 3;
 
   global $user;
   $uid = $user->uid;
 
-  $sql    = sprintf("SELECT DISTINCT recommended_nid FROM {kendra_match_recommender_out_user_to_item}
+  $sql = sprintf("SELECT DISTINCT recommended_nid FROM {kendra_match_recommender_out_user_to_item}
       WHERE uid = %d AND NOT ISNULL(recommended_nid)
       ORDER BY weight
       DESC, time DESC LIMIT %s, %s
@@ -844,12 +843,12 @@ function _kendra_saracen_trial_search_users($query = NULL, $filter = NULL, $sort
  * search content
  */
 function _kendra_saracen_trial_search_content($query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
-  $results     = array();
+  $results = array();
   $search_allowed_types = array('mediaitem');
-  $safe_query  = check_plain($query);
-  $safe_sort   = check_plain($sort);
+  $safe_query = check_plain($query);
+  $safe_sort = check_plain($sort);
   $safe_filter = check_plain($filter);
-  
+
   // restrict content types in search results
   $safe_query .= ' ' . join(',', $search_allowed_types);
 

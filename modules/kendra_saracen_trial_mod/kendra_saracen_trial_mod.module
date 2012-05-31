@@ -215,15 +215,10 @@ function _kendra_saracen_trial_mod_update_mediaitem($id, $data) {
   return _kendra_saracen_trial_mod_register_mediaitem($data);
 }
 
+/*
+* TODO: refactor this mess!
+*/
 function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
-
-  /* TODO: refactor this mess! */
-
-
-
-
-
-
   global $user;
   $op = 'unknown';
 
@@ -487,10 +482,13 @@ function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10) {
   return $results;
 }
 
-function _kendra_saracen_trial_mod_temp_callback() {
+function _kendra_saracen_trial_mod_default_access_callback() {
   return TRUE;
 }
 
+/**
+* implements hook_services_resources
+*/
 function kendra_saracen_trial_mod_services_resources() {
   return array(
     'mediaItems' => array(
@@ -498,7 +496,7 @@ function kendra_saracen_trial_mod_services_resources() {
         'rate' => array(
           'help' => 'Rate a mediaitem',
           'callback' => '_kendra_saracen_trial_mod_rate_mediaitem',
-          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
+          'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -519,7 +517,7 @@ function kendra_saracen_trial_mod_services_resources() {
         'tag' => array(
           'help' => 'Tag a mediaitem',
           'callback' => '_kendra_saracen_trial_mod_tag_mediaitem',
-          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
+          'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -540,7 +538,7 @@ function kendra_saracen_trial_mod_services_resources() {
         'annotate' => array(
           'help' => 'User annotation for a mediaitem',
           'callback' => '_kendra_saracen_trial_mod_annotate_mediaitem',
-          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
+          'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -562,7 +560,7 @@ function kendra_saracen_trial_mod_services_resources() {
       'relationships' => array(
         'annotations' => array(
           'help' => 'returns all annotations for a media item',
-          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
+          'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
           'callback' => '_kendra_saracen_trial_mod_get_annotations',
           'args' => array(
             array(
@@ -579,7 +577,7 @@ function kendra_saracen_trial_mod_services_resources() {
         'retrieve' => array(
           'help' => 'Retrieves a media item',
           'callback' => '_kendra_saracen_trial_mod_get_mediaitem',
-          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
+          'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -595,7 +593,7 @@ function kendra_saracen_trial_mod_services_resources() {
         'update' => array(
           'help' => 'update a media item',
           'callback' => '_kendra_saracen_trial_mod_update_mediaitem',
-          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
+          'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(
@@ -618,7 +616,7 @@ function kendra_saracen_trial_mod_services_resources() {
         'delete' => array(
           'help' => 'Deletes a media item',
           'callback' => '_kendra_saracen_trial_mod_delete_mediaitem',
-          'access callback' => '_kendra_saracen_trial_mod_temp_callback',
+          'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
           'access arguments' => array('access content'),
           'access arguments append' => FALSE,
           'args' => array(

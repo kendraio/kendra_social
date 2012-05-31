@@ -176,4 +176,4 @@ libraries[kendra_social_test][download][[url] = https://raw.github.com/jamespado
 libraries[arc][download][type]= "git"
 libraries[arc][download][url] = "https://github.com/semsol/arc2.git"
 libraries[arc][directory_name] = "arc"
-libraries[arc][destination] = "modules/contrib/rdfx/vendor"
+libraries[arc][destination] = "libraries/ARC2"

@@ -105,9 +105,9 @@ function kendra_social_services_services_resources() {
 }
 
 function kendra_social_services_services_resources_controller_post_processing_alter(&$services) {
-  $services['user/retrieve']['args'][0]['type'] = 'string';
-  $services['user/retrieve']['access callback'] = '_kendra_social_services_user_retrieve_access_check';
-  $services['user/retrieve']['callback'] = '_kendra_social_services_user_retrieve_callback';
+  $services['user']['operation']['retrieve']['args'][0]['type'] = 'string';
+  $services['user']['operation']['retrieve']['access callback'] = '_kendra_social_services_user_retrieve_access_check';
+  $services['user']['operation']['retrieve']['callback'] = '_kendra_social_services_user_retrieve_callback';
 }
 
 function _kendra_social_services_user_retrieve_access_check($op = 'view', $args = array()) {

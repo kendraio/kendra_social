@@ -3,1061 +3,1099 @@
         "actions": {
             "connect": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": false,
-
-                "args": [],
-                "callback": "_kss_accounts_connect",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": false, 
+                "args": [], 
+                "callback": "_kss_accounts_connect", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Get Account Connection Options"
+            }, 
+            "login": {
+                "access callback": "services_access_menu", 
+                "args": [
+                    {
+                        "description": "A valid username", 
+                        "name": "username", 
+                        "optional": false, 
+                        "source": {
+                            "data": "username"
+                        }, 
+                        "type": "string"
+                    }, 
+                    {
+                        "description": "A valid password", 
+                        "name": "password", 
+                        "optional": false, 
+                        "source": {
+                            "data": "password"
+                        }, 
+                        "type": "string"
+                    }
+                ], 
+                "callback": "_user_resource_login", 
+                "file": {
+                    "module": "services", 
+                    "name": "resources/user_resource", 
+                    "type": "inc"
+                }, 
+                "help": "Login a user for a new session"
+            }, 
+            "logout": {
+                "access callback": "services_access_menu", 
+                "callback": "_user_resource_logout", 
+                "file": {
+                    "module": "services", 
+                    "name": "resources/user_resource", 
+                    "type": "inc"
+                }, 
+                "help": "Logout a user session"
             }
-        },
-        "operations": [],
+        }, 
+        "operations": [], 
         "relationships": []
-    },
+    }, 
     "activitystreams": {
-        "actions": [],
+        "actions": [], 
         "create": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_activitystreams_create",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_activitystreams_create", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Create an ActivityEntry"
-        },
+        }, 
         "delete": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_activitystreams_delete",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_activitystreams_delete", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Delete an ActivityEntry"
-        },
+        }, 
         "operations": {
             "create": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_activitystreams_create",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_activitystreams_create", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Create an ActivityEntry"
-            },
+            }, 
             "delete": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_activitystreams_delete",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_activitystreams_delete", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Delete an ActivityEntry"
-            },
+            }, 
             "retrieve": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_activitystreams_retrieve",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_activitystreams_retrieve", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Get Activity Streams"
-            },
+            }, 
             "update": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_activitystreams_update",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_activitystreams_update", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Update an ActivityEntry"
             }
-        },
-        "relationships": [],
+        }, 
+        "relationships": [], 
         "retrieve": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_activitystreams_retrieve",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_activitystreams_retrieve", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Get Activity Streams"
-        },
+        }, 
         "update": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_activitystreams_update",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_activitystreams_update", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Update an ActivityEntry"
         }
-    },
+    }, 
     "albums": {
-        "actions": [],
+        "actions": [], 
         "create": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_albums_create",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_albums_create", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Create an Album"
-        },
+        }, 
         "delete": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_albums_delete",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_albums_delete", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Delete an Album"
-        },
+        }, 
         "operations": {
             "create": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_albums_create",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_albums_create", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Create an Album"
-            },
+            }, 
             "delete": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_albums_delete",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_albums_delete", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Delete an Album"
-            },
+            }, 
             "retrieve": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_albums_retrieve",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_albums_retrieve", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Get Albums"
-            },
+            }, 
             "update": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_albums_update",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_albums_update", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Update an Album"
             }
-        },
-        "relationships": [],
+        }, 
+        "relationships": [], 
         "retrieve": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_albums_retrieve",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_albums_retrieve", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Get Albums"
-        },
+        }, 
         "update": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_albums_update",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_albums_update", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Update an Album"
         }
-    },
+    }, 
     "groups": {
-        "actions": [],
+        "actions": [], 
         "create": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_groups_create",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_groups_create", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Create a Group"
-        },
+        }, 
         "delete": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_groups_delete",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_groups_delete", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Delete a Group"
-        },
+        }, 
         "operations": {
             "create": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_groups_create",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_groups_create", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Create a Group"
-            },
+            }, 
             "delete": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_groups_delete",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_groups_delete", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Delete a Group"
-            },
+            }, 
             "retrieve": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_groups_retrieve",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_groups_retrieve", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Get Groups"
-            },
+            }, 
             "update": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_groups_update",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_groups_update", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Update a Group"
             }
-        },
-        "relationships": [],
+        }, 
+        "relationships": [], 
         "retrieve": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_groups_retrieve",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_groups_retrieve", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Get Groups"
-        },
+        }, 
         "update": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_groups_update",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_groups_update", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Update a Group"
         }
-    },
+    }, 
     "mediaItems": {
         "operations": {
             "create": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": false,
+                    "access content"
+                ], 
+                "access arguments append": false, 
                 "args": [
-                {
-                    "description": "The media item object",
-                    "name": "data",
-                    "optional": false,
-                    "source": "data",
-                    "type": "struct"
-                }
-                ],
-                "callback": "_kendra_saracen_trial_mod_register_mediaitem",
-                "enabled": 1,
+                    {
+                        "description": "The media item object", 
+                        "name": "data", 
+                        "optional": false, 
+                        "source": "data", 
+                        "type": "struct"
+                    }
+                ], 
+                "callback": "_kendra_saracen_trial_mod_register_mediaitem", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_saracen_trial_mod",
-                    "name": "kendra_saracen_trial_mod.callbacks.inc",
+                    "module": "kendra_saracen_trial_mod", 
+                    "name": "kendra_saracen_trial_mod.callbacks.inc", 
                     "type": "inc"
-                },
+                }, 
                 "help": "register a media item"
-            },
+            }, 
             "delete": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": false,
-                "access callback": "_kendra_saracen_trial_mod_default_access_callback",
+                    "access content"
+                ], 
+                "access arguments append": false, 
+                "access callback": "_kendra_saracen_trial_mod_default_access_callback", 
                 "args": [
-                {
-                    "description": "The media identifier",
-                    "name": "id",
-                    "optional": false,
-                    "source": {
-                        "path": 0
-                    },
-                    "type": "string"
-                }
-                ],
-                "callback": "_kendra_saracen_trial_mod_delete_mediaitem",
-                "enabled": 1,
+                    {
+                        "description": "The media identifier", 
+                        "name": "id", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "string"
+                    }
+                ], 
+                "callback": "_kendra_saracen_trial_mod_delete_mediaitem", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_saracen_trial_mod",
-                    "name": "kendra_saracen_trial_mod.callbacks.inc",
+                    "module": "kendra_saracen_trial_mod", 
+                    "name": "kendra_saracen_trial_mod.callbacks.inc", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Deletes a media item"
-            },
+            }, 
             "index": {
                 "access arguments": [
-                "access content"
-                ],
+                    "access content"
+                ], 
                 "args": [
-                {
-                    "default_value": 0,
-                    "description": "zero-indexed page of results requested",
-                    "name": "page",
-                    "optional": true,
-                    "source": {
-                        "param": "page"
-                    },
-                    "type": "int"
-                },
-                {
-                    "default_value": 10,
-                    "description": "size of page",
-                    "name": "page_size",
-                    "optional": true,
-                    "source": {
-                        "param": "page_size"
-                    },
-                    "type": "int"
-                }
-                ],
-                "callback": "_kendra_saracen_trial_mod_list_mediaitem",
-                "enabled": 1,
+                    {
+                        "default_value": 0, 
+                        "description": "zero-indexed page of results requested", 
+                        "name": "page", 
+                        "optional": true, 
+                        "source": {
+                            "param": "page"
+                        }, 
+                        "type": "int"
+                    }, 
+                    {
+                        "default_value": 10, 
+                        "description": "size of page", 
+                        "name": "page_size", 
+                        "optional": true, 
+                        "source": {
+                            "param": "page_size"
+                        }, 
+                        "type": "int"
+                    }
+                ], 
+                "callback": "_kendra_saracen_trial_mod_list_mediaitem", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_saracen_trial_mod",
-                    "name": "kendra_saracen_trial_mod.callbacks.inc",
+                    "module": "kendra_saracen_trial_mod", 
+                    "name": "kendra_saracen_trial_mod.callbacks.inc", 
                     "type": "inc"
                 }
-            },
+            }, 
             "retrieve": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": false,
-                "access callback": "_kendra_saracen_trial_mod_default_access_callback",
+                    "access content"
+                ], 
+                "access arguments append": false, 
+                "access callback": "_kendra_saracen_trial_mod_default_access_callback", 
                 "args": [
-                {
-                    "description": "The media identifier",
-                    "name": "id",
-                    "optional": false,
-                    "source": {
-                        "path": 0
-                    },
-                    "type": "string"
-                }
-                ],
-                "callback": "_kendra_saracen_trial_mod_get_mediaitem",
-                "enabled": 1,
+                    {
+                        "description": "The media identifier", 
+                        "name": "id", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "string"
+                    }
+                ], 
+                "callback": "_kendra_saracen_trial_mod_get_mediaitem", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_saracen_trial_mod",
-                    "name": "kendra_saracen_trial_mod.callbacks.inc",
+                    "module": "kendra_saracen_trial_mod", 
+                    "name": "kendra_saracen_trial_mod.callbacks.inc", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Retrieves a media item"
-            },
+            }, 
             "update": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": false,
-                "access callback": "_kendra_saracen_trial_mod_default_access_callback",
+                    "access content"
+                ], 
+                "access arguments append": false, 
+                "access callback": "_kendra_saracen_trial_mod_default_access_callback", 
                 "args": [
-                {
-                    "description": "The media identifier",
-                    "name": "id",
-                    "optional": false,
-                    "source": {
-                        "path": 0
-                    },
-                    "type": "string"
-                },
-                {
-                    "description": "The media item object",
-                    "name": "data",
-                    "optional": false,
-                    "source": "data",
-                    "type": "struct"
-                }
-                ],
-                "callback": "_kendra_saracen_trial_mod_update_mediaitem",
-                "enabled": 1,
+                    {
+                        "description": "The media identifier", 
+                        "name": "id", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "string"
+                    }, 
+                    {
+                        "description": "The media item object", 
+                        "name": "data", 
+                        "optional": false, 
+                        "source": "data", 
+                        "type": "struct"
+                    }
+                ], 
+                "callback": "_kendra_saracen_trial_mod_update_mediaitem", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_saracen_trial_mod",
-                    "name": "kendra_saracen_trial_mod.callbacks.inc",
+                    "module": "kendra_saracen_trial_mod", 
+                    "name": "kendra_saracen_trial_mod.callbacks.inc", 
                     "type": "inc"
-                },
+                }, 
                 "help": "update a media item"
             }
-        },
+        }, 
         "relationships": {
             "annotations": {
-                "access callback": "_kendra_saracen_trial_mod_default_access_callback",
+                "access callback": "_kendra_saracen_trial_mod_default_access_callback", 
                 "args": [
-                {
-                    "description": "the uuid of the mediaitem to get annotations for",
-                    "name": "id",
-                    "optional": false,
-                    "source": {
-                        "path": 0
-                    },
-                    "type": "string"
-                }
-                ],
-                "callback": "_kendra_saracen_trial_mod_get_annotations",
-                "enabled": 1,
+                    {
+                        "description": "the uuid of the mediaitem to get annotations for", 
+                        "name": "id", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "string"
+                    }
+                ], 
+                "callback": "_kendra_saracen_trial_mod_get_annotations", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_saracen_trial_mod",
-                    "name": "kendra_saracen_trial_mod.callbacks.inc",
+                    "module": "kendra_saracen_trial_mod", 
+                    "name": "kendra_saracen_trial_mod.callbacks.inc", 
                     "type": "inc"
-                },
+                }, 
                 "help": "returns all annotations for a media item"
             }
-        },
+        }, 
         "targeted_actions": {
             "annotate": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": false,
-                "access callback": "_kendra_saracen_trial_mod_default_access_callback",
+                    "access content"
+                ], 
+                "access arguments append": false, 
+                "access callback": "_kendra_saracen_trial_mod_default_access_callback", 
                 "args": [
-                {
-                    "name": "id",
-                    "optional": false,
-                    "source": {
-                        "path": 0
-                    },
-                    "type": "string"
-                },
-                {
-                    "name": "annotate",
-                    "optional": true,
-                    "source": "data",
-                    "type": "string"
-                }
-                ],
-                "callback": "_kendra_saracen_trial_mod_annotate_mediaitem",
-                "enabled": 1,
+                    {
+                        "name": "id", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "string"
+                    }, 
+                    {
+                        "name": "annotate", 
+                        "optional": true, 
+                        "source": "data", 
+                        "type": "string"
+                    }
+                ], 
+                "callback": "_kendra_saracen_trial_mod_annotate_mediaitem", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_saracen_trial_mod",
-                    "name": "kendra_saracen_trial_mod.callbacks.inc",
+                    "module": "kendra_saracen_trial_mod", 
+                    "name": "kendra_saracen_trial_mod.callbacks.inc", 
                     "type": "inc"
-                },
+                }, 
                 "help": "User annotation for a mediaitem"
-            },
+            }, 
             "rate": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": false,
-                "access callback": "_kendra_saracen_trial_mod_default_access_callback",
+                    "access content"
+                ], 
+                "access arguments append": false, 
+                "access callback": "_kendra_saracen_trial_mod_default_access_callback", 
                 "args": [
-                {
-                    "name": "id",
-                    "optional": false,
-                    "source": {
-                        "path": 0
-                    },
-                    "type": "string"
-                },
-                {
-                    "name": "rate",
-                    "optional": true,
-                    "source": "data",
-                    "type": "string"
-                }
-                ],
-                "callback": "_kendra_saracen_trial_mod_rate_mediaitem",
-                "enabled": 1,
+                    {
+                        "name": "id", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "string"
+                    }, 
+                    {
+                        "name": "rate", 
+                        "optional": true, 
+                        "source": "data", 
+                        "type": "string"
+                    }
+                ], 
+                "callback": "_kendra_saracen_trial_mod_rate_mediaitem", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_saracen_trial_mod",
-                    "name": "kendra_saracen_trial_mod.callbacks.inc",
+                    "module": "kendra_saracen_trial_mod", 
+                    "name": "kendra_saracen_trial_mod.callbacks.inc", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Rate a mediaitem"
-            },
+            }, 
             "tag": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": false,
-                "access callback": "_kendra_saracen_trial_mod_default_access_callback",
+                    "access content"
+                ], 
+                "access arguments append": false, 
+                "access callback": "_kendra_saracen_trial_mod_default_access_callback", 
                 "args": [
-                {
-                    "name": "id",
-                    "optional": false,
-                    "source": {
-                        "path": 0
-                    },
-                    "type": "string"
-                },
-                {
-                    "name": "tag",
-                    "optional": true,
-                    "source": "data",
-                    "type": "string"
-                }
-                ],
-                "callback": "_kendra_saracen_trial_mod_tag_mediaitem",
-                "enabled": 1,
+                    {
+                        "name": "id", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "string"
+                    }, 
+                    {
+                        "name": "tag", 
+                        "optional": true, 
+                        "source": "data", 
+                        "type": "string"
+                    }
+                ], 
+                "callback": "_kendra_saracen_trial_mod_tag_mediaitem", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_saracen_trial_mod",
-                    "name": "kendra_saracen_trial_mod.callbacks.inc",
+                    "module": "kendra_saracen_trial_mod", 
+                    "name": "kendra_saracen_trial_mod.callbacks.inc", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Tag a mediaitem"
             }
         }
-    },
+    }, 
     "people": {
-        "actions": [],
-        "create": {
-            "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_people_create",
-            "enabled": 1,
-            "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
-                "type": "inc"
-            },
-            "help": "Create a Relationship"
-        },
-        "delete": {
-            "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_people_delete",
-            "enabled": 1,
-            "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
-                "type": "inc"
-            },
-            "help": "Delete a Person"
-        },
         "operations": {
             "create": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_people_create",
-                "enabled": 1,
+                    "create"
+                ], 
+                "access arguments append": false, 
+                "access callback": "_user_resource_access", 
+                "args": [
+                    {
+                        "description": "The user object", 
+                        "name": "account", 
+                        "optional": false, 
+                        "source": "data", 
+                        "type": "array"
+                    }
+                ], 
+                "callback": "_user_resource_create", 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "services", 
+                    "name": "resources/user_resource", 
                     "type": "inc"
-                },
-                "help": "Create a Relationship"
-            },
+                }, 
+                "help": "Creates a user"
+            }, 
             "delete": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_people_delete",
-                "enabled": 1,
+                    "delete"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_user_resource_access", 
+                "args": [
+                    {
+                        "description": "The id of the user to delete", 
+                        "name": "uid", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "int"
+                    }
+                ], 
+                "callback": "_user_resource_delete", 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "services", 
+                    "name": "resources/user_resource", 
                     "type": "inc"
-                },
-                "help": "Delete a Person"
-            },
+                }, 
+                "help": "Deletes a user"
+            }, 
+            "index": {
+                "access arguments": [
+                    "access user profiles"
+                ], 
+                "access arguments append": false, 
+                "args": [
+                    {
+                        "default value": 0, 
+                        "description": "The zero-based index of the page to get, defaults to 0.", 
+                        "name": "page", 
+                        "optional": true, 
+                        "source": {
+                            "param": "page"
+                        }, 
+                        "type": "int"
+                    }, 
+                    {
+                        "default value": "*", 
+                        "description": "The fields to get.", 
+                        "name": "fields", 
+                        "optional": true, 
+                        "source": {
+                            "param": "fields"
+                        }, 
+                        "type": "string"
+                    }, 
+                    {
+                        "default value": [], 
+                        "description": "Parameters", 
+                        "name": "parameters", 
+                        "optional": true, 
+                        "source": {
+                            "param": "parameters"
+                        }, 
+                        "type": "array"
+                    }, 
+                    {
+                        "default value": 20, 
+                        "description": "Number of records to get per page.", 
+                        "name": "pagesize", 
+                        "optional": true, 
+                        "source": {
+                            "param": "pagesize"
+                        }, 
+                        "type": "int"
+                    }
+                ], 
+                "callback": "_user_resource_index", 
+                "file": {
+                    "module": "services", 
+                    "name": "resources/user_resource", 
+                    "type": "inc"
+                }
+            }, 
             "retrieve": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_people_retrieve",
-                "enabled": 1,
+                    "view"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_kendra_social_services_user_retrieve_access_check", 
+                "args": [
+                    {
+                        "description": "The uid of the user to retrieve.", 
+                        "name": "uid", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "string"
+                    }
+                ], 
+                "callback": "_kendra_social_services_user_retrieve_callback", 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "services", 
+                    "name": "resources/user_resource", 
                     "type": "inc"
-                },
-                "help": "Get a Person"
-            },
+                }, 
+                "help": "Retrieves a user"
+            }, 
             "update": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_people_update",
-                "enabled": 1,
+                    "update"
+                ], 
+                "access arguments append": true, 
+                "access callback": "_user_resource_access", 
+                "args": [
+                    {
+                        "description": "Unique identifier for this user", 
+                        "name": "uid", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "int"
+                    }, 
+                    {
+                        "description": "The user object with updated information", 
+                        "name": "data", 
+                        "optional": false, 
+                        "source": "data", 
+                        "type": "array"
+                    }
+                ], 
+                "callback": "_user_resource_update", 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "services", 
+                    "name": "resources/user_resource", 
                     "type": "inc"
-                },
-                "help": "Update a Person"
+                }, 
+                "help": "Updates a user"
             }
-        },
-        "relationships": [],
-        "retrieve": {
-            "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_people_retrieve",
-            "enabled": 1,
-            "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
-                "type": "inc"
-            },
-            "help": "Get a Person"
-        },
-        "update": {
-            "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_people_update",
-            "enabled": 1,
-            "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
-                "type": "inc"
-            },
-            "help": "Update a Person"
         }
-    },
+    }, 
     "profiles": {
-        "actions": [],
+        "actions": [], 
         "create": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_profiles_create",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_profiles_create", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Store user profile data"
-        },
+        }, 
         "operations": {
             "create": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_profiles_create",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_profiles_create", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Store user profile data"
-            },
+            }, 
             "retrieve": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_profiles_retrieve",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_profiles_retrieve", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Retrieve a user\\'s profile data"
             }
-        },
-        "relationships": [],
+        }, 
+        "relationships": [], 
         "retrieve": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_profiles_retrieve",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_profiles_retrieve", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Retrieve a user\\'s profile data"
         }
-    },
+    }, 
+    "relationships": [], 
     "search": {
         "operations": {
             "index": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": false,
+                    "access content"
+                ], 
+                "access arguments append": false, 
                 "args": [
-                {
-                    "description": "The search type",
-                    "name": "type",
-                    "optional": true,
-                    "source": {
-                        "param": "type"
-                    },
-                    "type": "string"
-                },
-                {
-                    "description": "The search query",
-                    "name": "query",
-                    "optional": true,
-                    "source": {
-                        "param": "query"
-                    },
-                    "type": "string"
-                },
-                {
-                    "description": "The search filter",
-                    "name": "filter",
-                    "optional": true,
-                    "source": {
-                        "param": "filter"
-                    },
-                    "type": "string"
-                },
-                {
-                    "description": "The search sort",
-                    "name": "sort",
-                    "optional": true,
-                    "source": {
-                        "param": "sort"
-                    },
-                    "type": "string"
-                },
-                {
-                    "default_value": 0,
-                    "description": "zero-indexed page of results requested",
-                    "name": "page",
-                    "optional": true,
-                    "source": {
-                        "param": "page"
-                    },
-                    "type": "int"
-                },
-                {
-                    "default_value": 10,
-                    "description": "size of page",
-                    "name": "page_size",
-                    "optional": true,
-                    "source": {
-                        "param": "page_size"
-                    },
-                    "type": "int"
-                }
-                ],
-                "callback": "_kendra_saracen_trial_mod_search_general",
-                "enabled": 1,
+                    {
+                        "description": "The search type", 
+                        "name": "type", 
+                        "optional": true, 
+                        "source": {
+                            "param": "type"
+                        }, 
+                        "type": "string"
+                    }, 
+                    {
+                        "description": "The search query", 
+                        "name": "query", 
+                        "optional": true, 
+                        "source": {
+                            "param": "query"
+                        }, 
+                        "type": "string"
+                    }, 
+                    {
+                        "description": "The search filter", 
+                        "name": "filter", 
+                        "optional": true, 
+                        "source": {
+                            "param": "filter"
+                        }, 
+                        "type": "string"
+                    }, 
+                    {
+                        "description": "The search sort", 
+                        "name": "sort", 
+                        "optional": true, 
+                        "source": {
+                            "param": "sort"
+                        }, 
+                        "type": "string"
+                    }, 
+                    {
+                        "default_value": 0, 
+                        "description": "zero-indexed page of results requested", 
+                        "name": "page", 
+                        "optional": true, 
+                        "source": {
+                            "param": "page"
+                        }, 
+                        "type": "int"
+                    }, 
+                    {
+                        "default_value": 10, 
+                        "description": "size of page", 
+                        "name": "page_size", 
+                        "optional": true, 
+                        "source": {
+                            "param": "page_size"
+                        }, 
+                        "type": "int"
+                    }
+                ], 
+                "callback": "_kendra_saracen_trial_mod_search_general", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_saracen_trial_mod",
-                    "name": "kendra_saracen_trial_mod.callbacks.inc",
+                    "module": "kendra_saracen_trial_mod", 
+                    "name": "kendra_saracen_trial_mod.callbacks.inc", 
                     "type": "inc"
-                },
+                }, 
                 "help": "search content and users"
             }
         }
-    },
+    }, 
     "smartfilters": {
-        "actions": [],
+        "actions": [], 
         "create": {
             "access arguments": [
-            "access content"
-            ],
-            "access arguments append": true,
-
-            "args": [],
-            "callback": "_kss_smartfilters_create",
-            "enabled": 1,
+                "access content"
+            ], 
+            "access arguments append": true, 
+            "args": [], 
+            "callback": "_kss_smartfilters_create", 
+            "enabled": 1, 
             "file": {
-                "module": "kendra_social_services",
-                "name": "kendra_social_services.callbacks",
+                "module": "kendra_social_services", 
+                "name": "kendra_social_services.callbacks", 
                 "type": "inc"
-            },
+            }, 
             "help": "Create a Smart Filter"
-        },
+        }, 
         "operations": {
             "create": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_smartfilters_create",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_smartfilters_create", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Create a Smart Filter"
             }
-        },
+        }, 
         "relationships": []
-    },
+    }, 
     "social": {
         "actions": {
             "publish": {
                 "access arguments": [
-                "access content"
-                ],
-                "access arguments append": true,
-
-                "args": [],
-                "callback": "_kss_social_publish",
-                "enabled": 1,
+                    "access content"
+                ], 
+                "access arguments append": true, 
+                "args": [], 
+                "callback": "_kss_social_publish", 
+                "enabled": 1, 
                 "file": {
-                    "module": "kendra_social_services",
-                    "name": "kendra_social_services.callbacks",
+                    "module": "kendra_social_services", 
+                    "name": "kendra_social_services.callbacks", 
                     "type": "inc"
-                },
+                }, 
                 "help": "Post content to social network"
             }
-        },
-        "operations": [],
+        }, 
+        "operations": [], 
         "relationships": []
-    },
+    }, 
     "user": {
         "actions": {
             "login": {
-                "enabled": 1,
+                "enabled": 1, 
                 "help": "User Login"
-            },
+            }, 
             "logout": {
-                "enabled": 1,
+                "enabled": 1, 
                 "help": "User Logout"
-            },
+            }, 
             "register": {
-                "enabled": 1,
+                "enabled": 1, 
                 "help": "User Register"
             }
-        },
+        }, 
         "operations": {
             "delete": {
-                "enabled": 1,
+                "enabled": 1, 
                 "help": "User Delete"
-            },
+            }, 
             "index": {
-                "enabled": 1,
+                "enabled": 1, 
                 "help": "User Index"
-            },
+            }, 
             "retrieve": {
-                "enabled": 1,
+                "enabled": 1, 
                 "help": "Get a User Profile"
-            },
+            }, 
             "update": {
-                "enabled": 1,
+                "enabled": 1, 
                 "help": "User Update"
             }
         }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * kendra_social_services.services.inc
@@ -11,7 +12,10 @@ function kendra_social_services_default_services_endpoint() {
   $export = array();
 
   $endpoint = new stdClass();
-  $endpoint->disabled = FALSE; /* Edit this to true to make a default endpoint disabled initially */
+  /* Edit this to true to make a default endpoint disabled initially */
+
+
+  $endpoint->disabled = FALSE;
   $endpoint->api_version = 3;
   $endpoint->name = 'saracen';
   $endpoint->server = 'rest_server';
@@ -56,6 +60,7 @@ function kendra_social_services_default_services_endpoint() {
           'enabled' => '1',
         ),
       ),
+    ),
     'mediaItems' => array(
       'operations' => array(
         'retrieve' => array(
@@ -176,6 +181,6 @@ function kendra_social_services_default_services_endpoint() {
   );
   $endpoint->debug = 1;
   $export['saracen'] = $endpoint;
-
   return $export;
 }
+

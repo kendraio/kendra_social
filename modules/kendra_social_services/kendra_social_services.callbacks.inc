@@ -84,6 +84,7 @@ function _kss_activitystreams_update () { return _kss_default_callback(); }
 function _kss_albums_create () { return _kss_default_callback(); }
 function _kss_albums_delete () { return _kss_default_callback(); }
 function _kss_albums_retrieve () { return _kss_default_callback(); }
+function _kss_albums_index () { return _kss_default_callback(); }
 function _kss_albums_update () { return _kss_default_callback(); }
 function _kss_groups_create () { return _kss_default_callback(); }
 function _kss_groups_delete () { return _kss_default_callback(); }

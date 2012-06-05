@@ -100,7 +100,6 @@ function kendra_social_services_permission() {
  */
 function kendra_social_services_services_resources() {
   $resources = kendra_social_services_services_get_mappings();
-  unset($resources['mediaItems']);
   return $resources;
 }
 

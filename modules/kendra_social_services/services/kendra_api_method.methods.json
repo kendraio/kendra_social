@@ -1065,39 +1065,5 @@
         }, 
         "operations": [], 
         "relationships": []
-    }, 
-    "user": {
-        "actions": {
-            "login": {
-                "enabled": 1, 
-                "help": "User Login"
-            }, 
-            "logout": {
-                "enabled": 1, 
-                "help": "User Logout"
-            }, 
-            "register": {
-                "enabled": 1, 
-                "help": "User Register"
-            }
-        }, 
-        "operations": {
-            "delete": {
-                "enabled": 1, 
-                "help": "User Delete"
-            }, 
-            "index": {
-                "enabled": 1, 
-                "help": "User Index"
-            }, 
-            "retrieve": {
-                "enabled": 1, 
-                "help": "Get a User Profile"
-            }, 
-            "update": {
-                "enabled": 1, 
-                "help": "User Update"
-            }
-        }
     }
 }

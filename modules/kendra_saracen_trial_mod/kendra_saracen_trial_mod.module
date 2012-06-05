@@ -238,27 +238,3 @@ function _kendra_saracen_trial_mod_search_content($query = NULL, $filter = NULL,
   $results = module_invoke('node', 'search_execute', $safe_query);
   return $results;
 }
-
-function kendra_saracen_trial_mod_services_resources_controller_post_processing_alter(&$services) {
-  $services['user']['operation']['retrieve']['args'][0]['type'] = 'string';
-  $services['user']['operation']['retrieve']['access callback'] = '_kendra_saracen_trial_mod_user_retrieve_access_check';
-  $services['user']['operation']['retrieve']['callback'] = '_kendra_saracen_trial_mod_user_retrieve_callback';
-}
-
-function _kendra_saracen_trial_mod_user_retrieve_access_check($op = 'view', $args = array()) {
-  if ($args[0] == 'me') {
-    return TRUE;
-  }
-  else {
-    return _user_resource_access($op, $args);
-  }
-}
-
-function _kendra_saracen_trial_mod_user_retrieve_callback($uid) {
-  if ($uid == 'me') {
-    global $user;
-    $uid = $user->uid;
-  }
-  return _user_resource_retrieve($uid);
-}
-

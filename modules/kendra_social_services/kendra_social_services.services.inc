@@ -38,6 +38,24 @@ function kendra_social_services_default_services_endpoint() {
     ),
   );
   $endpoint->resources = array(
+    'people' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'enabled' => '1',
+        ),
+        'update' => array(
+          'enabled' => '1',
+        ),
+        'delete' => array(
+          'enabled' => '1',
+        ),
+        'index' => array(
+          'enabled' => '1',
+        ),
+        'create' => array(
+          'enabled' => '1',
+        ),
+      ),
     'mediaItems' => array(
       'operations' => array(
         'retrieve' => array(

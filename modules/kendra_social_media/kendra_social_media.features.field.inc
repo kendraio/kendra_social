@@ -33,7 +33,6 @@ function kendra_social_media_field_default_fields() {
       ),
       'module' => 'text',
       'settings' => array(
-        'profile2_private' => FALSE,
       ),
       'translatable' => '0',
       'type' => 'text_long',
@@ -101,7 +100,6 @@ function kendra_social_media_field_default_fields() {
       ),
       'module' => 'text',
       'settings' => array(
-        'profile2_private' => FALSE,
       ),
       'translatable' => '0',
       'type' => 'text_long',
@@ -170,7 +168,6 @@ function kendra_social_media_field_default_fields() {
       'module' => 'text',
       'settings' => array(
         'max_length' => '255',
-        'profile2_private' => FALSE,
       ),
       'translatable' => '0',
       'type' => 'text',

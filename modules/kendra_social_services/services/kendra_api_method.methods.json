@@ -524,6 +524,16 @@
                             "path": 0
                         }, 
                         "type": "string"
+                    },
+                    {
+                        "default value": 1, 
+                        "description": "Whether to include media derivatives, defaults to true.", 
+                        "name": "include_derivatives", 
+                        "optional": true, 
+                        "source": {
+                            "param": "include_derivatives"
+                        }, 
+                        "type": "int"
                     }
                 ], 
                 "callback": "_kendra_saracen_trial_mod_get_mediaitem", 

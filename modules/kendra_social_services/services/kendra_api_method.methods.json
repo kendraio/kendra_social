@@ -133,7 +133,7 @@
                 "access arguments": [
                 "access content"
                 ],
-                "access arguments append": true,
+                "access arguments append": false,
                 "args": [],
                 "callback": "_kss_albums_create",
                 "enabled": 1,
@@ -854,5 +854,158 @@
         },
         "operations": [],
         "relationships": []
+    },
+    "boxes": {
+        "operations": {
+            "create": {
+                "access arguments": [
+                "access content"
+                ],
+                "access arguments append": false,
+                "access callback": "_kendra_saracen_trial_temp_callback",
+                "args": [
+                {
+                    "description": "The media item object",
+                    "name": "data",
+                    "optional": false,
+                    "source": "data",
+                    "type": "struct"
+                }
+                ],
+                "callback": "_kendra_social_albums_create",
+                "enabled": 1,
+                "file": {
+                    "module": "kendra_social_albums",
+                    "name": "kendra_social_albums.callbacks",
+                    "type": "inc"
+                },
+                "help": ""
+            },
+            "index": {
+                "access arguments": [
+                "access content"
+                ],
+                "callback": "_kendra_social_albums_index",
+                "enabled": 1,
+                "file": {
+                    "module": "kendra_social_albums",
+                    "name": "kendra_social_albums.callbacks",
+                    "type": "inc"
+                },
+                "help": ""
+            },
+            "retrieve": {
+                "access arguments": [
+                "access content"
+                ],
+                "args": [
+                {
+                    "name": "id",
+                    "optional": false,
+                    "source": {
+                        "path": 0
+                    },
+                    "type": "int"
+                }
+                ],
+                "callback": "_kendra_social_albums_retrieve",
+                "enabled": 1,
+                "file": {
+                    "module": "kendra_social_albums",
+                    "name": "kendra_social_albums.callbacks",
+                    "type": "inc"
+                },
+                "help": ""
+            }
+        },
+        "targeted_actions": {
+            "add_item": {
+                "access arguments": [
+                "access content"
+                ],
+                "args": [
+                {
+                    "name": "box",
+                    "optional": false,
+                    "source": {
+                        "path": 0
+                    },
+                    "type": "int"
+                },
+                {
+                    "name": "data",
+                    "optional": false,
+                    "source": "data",
+                    "type": "struct"
+                }
+                ],
+                "callback": "_kendra_social_albums_add_item",
+                "enabled": 1,
+                "file": {
+                    "module": "kendra_social_albums",
+                    "name": "kendra_social_albums.callbacks",
+                    "type": "inc"
+                },
+                "help": ""
+            },
+            "delete_item": {
+                "access arguments": [
+                "access content"
+                ],
+                "args": [
+                {
+                    "name": "box",
+                    "optional": false,
+                    "source": {
+                        "path": 0
+                    },
+                    "type": "int"
+                },
+                {
+                    "name": "data",
+                    "optional": false,
+                    "source": "data",
+                    "type": "struct"
+                }
+                ],
+                "callback": "_kendra_social_albums_delete_item",
+                "enabled": 1,
+                "file": {
+                    "module": "kendra_social_albums",
+                    "name": "kendra_social_albums.callbacks",
+                    "type": "inc"
+                },
+                "help": ""
+            },
+            "user": {
+                "access arguments": [
+                "access content"
+                ],
+                "args": [
+                {
+                    "name": "id",
+                    "optional": false,
+                    "source": {
+                        "path": 0
+                    },
+                    "type": "int"
+                },
+                {
+                    "name": "data",
+                    "optional": true,
+                    "source": "data",
+                    "type": "struct"
+                }
+                ],
+                "callback": "_kendra_social_albums_update_user",
+                "enabled": 1,
+                "file": {
+                    "module": "kendra_social_albums",
+                    "name": "kendra_social_albums.callbacks",
+                    "type": "inc"
+                },
+                "help": ""
+            }
+        }
     }
 }

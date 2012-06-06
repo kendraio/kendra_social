@@ -1,11 +1,9 @@
 <?php
-function _kendra_saracen_trial_mod_annotate_mediaitem($id, $data) {
-  global $user;
-  $org = node_load(_kendra_saracen_trial_mod_lookup_id($id));
-  if (!isset($org->nid)) {
-    return array('status' => 'error', 'message' => 'unknown identifier');
-  }
-  if (!isset($data['type'])) {
+function _kendra_saracen_trial_mod_annotate_mediaitem($id, $data) { global $user;
+$org = node_load(_kendra_saracen_trial_mod_lookup_id($id));
+if (!isset($org->nid)) {
+  return array('status' => 'error', 'message' => 'unknown identifier');
+  }if (!isset($data['type'])) {
     return array('status' => 'error', 'message' => 'required attribute "type" is missing');
   }
   // force 'type' attribute to Start Case
@@ -148,10 +146,60 @@ function _kendra_saracen_trial_mod_get_mediaitem($id) {
       }
     }
     $node->views_count = 0;
+
+    _kendra_saracen_trial_mod_filter_mediaitem($node);
     return $node;
   }
   return array('status' => 'error', 'message' => 'unknown identifier ' . var_export($id, TRUE));
   //return 'unknown identifier: ' . var_export($id, TRUE);
+}
+
+/**
+ * filter out unused properties from a MediaItem node object
+ */
+function _kendra_saracen_trial_mod_filter_mediaitem(&$node) {
+  $mediaItem_properties = array(
+    //"vid",
+    //"uid",
+    "title",
+    //"log",
+    //"status",
+    //"comment",
+    //"promote",
+    //"sticky",
+    //"nid",
+    "type",
+    "language",
+    "created",
+    "changed",
+    //"tnid",
+    //"translate",
+    //"revision_timestamp",
+    //"revision_uid",
+    "field_mediaitem_identifier",
+    "field_mediaitem_description",
+    "field_mediaitem_tags",
+    "field_mediaitem_rate",
+    "field_mediaitem_derivatives",
+    "field_mediaitem_category",
+    "field_mediaitem_duration",
+    "field_mediaitem_3d",
+    "field_mediaitem_info",
+    //"rdf_mapping",
+    //"cid",
+    "last_comment_timestamp",
+    "last_comment_name",
+    "last_comment_uid",
+    "comment_count",
+    "name",
+    //"picture",
+    //"data",
+    "views_count",
+  );
+  
+  foreach($node as $key=>$obj) {
+      if (!in_array($key, $mediaItem_properties)) unset($node->$key);
+  }
 }
 
 function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10) {

@@ -1,2 +1,17 @@
+; -------------
 name = Kendra Saracen Trial
+description = Kendra Saracen Trial Hub
 core = 7.x
+package = "Features"
+version = "7.0"
+; -------------
+; Core
+; -------------
+dependencies[] = search
+; -------------
+; Features
+; -------------
+dependencies[] = kendra_match_recommender
+; -------------
+; Contrib
+; -------------

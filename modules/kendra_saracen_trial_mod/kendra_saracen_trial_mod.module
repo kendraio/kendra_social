@@ -232,8 +232,8 @@ function _kendra_saracen_trial_mod_search_content($query = NULL, $filter = NULL,
   $safe_filter = check_plain($filter);
 
   // restrict content types in search results
-  $safe_query .= ' ' . join(',', $search_allowed_types);
-
+  $safe_query .= ' type:' . join(',', $search_allowed_types);
+  
   // Invoke the search hook to generate results.
   $results = module_invoke('node', 'search_execute', $safe_query);
   return $results;

@@ -212,7 +212,7 @@
                     "access content"
                 ], 
                 "access arguments append": false, 
-                "access callback": "_kendra_saracen_trial_temp_callback", 
+                "access callback": "_kendra_saracen_trial_mod_default_access_callback", 
                 "args": [
                     {
                         "description": "The media item object", 

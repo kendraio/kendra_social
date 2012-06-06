@@ -68,6 +68,9 @@ if (isset($annotations['node'])) {
 return $results;
 }
 
+/**
+* get a single mediaItem
+*/
 function _kendra_saracen_trial_mod_get_mediaitem($id, $include_derivatives = FALSE) {
 //watchdog('d','r');
 // lookup node based on identifier
@@ -210,6 +213,10 @@ foreach ($node as $key => $obj) {
 }
 }
 
+/**
+* get all mediaItems
+* @todo filter by user preferences
+*/
 function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10) {
 if ($page_size == 0) {
   $page_size = 10;

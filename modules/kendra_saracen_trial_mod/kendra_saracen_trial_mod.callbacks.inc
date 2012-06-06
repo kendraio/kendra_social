@@ -330,35 +330,6 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
   return array('status' => 'OK', 'message' => 'Media item ' . $op, 'identifier' => $data['identifier']);
 }
 
-function _kendra_saracen_trial_mod_search_general($type = NULL, $query = NULL, $filter = NULL, $sort = NULL, $page = 0, $page_size = 10) {
-  $results = array();
-  switch (strtolower($type)) {
-    case 'mediaitem':
-    case 'mediaitems':
-      if (empty($query)) {
-        $results = _kendra_saracen_trial_mod_recommend_content($query, $filter, $sort, $page, $page_size);
-      }
-      else {
-        $results = _kendra_saracen_trial_mod_search_content($query, $filter, $sort, $page, $page_size);
-      }
-      break;
-
-    case 'user':
-      if (empty($query)) {
-        $results = _kendra_saracen_trial_mod_recommend_users($query, $filter, $sort, $page, $page_size);
-      }
-      else {
-        $results = _kendra_saracen_trial_mod_search_users($query, $filter, $sort, $page, $page_size);
-      }
-      break;
-
-    default:
-      // echo input
-      $results = compact('type', 'query', 'filter', 'sort');
-  }
-  return $results;
-}
-
 function _kendra_saracen_trial_mod_tag_mediaitem($id, $data) {
   global $user;
   $node = node_load(_kendra_saracen_trial_mod_lookup_id($id));

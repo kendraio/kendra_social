@@ -957,9 +957,9 @@
                 "callback": "_kendra_match_recommender_search_general", 
                 "enabled": 1, 
                 "file": {
-                    "module": "kendra_saracen_trial_mod", 
-                    "name": "kendra_saracen_trial_mod.callbacks.inc", 
-                    "type": "inc"
+                    "module": "kendra_match_recommender", 
+                    "name": "kendra_match_recommender", 
+                    "type": "module"
                 }, 
                 "help": "search content and users"
             }

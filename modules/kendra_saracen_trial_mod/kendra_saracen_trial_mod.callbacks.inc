@@ -190,6 +190,12 @@ $mediaItem_properties = array(
   //"picture",
   //"data",
   "views_count",
+  "field_derivative_format	",
+  "field_derivative_codec",
+  "field_derivative_quality",
+  "field_derivative_url",
+  "field_derivative_uuid",
+  "derivativeID",
 );
 
 if ($include_derivatives) {
@@ -201,8 +207,12 @@ foreach ($node as $key => $obj) {
     unset($node->$key);
   }
   elseif ($include_derivatives && $key === 'field_mediaitem_derivatives') {
-    // recurse
-    _kendra_saracen_trial_mod_filter_mediaitem($node->$key);
+      foreach ($node->$key as $lc => $derivatives) {
+          foreach ($derivatives as $i => $derivative) {
+              // recurse through all derivatives
+              _kendra_saracen_trial_mod_filter_mediaitem($node->$key[$lc][$i]);
+          }
+      }
   }
 }
 }

@@ -1,7 +1,6 @@
 <?php
 // force 'type' attribute to Start Case
-function _kendra_saracen_trial_mod_annotate_mediaitem($id, $data) { global $user; $org = node_load(_kendra_saracen_trial_mod_lookup_id($id)); if (!isset($org->nid)) { return array('status' => 'error', 'message' => 'unknown identifier'); }if (!isset($data['type'])) { return array('status' => 'error', 'message' => 'required attribute "type" is missing'); }$data['type'] = ucwords($data['type']);
-
+function _kendra_saracen_trial_mod_annotate_mediaitem($id, $data) { global $user; $org = node_load(_kendra_saracen_trial_mod_lookup_id($id)); if (!isset($org->nid)) { return array('status' => 'error', 'message' => 'unknown identifier'); }if (!isset($data['type'])) { return array('status' => 'error', 'message' => 'required attribute "type" is missing'); }$data['type'] = ucwords($data['type']); 
 if ($data['type'] == 'rate' || $data['type'] == 'rating') {
   return array('status' => 'error', 'message' => 'use the dedicated rating API resource');
 }
@@ -110,9 +109,11 @@ foreach ($result as $node) {
     $derivatives = $devquery->entityCondition('entity_type', 'node')->entityCondition('bundle', 'derivative')->fieldCondition('field_derivative_uuid', 'value', $node->field_mediaitem_identifier['und'][0]['value'], 'like')->execute();
     if (isset($derivatives['node'])) {
       foreach ($derivatives['node'] as $deriv) {
-        $deriv = node_load($deriv->nid);
-        $uuid = $deriv->field_derivative_uuid[$deriv->language][0]['value'];
+        $deriv               = node_load($deriv->nid);
+        $uuid                = $deriv->field_derivative_uuid[$deriv->language][0]['value'];
         $deriv->derivativeID = $uuid . ':' . $deriv->nid;
+
+        _kendra_saracen_trial_mod_filter_mediaitem($deriv);
         $node->field_mediaitem_derivatives['und'][] = $deriv;
       }
     }
@@ -205,14 +206,6 @@ if ($include_derivatives) {
 foreach ($node as $key => $obj) {
   if (!in_array($key, $mediaItem_properties)) {
     unset($node->$key);
-  }
-  elseif ($include_derivatives && $key === 'field_mediaitem_derivatives') {
-      foreach ($node->$key as $lc => $derivatives) {
-          foreach ($derivatives as $i => $derivative) {
-              // recurse through all derivatives
-              _kendra_saracen_trial_mod_filter_mediaitem($node->$key[$lc][$i]);
-          }
-      }
   }
 }
 }

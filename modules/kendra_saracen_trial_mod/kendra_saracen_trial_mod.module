@@ -98,10 +98,45 @@ function _kendra_saracen_update_facebook_profile($item) {
       watchdog('fb debug', 'failed to import: ' . print_r($response, TRUE) . ' for ' . print_r($item, TRUE));
     }
   }
+  _kendra_saracen_import_facebook_friend($item);
+}
+
+function _kendra_saracen_get_facebook_friends($account, $fbu, $access_code) {
+	$fb = "https://graph.facebook.com/{$account->fbu}/friends?access_token={$account->key}";
+	$debug == FALSE;
+  if ($debug) {
+		if ($account->uid == 27) { 
+			return $fb;
+		} else {
+			return array();
+		}
+	}
+	$response = drupal_http_request($fb);
+	if ($response->code == 200) {
+	  $data = json_decode($response->data);
+	  return $data->data;
+	} else {
+		watchdog('fb friend debug2', 'failed to import: ' . print_r($response, TRUE) . ' for ' . print_r($item, TRUE));
+	}
+	return array();
+}
+
+function _kendra_saracen_import_facebook_friend($job) {
+	$fb = "https://graph.facebook.com/{$job->fbu}/friends?access_token={$item->access_token}";
+	$response = drupal_http_request($fb);
+  if ($response->code == 200) {
+	  $data = json_decode($response->data);
+	  foreach ($data->data as $friend) {
+		  $friend->connection = 'friend';
+		  _kendra_saracen_save_sparql_fb($job, $friend);
+	  }
+	} else {
+		watchdog('fb friend debug', 'failed to import: ' . print_r($response, TRUE) . ' for ' . print_r($item, TRUE));
+	}
 }
 
 function _kendra_saracen_save_sparql_fb($item, $like) {
-  watchdog('debug', 'item: ' . print_r($item, TRUE) . ' <br />like: ' . print_r($like, TRUE));
+  //watchdog('debug', 'item: ' . print_r($item, TRUE) . ' <br />like: ' . print_r($like, TRUE));
   $id_url = url('user/' . $item->uid, array('absolute' => TRUE));
   $data = array('like' => $like->name);
   //_kendra_saracen_sparql_util('fblikes', $like->connection, $id_url, $data);

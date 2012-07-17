@@ -230,6 +230,38 @@
                     "type": "inc"
                 }, 
                 "help": ""
+            },
+            "update": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "access arguments append": false, 
+                "access callback": "_kendra_saracen_trial_mod_default_access_callback", 
+                "args": [
+                    {
+                        "name": "box", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "int"
+                    },
+                    {
+                        "description": "The media item object", 
+                        "name": "data", 
+                        "optional": false, 
+                        "source": "data", 
+                        "type": "struct"
+                    }
+                ], 
+                "callback": "_kendra_social_albums_update", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_albums", 
+                    "name": "kendra_social_albums.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": ""
             }, 
             "index": {
                 "access arguments": [
@@ -259,6 +291,29 @@
                     }
                 ], 
                 "callback": "_kendra_social_albums_retrieve", 
+                "enabled": 1, 
+                "file": {
+                    "module": "kendra_social_albums", 
+                    "name": "kendra_social_albums.callbacks", 
+                    "type": "inc"
+                }, 
+                "help": ""
+            },
+            "delete": {
+                "access arguments": [
+                    "access content"
+                ], 
+                "args": [
+                    {
+                        "name": "id", 
+                        "optional": false, 
+                        "source": {
+                            "path": 0
+                        }, 
+                        "type": "int"
+                    }
+                ], 
+                "callback": "_kendra_social_albums_delete", 
                 "enabled": 1, 
                 "file": {
                     "module": "kendra_social_albums", 

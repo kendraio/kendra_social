@@ -1,38 +1,50 @@
 <?php
 // force 'type' attribute to Start Case
-function _kendra_saracen_trial_mod_annotate_mediaitem($id, $data) { global $user; $org = node_load(_kendra_saracen_trial_mod_lookup_id($id)); if (!isset($org->nid)) { return array('status' => 'error', 'message' => 'unknown identifier'); }if (!isset($data['type'])) { return array('status' => 'error', 'message' => 'required attribute "type" is missing'); }$data['type'] = ucwords($data['type']); 
-if ($data['type'] == 'rate' || $data['type'] == 'rating') {
-  return array('status' => 'error', 'message' => 'use the dedicated rating API resource');
-}
-$node = new StdClass();
-$node->type = 'annotation';
-$node->status = 1;
-$node->title = 'User annotation for ' . $org->title;
-$node->uid = $user->uid;
-$node->language = 'und';
-$node->field_annotation_mediaitem['und'][0]['value'] = $id;
-if (isset($data['derivative'])) {
-  $node->field_annotation_derivative['und'][0]['value'] = $data['derivative'];
-}
-if (isset($data['start']) && $data['start'] > 0) {
-  $node->field_annotation_start['und'][0]['value'] = $data['start'];
-}
-if (isset($data['length']) && $data['length'] > 0) {
-  $node->field_annotation_length['und'][0]['value'] = $data['length'];
-}
-if (isset($data['type'])) {
-  $node->field_annotation_type['und'][0]['value'] = $data['type'];
-}
-if (isset($data['text'])) {
-  $node->field_annotation_text['und'][0]['value'] = $data['text'];
-}
+function _kendra_saracen_trial_mod_annotate_mediaitem($id, $data) { 
+	global $user; 
+	$org = node_load(_kendra_saracen_trial_mod_lookup_id($id)); 
+	if (!isset($org->nid)) { 
+		return array('status' => 'error', 'message' => 'unknown identifier'); 
+	}
+	if (!isset($data['type'])) { 
+		return array('status' => 'error', 'message' => 'required attribute "type" is missing'); 
+	}
+	$data['type'] = ucwords($data['type']); 
+	if ($data['type'] == 'rate' || $data['type'] == 'rating') {
+	  return array('status' => 'error', 'message' => 'use the dedicated rating API resource');
+	}
+	$node = new StdClass();
+	$node->type = 'annotation';
+	$node->status = 1;
+	$node->title = 'User annotation for ' . $org->title;
+	$node->uid = $user->uid;
+	$node->language = 'und';
+	$node->field_annotation_mediaitem['und'][0]['value'] = $id;
+	if (isset($data['derivative'])) {
+	  $node->field_annotation_derivative['und'][0]['value'] = $data['derivative'];
+	}
+	if (isset($data['start']) && $data['start'] > 0) {
+	  $node->field_annotation_start['und'][0]['value'] = $data['start'];
+	}
+	if (isset($data['length']) && $data['length'] > 0) {
+	  $node->field_annotation_length['und'][0]['value'] = $data['length'];
+	}
+	if (isset($data['duration']) && ($data['duration'] > 0) && !isset($data['length'])) {
+	  $node->field_annotation_length['und'][0]['value'] = $data['length'];
+	}
+	if (isset($data['type'])) {
+	  $node->field_annotation_type['und'][0]['value'] = $data['type'];
+	}
+	if (isset($data['text'])) {
+	  $node->field_annotation_text['und'][0]['value'] = $data['text'];
+	}
 
-node_object_prepare($node);
-node_save($node);
+	node_object_prepare($node);
+	node_save($node);
 
-return array('status' => 'OK', 'message' => 'created user annotation for ' . $org->title,
-  'type' => $data['type'],
-);
+	return array('status' => 'OK', 'message' => 'created user annotation for ' . $org->title,
+	  'type' => $data['type'],
+	);
 }
 
 function _kendra_saracen_trial_mod_delete_mediaitem($id) {
@@ -234,12 +246,25 @@ foreach ($result as $node) {
 return $results;
 }
 
+function _kendra_saracen_trial_mod_add_rate_mediaitem($id, $data, $lookup_nid = TRUE, $account = FALSE) {
+	if ($lookup_nid) {
+    $nid = _kendra_saracen_trial_mod_lookup_id($id);
+  } else {
+	  $nid = $id;
+  }
+  if ($account === FALSE) {
+  	global $user;
+    $account = $user->uid;
+  }
+	// TODO: add error checking so no null result
+	_kendra_saracen_save_recommend($account, $nid, 'rating', $data['value']);
+	_kendra_saracen_save_recommend($account, $nid, 'like', $data['value']);
+	return _fivestar_cast_vote('node', $nid, $data['value'], 'vote', $account);
+	return func_get_args();
+}
+
 function _kendra_saracen_trial_mod_rate_mediaitem($id, $data) {
-$nid = _kendra_saracen_trial_mod_lookup_id($id);
-global $user;
-_kendra_saracen_save_recommend($user->uid, $nid, 'rating', $data['value']);
-return _fivestar_cast_vote('node', $nid, $data['value'], 'vote', $user->uid);
-return func_get_args();
+	return _kendra_saracen_trial_mod_add_rate_mediaitem($id, $data);
 }
 
 /*
@@ -255,7 +280,13 @@ if (!isset($data['identifier'])) {
   }
   $data['identifier'] = uniqid($data['title']);
 }
+// use this to determin if reset of title is actually required
+$reset_title = FALSE; 
+if (isset($data['title'])) {
+  $reset_title = TRUE;
+}
 if (!isset($data['title'])) {
+	$reset_title = FALSE;
   $data['title'] = $data['identifier'];
 }
 
@@ -288,7 +319,9 @@ else {
   $node->language = 'und';
 }
 
-$node->title = $data['title'];
+if (empty($node->title) || $reset_title) {
+  $node->title = $data['title'];
+}
 
 $node->field_mediaitem_identifier['und'][0]['value'] = $data['identifier'];
 if (isset($data['description'])) {

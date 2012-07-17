@@ -21,6 +21,7 @@ function kendra_social_services_user_load($users) {
   );
   foreach ($fb_users as $fbuser) {
     $users[$fbuser->uid]->fbu = $fbuser->fbu;
+    $users[$fbuser->uid]->key = $fbuser->session_key;
     $queue = DrupalQueue::get('kendra_saracen_trial');
     $item = new stdClass();
     $item->type = 'facebook_profile';
@@ -33,6 +34,36 @@ function kendra_social_services_user_load($users) {
   $fblikes = db_query("SELECT * FROM {sparql_store_fblike_temp} f WHERE f.uid IN (:uids)", array(':uids' => array_keys($users)));
   foreach ($fblikes as $like) {
     $users[$like->uid]->{$like->connection}[] = $like->name;
+  }
+  if (TRUE) { // set to false to debug friends
+  foreach ($users as $account) {
+	  //used for live debugging: if ($account->uid == 27) {
+		if (isset($account->fbu) && isset($account->key)) {
+			$friends = _kendra_saracen_get_facebook_friends($account, $account->fbu, $account->key);
+			$users[$account->uid]->friends = array();
+			if (is_array($friends)) {
+				foreach ($friends as $friend) {
+					$users[$account->uid]->friends[$friend->id] = $friend->name;
+				}
+				if (!empty($users[$account->uid]->friends)) {
+				  $saracen_friends = db_query("SELECT u.uid, u.fbu FROM {fb_user} u WHERE fbu IN (:fbuids)",
+				    array(':fbuids' => array_keys($users[$account->uid]->friends))
+				  );
+				  foreach ($saracen_friends as $sfriend) {
+					  //$friend_account = user_load($sfriend->uid);
+						$users[$account->uid]->saracen_friends[] = (object) array(
+							'id' => $sfriend->uid,
+							'name' => $users[$account->uid]->friends[$sfriend->fbu],
+						);
+					}
+				}
+				unset($users[$account->uid]->friends);
+			} else {
+				$users[$account->uid]->friends = $friends;
+			}
+	//}
+	  }
+  }
   }
 }
 

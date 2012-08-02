@@ -8,6 +8,9 @@ function _kss_annotation_retrieve($nid) {
 function _kss_annotation_delete($nid) {
 	$annotate = node_load($nid);
 	global $user;
+	if (empty($annotate->nid)) {
+		return array('status' => 'Error', 'message' => 'Invalid ID: Annotation does not exist');
+	}
 	if ($user->uid == $annotate->uid) {
 		$annotate->status = 0;
 		node_save($annotate);

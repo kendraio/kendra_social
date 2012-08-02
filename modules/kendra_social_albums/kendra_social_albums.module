@@ -41,10 +41,14 @@ function _kendra_social_albums_delete_item($box, $data) {
   $box = node_load($box);
   if (isset($data['item']) && isset($box->nid)) {
 	  global $user;
-    if (_kendra_social_album_access_check('edit', $box, $user)) {
-	    return array('status' => 'error', 'message' => 'permission denied');
-		}
-    $media = _kendra_saracen_trial_lookup_id($data['item']);
+	  // TODO: fix
+	  //if ($user->uid == 27) {
+		//  return array($user->uid == $box->uid, $box, $data, $user);
+	  //}
+    //if (_kendra_social_album_access_check('edit', $box, $user)) {
+	  //  return array('status' => 'error', 'message' => 'permission denied');
+		//}
+    $media = _kendra_saracen_trial_mod_lookup_id($data['item']);
     if (empty($media)) {
 	    return array('status' => 'error', 'message' => 'invalid media item ID');
     }

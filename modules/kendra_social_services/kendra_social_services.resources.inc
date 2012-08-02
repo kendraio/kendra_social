@@ -15,10 +15,89 @@ function kendra_social_services_services_get_mappings() {
 	$services_definition = ob_get_clean();
 	
 	$resources = json_decode($services_definition, true); // convert JSON to associative arrays
+	//watchdog('service debug', '<pre>' . print_r($resources, TRUE) . '</pre>');
+	// TODO: Move these service definitions into JSON format 
 	
+	$resources['mediaItems']['targeted_actions']['startWatching'] = array(
+		'access arguments' => array('access content'),
+		'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
+		'access arguments append' => FALSE,
+		'args' => array(
+			array(
+				'name' => 'id',
+				'description' => 'identifier',
+				'source' => array('path' => '0'),
+				'type' => 'int',
+				'optional' => FALSE,
+		  )
+		),
+		'callback' => '_kendra_saracen_trial_mod_start_watching_mediaitem',
+	);
+	$resources['mediaItems']['targeted_actions']['stopWatching'] = array(
+		'access arguments' => array('access content'),
+		'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
+		'access arguments append' => FALSE,
+		'args' => array(
+			array(
+				'name' => 'id',
+				'description' => 'identifier',
+				'source' => array('path' => '0'),
+				'type' => 'int',
+				'optional' => FALSE,
+		  )
+		),
+		'callback' => '_kendra_saracen_trial_mod_stop_watching_mediaitem',
+	); 
+	$resources['annotations'] = array(
+		'operations' => array(
+			'delete' => array(
+				'access arguments' => array('access content'),
+				'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
+				'access arguments append' => FALSE,
+        'file' => array(
+	        'type' => 'inc', 
+	        'module' => 'kendra_saracen_trial_mod',
+	        'name' => 'kendra_saracen_trial.extra',
+	      ),
+				'args' => array(
+					array(
+						'name' => 'id',
+						'description' => 'identifier',
+						'source' => array('path' => '0'),
+						'type' => 'int',
+						'optional' => FALSE,
+				  )
+				),	
+				'callback' => '_kss_annotation_delete',
+				'enabled' => 1,
+			),
+			'retrieve' => array(
+				'access arguments' => array('access content'),
+        'file' => array(
+	        'type' => 'inc', 
+	        'module' => 'kendra_saracen_trial_mod',
+	        'name' => 'kendra_saracen_trial.extra',
+	      ),
+				'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
+				'access arguments append' => FALSE,
+				'args' => array(
+					array(
+						'name' => 'id',
+						'description' => 'identifier',
+						'source' => array('path' => '0'),
+						'type' => 'int',
+						'optional' => FALSE,
+				  ),
+				),
+				'callback' => '_kss_annotation_retrieve',
+				'enabled' => 1,
+			),
+		),
+	);
 	//die(json_encode(print_r($resources,1)));
 	return $resources;
 }
+
 
 /**
  * Kendra Social Default Service Callback

@@ -98,10 +98,45 @@ function _kendra_saracen_update_facebook_profile($item) {
       watchdog('fb debug', 'failed to import: ' . print_r($response, TRUE) . ' for ' . print_r($item, TRUE));
     }
   }
+  _kendra_saracen_import_facebook_friend($item);
+}
+
+function _kendra_saracen_get_facebook_friends($account, $fbu, $access_code) {
+	$fb = "https://graph.facebook.com/{$account->fbu}/friends?access_token={$account->key}";
+	$debug == FALSE;
+  if ($debug) {
+		if ($account->uid == 27) { 
+			return $fb;
+		} else {
+			return array();
+		}
+	}
+	$response = drupal_http_request($fb);
+	if ($response->code == 200) {
+	  $data = json_decode($response->data);
+	  return $data->data;
+	} else {
+		watchdog('fb friend debug2', 'failed to import: ' . print_r($response, TRUE) . ' for ' . print_r($item, TRUE));
+	}
+	return array();
+}
+
+function _kendra_saracen_import_facebook_friend($job) {
+	$fb = "https://graph.facebook.com/{$job->fbu}/friends?access_token={$item->access_token}";
+	$response = drupal_http_request($fb);
+  if ($response->code == 200) {
+	  $data = json_decode($response->data);
+	  foreach ($data->data as $friend) {
+		  $friend->connection = 'friend';
+		  _kendra_saracen_save_sparql_fb($job, $friend);
+	  }
+	} else {
+		watchdog('fb friend debug', 'failed to import: ' . print_r($response, TRUE) . ' for ' . print_r($item, TRUE));
+	}
 }
 
 function _kendra_saracen_save_sparql_fb($item, $like) {
-  watchdog('debug', 'item: ' . print_r($item, TRUE) . ' <br />like: ' . print_r($like, TRUE));
+  //watchdog('debug', 'item: ' . print_r($item, TRUE) . ' <br />like: ' . print_r($like, TRUE));
   $id_url = url('user/' . $item->uid, array('absolute' => TRUE));
   $data = array('like' => $like->name);
   //_kendra_saracen_sparql_util('fblikes', $like->connection, $id_url, $data);
@@ -139,3 +174,132 @@ function _kendra_saracen_trial_mod_lookup_id($id) {
 function _kendra_saracen_trial_mod_default_access_callback() {
   return TRUE;
 }
+
+
+/**
+ * Implements hook_menu().
+ */
+function kendra_saracen_trial_mod_menu() {
+  $items['admin/kendra-dev-generate'] = array(
+    'title' => 'Kendra Dev Generate',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_kendra_saracen_trial_dev_generate_data'),
+    'access arguments' => array('administer nodes'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+  return $items;
+}
+function _kendra_saracen_trial_dev_generate_data($form, &$form_state) {
+	$form['user_ratings'] = array(
+		'#type' => 'checkbox',
+		'#title' => 'Generate likes/ratings for 50% of content for each user',
+		'#default_value' => FALSE,
+	);
+	$form['submit'] = array(
+		'#type' => 'submit',
+		'#value' => 'Submit',
+	);
+	return $form;
+}
+function _kendra_saracen_trial_dev_generate_data_submit($form, &$form_state) {
+	if (isset($form_state['values']['user_ratings']) && $form_state['values']['user_ratings'] == 1) {
+		$user_query = new EntityFieldQuery();
+		$user_query->entityCondition('entity_type', 'user');
+		$user_query->propertyCondition('status', 1);
+		$accounts = $user_query->execute();
+		$uids = array_keys($accounts['user']);
+		
+		$node_query = new EntityFieldQuery();
+		$node_query->entityCondition('entity_type', 'node');
+		$node_query->entityCondition('bundle', 'mediaitem');
+		$node_query->propertyCondition('status', 1);
+		$items = $node_query->execute();
+		$nids = array_keys($items['node']);
+		$nid_count = count($nids);
+		
+		foreach ($uids as $uid) {
+			shuffle($nids);
+			$selected = array_slice($nids, 0, $nid_count / 2);
+			foreach ($selected as $nid) { 
+				$value = rand(50, 100);
+			  _kendra_saracen_trial_mod_add_rate_mediaitem($nid, array('value' => $value), FALSE, $uid);
+			  drupal_set_message("User {$uid} rates {$nid} with score {$value}");
+			}
+		}
+	}
+}
+
+
+function _kendra_saracen_trial_mod_start_watching_mediaitem($id) {
+	global $user;
+	db_update('kendra_mediaitem_watch')
+		->fields(array(
+			'stop' => REQUEST_TIME,
+		))
+		->condition('stop', NULL)
+		->condition('uid', $user->uid)
+		->execute(); 
+	return _kendra_saracen_trial_mod_save_live_event($user, $id, REQUEST_TIME, NULL);
+}
+function _kendra_saracen_trial_mod_stop_watching_mediaitem($id) {
+	global $user;
+	$closed = db_update('kendra_mediaitem_watch')
+		->fields(array(
+			'stop' => REQUEST_TIME,
+		))
+		->condition('stop', NULL)
+		->condition('uid', $user->uid)
+		->execute();
+	return $closed;
+}
+
+function _kendra_saracen_trial_mod_get_live_events($account) {
+	$results = db_select('kendra_mediaitem_watch', 'w')
+		->fields('w')
+		->execute();
+	$output = array();
+	foreach ($results as $r) {
+		$output[] = $r;
+	}
+	return $output;
+}
+
+function _kendra_saracen_trial_mod_save_live_event($account, $id, $start = NULL, $stop = NULL) {
+	$result = db_insert('kendra_mediaitem_watch')->fields(array(
+	  'uid' => $account->uid,
+	  'start' => $start,
+	  'stop' => $stop,
+		'media_id' => $id,
+	))->execute();
+	return $result;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

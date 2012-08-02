@@ -103,14 +103,6 @@ function _kendra_saracen_update_facebook_profile($item) {
 
 function _kendra_saracen_get_facebook_friends($account, $fbu, $access_code) {
 	$fb = "https://graph.facebook.com/{$account->fbu}/friends?access_token={$account->key}";
-	$debug == FALSE;
-  if ($debug) {
-		if ($account->uid == 27) { 
-			return $fb;
-		} else {
-			return array();
-		}
-	}
 	$response = drupal_http_request($fb);
 	if ($response->code == 200) {
 	  $data = json_decode($response->data);

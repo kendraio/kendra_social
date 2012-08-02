@@ -6,7 +6,7 @@ function _kss_annotation_retrieve($nid) {
 }
 
 function _kss_annotation_delete($nid) {
-	$annotate = node_load($id);
+	$annotate = node_load($nid);
 	global $user;
 	if ($user->uid == $annotate->uid) {
 		$annotate->status = 0;

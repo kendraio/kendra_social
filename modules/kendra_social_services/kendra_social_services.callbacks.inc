@@ -44,19 +44,35 @@ function _kss_social_publish($domain, $msg) {
 		return "Unknown domain";
 	}
 }
-
-function _kss_accounts_connect($domain = 'facebook.com') {
-	if ($domain == 'facebook.com') {
-		$connect_url = url('connect', array('absolute' => TRUE));
-		return array(
-      'embed' => "<iframe src=\"{$connect_url}\" width=\"300px\" height=\"400px\" />",
-		);
-	}
-	return "Kendra Social connect error: domain unknown";
+function _kss_accounts_connect($domain = 'facebook.com,twitter.com') {
+	global $user;
+	if (!empty($user->uid)) {
+		//module_load_include('inc', 'twitter', 'twitter.pages');
+		//$output = render(twitter_user_settings($user->uid));
+		$connect_url = url('user/' . $user->uid . '/edit/twitter', array('absolute' => TRUE));
+    return array('embed' => "<iframe src=\"{$connect_url}\" width=\"600px\" height=\"400px\" />");
+	} else {
+		if ($domain == 'facebook.com,twitter.com') {
+			$connect_url = url('connect', array('absolute' => TRUE));
+			return array(
+	      'embed' => "<iframe src=\"{$connect_url}\" width=\"300px\" height=\"400px\" />"
+	       // . theme('twitter_signin_button'),
+			); 
+		} else if ($domain = 'facebook.com') {
+			$connect_url = url('connect', array('absolute' => TRUE));
+			return array(
+	      'embed' => "<iframe src=\"{$connect_url}\" width=\"300px\" height=\"400px\" />",
+			);
+		} else if ($domain = 'twitter.com') {
+			return theme('twitter_signin_button');
+		}
+		return "Kendra Social connect error: domain unknown";
+  }
 }
 
 function _kss_accounts_connect_page() {
-	return "<fb:login-button scope=\"\" v=\"2\">Connect</fb:login-button>";
+	return "<fb:login-button scope=\"\" v=\"2\">Connect</fb:login-button><br />"
+	  . theme('twitter_signin_button');
 }
 
 /**

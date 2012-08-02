@@ -77,7 +77,6 @@ function _kendra_social_albums_index_fetch($account = NULL) {
     global $user;
     $account = $user; 
   }
-  //if ($account->uid == 27) { return array('test'); }
   $query = new EntityFieldQuery();
   $user_albums = $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'album')
@@ -106,9 +105,7 @@ function _kendra_social_albums_index_fetch($account = NULL) {
     $output[$nid]['title'] = $album_node->title;
     $output[$nid]['description'] = $album_node->description;
     $output[$nid]['item_count'] = count($album_node->items);
-    if ($account->uid == 27) {
-	    //$output[$nid]['debug'] = $album_node;
-    }
+
   }
 
   return $output;
@@ -171,9 +168,6 @@ function _kendra_social_albums_delete($id) {
 
 function _kendra_social_albums_update_user($id, $data) {
 	global $user;
-	if ($user->uid == 27) {
-		//return func_get_args();
-	}
   $box = node_load($id);
   $account = user_load($data['user']);
   if (isset($box->nid) && isset($account->uid)) {

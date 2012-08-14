@@ -211,14 +211,26 @@ function _kendra_social_add_user_to_box($uid, $bid, $perm) {
 function _kendra_social_albums_update_user($id, $data) {
 	global $user;
   $box = node_load($id);
-  $account = user_load($data['user']);
-  // check user and box exist
-  if (isset($box->nid) && isset($account->uid)) {
-	  $rid = _kendra_social_add_user_to_box($account->uid, $box->nid, $data['perm']);
-	  if ($rid) {
-		  return array('status' => 'ok', 'message' => "added user ({$account->uid}) to box ({$box->nid})", 'identifier' => $rid);
+  $updates = array();
+  $fail = TRUE;
+
+  foreach (explode(',', $data['user']) as $uid) {
+    $account = user_load($uid);
+    // check user and box exist
+    if (isset($box->nid) && isset($account->uid)) {
+	    $fail = FALSE;
+	    $rid = _kendra_social_add_user_to_box($account->uid, $box->nid, $data['perm']);
+	    if ($rid) {
+		    $updates[] = $rid;
+ 	    }
 	  }
-    return array('status' => 'ok', 'message' => "deleted user ({$account->uid}) from box ({$box->nid})");
-  }
-  return array('status' => 'error', 'message' => 'user and album are required');
+	}
+	if (!empty($updates)) {
+		return array('status' => 'ok', 'message' => 
+		  "added user ({$data['user']}) to box ({$id})", 'identifier' => implode(',', $updates));
+	}
+	if ($fail) {
+    return array('status' => 'error', 'message' => 'user and album are required');
+	}
+  return array('status' => 'ok', 'message' => "deleted user ({$data['user']}) from box ({$id})");
 }

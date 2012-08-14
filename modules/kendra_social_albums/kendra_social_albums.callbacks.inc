@@ -185,29 +185,39 @@ function _kendra_social_albums_delete($id) {
 	return array('status' => 'error', 'message' => 'user can only delete their own box.');
 }
 
+function _kendra_social_add_user_to_box($uid, $bid, $perm) {
+	// Delete any existing relations for this box and user
+	_kendra_social_albums_delete_user_rel($bid, $uid);
+
+	// Create new relation with updated permissions
+	$endpoints = array(
+	  array('entity_type' => 'node', 'entity_id' => $bid),
+	  array('entity_type' => 'user', 'entity_id' => $uid),
+	);
+	$relation = relation_create('album_user', $endpoints);
+	if (strstr($perm, 'R') !== FALSE) {
+	  $relation->field_album_perm['und'][] = array('value' => 'view');
+	}
+	if (strstr($perm, 'W') !== FALSE) {
+	  $relation->field_album_perm['und'][] = array('value' => 'edit');
+	}		  
+	if (!empty($relation->field_album_perm['und'])) {
+	  $rid = relation_save($relation);
+	  return $rid;
+	}
+	return FALSE;
+}
+
 function _kendra_social_albums_update_user($id, $data) {
 	global $user;
   $box = node_load($id);
   $account = user_load($data['user']);
+  // check user and box exist
   if (isset($box->nid) && isset($account->uid)) {
-    // Delete any existing relations
-    _kendra_social_albums_delete_user_rel($box->nid, $account->uid);
-    // Create new relation
-    $endpoints = array(
-      array('entity_type' => 'node', 'entity_id' => $box->nid),
-      array('entity_type' => 'user', 'entity_id' => $account->uid),
-    );
-    $relation = relation_create('album_user', $endpoints);
-    if (strstr($data['perm'], 'R') !== FALSE) {
-      $relation->field_album_perm['und'][] = array('value' => 'view');
-    }
-    if (strstr($data['perm'], 'W') !== FALSE) {
-      $relation->field_album_perm['und'][] = array('value' => 'edit');
-    }
-    if (!empty($relation->field_album_perm['und'])) {
-      $rid = relation_save($relation);
-      return array('status' => 'ok', 'message' => "added user ({$account->uid}) to box ({$box->nid})", 'identifier' => $rid);
-    } 
+	  $rid = _kendra_social_add_user_to_box($account->uid, $box->nid, $data['perm']);
+	  if ($rid) {
+		  return array('status' => 'ok', 'message' => "added user ({$account->uid}) to box ({$box->nid})", 'identifier' => $rid);
+	  }
     return array('status' => 'ok', 'message' => "deleted user ({$account->uid}) from box ({$box->nid})");
   }
   return array('status' => 'error', 'message' => 'user and album are required');

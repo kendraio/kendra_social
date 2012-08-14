@@ -115,6 +115,12 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
   $box = new StdClass();
   $box->id = $node->nid;
   $box->title = $node->title;
+
+  $public = field_get_items('node', $node, 'field_album_public');
+  $box->public = (empty($public[0]['value'])) ? FALSE : TRUE;
+	$friends = field_get_items('node', $node, 'field_album_friends');
+  $box->friends = (empty($friends[0]['value'])) ? FALSE : TRUE;
+
   $box->description = $node->field_album_description[$node->language][0]['value'];
   $box->owner = $node->uid;
   $box->owner_name = $node->name;

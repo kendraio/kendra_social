@@ -36,10 +36,10 @@ function _kendra_social_albums_update($id, $data) {
 	    $box->field_album_description['und'][0]['value'] = $data['description'];
 		}  
 		if (isset($data['public'])) {
-		  $node->field_album_public[LANGUAGE_NONE][0]['value'] = (!empty($data['public'])) ? 1 : 0;
+		  $box->field_album_public[LANGUAGE_NONE][0]['value'] = (!empty($data['public'])) ? 1 : 0;
 		}
 		if (isset($data['friends'])) {
-		  $node->field_album_friends[LANGUAGE_NONE][0]['value'] = (!empty($data['friends'])) ? 1 : 0;
+		  $box->field_album_friends[LANGUAGE_NONE][0]['value'] = (!empty($data['friends'])) ? 1 : 0;
 		}
 		node_save($box);
 		return array('status' => 'OK', 'message' => 'box ' . $id . ' has been updated');

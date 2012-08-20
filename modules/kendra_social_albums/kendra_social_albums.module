@@ -2,6 +2,17 @@
 
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_albums') . '/kendra_social_albums.callbacks.inc';
 
+function _kendra_social_albums_fetch_user_rel($boxid, $uid) {
+	$query = new EntityFieldQuery();
+	$res = $query->entityCondition('entity_type', 'relation')
+	  ->entityCondition('bundle', 'album_user')
+	  ->fieldCondition('endpoints', 'entity_id', $boxid, '=')
+	  ->fieldCondition('endpoints', 'entity_id', $uid, '=')
+	  ->execute();
+	$relation = array_shift($res['relation']);
+	return relation_load($relation->rid);
+}
+
 function _kendra_social_albums_delete_user_rel($boxid, $uid) {  
   $query = new EntityFieldQuery();
   $res = $query->entityCondition('entity_type', 'relation')

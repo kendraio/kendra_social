@@ -39,13 +39,30 @@ function _kendra_social_albums_update($id, $data) {
 		  $box->field_album_public[LANGUAGE_NONE][0]['value'] = (!empty($data['public'])) ? 1 : 0;
 		}
 		if (isset($data['friends'])) {
-		  $box->field_album_friends[LANGUAGE_NONE][0]['value'] = (!empty($data['friends'])) ? 1 : 0;
+			if ($data['friends'] == 1) {
+				$data['friends'] = 'R';
+			}
+		  $box->field_album_friends[LANGUAGE_NONE][0]['value'] = _kendra_social_parse_perm($data['friends']);
 		}
 		node_save($box);
 		return array('status' => 'OK', 'message' => 'box ' . $id . ' has been updated');
 	} else {
 		return array('status' => 'error', 'message' => 'permission denied, not your box');
 	}
+}
+
+function _kendra_social_parse_perm($perm, $as_array = FALSE) {
+	$perm_string = '';
+	$perm_array = array();
+	if (strstr($perm, 'R') !== FALSE) {
+	  $perm_array[] = array('value' => 'view');
+	  $perm_string .= 'R';
+	}
+	if (strstr($perm, 'W') !== FALSE) {
+	  $perm_array[] = array('value' => 'edit');
+	  $perm_string .= 'W';
+	}
+	return ($as_array) ? $perm_array : $perm_string;
 }
 
 
@@ -132,7 +149,7 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
   $public = field_get_items('node', $node, 'field_album_public');
   $box->public = (empty($public[0]['value'])) ? FALSE : TRUE;
 	$friends = field_get_items('node', $node, 'field_album_friends');
-  $box->friends = (empty($friends[0]['value'])) ? FALSE : TRUE;
+  $box->friends = (empty($friends[0]['value'])) ? FALSE : $friends[0]['value'];
 
   $box->description = $node->field_album_description[$node->language][0]['value'];
   $box->owner = $node->uid;
@@ -185,27 +202,71 @@ function _kendra_social_albums_delete($id) {
 	return array('status' => 'error', 'message' => 'user can only delete their own box.');
 }
 
-function _kendra_social_add_user_to_box($uid, $bid, $perm) {
+function _kendra_social_add_user_to_box($uid, $bid, $perm, $action = 'update') {
 	// Delete any existing relations for this box and user
-	_kendra_social_albums_delete_user_rel($bid, $uid);
+	if ($action == 'update') { 
+  	_kendra_social_albums_delete_user_rel($bid, $uid);
+		// Create new relation with updated permissions
+		$endpoints = array(
+		  array('entity_type' => 'node', 'entity_id' => $bid),
+		  array('entity_type' => 'user', 'entity_id' => $uid),
+		);
+		$relation = relation_create('album_user', $endpoints);
+  } else {
+	  // to add or remove perm then load the existing relation
+	  $relation = _kendra_social_albums_fetch_user_rel($bid, $uid);
+	  if (empty($relation->rid)) {
+		  // relation doesn't exist, so create it
+			$endpoints = array(
+			  array('entity_type' => 'node', 'entity_id' => $bid),
+			  array('entity_type' => 'user', 'entity_id' => $uid),
+			);
+			$relation = relation_create('album_user', $endpoints);
+	  }
+  }
 
-	// Create new relation with updated permissions
-	$endpoints = array(
-	  array('entity_type' => 'node', 'entity_id' => $bid),
-	  array('entity_type' => 'user', 'entity_id' => $uid),
-	);
-	$relation = relation_create('album_user', $endpoints);
-	if (strstr($perm, 'R') !== FALSE) {
-	  $relation->field_album_perm['und'][] = array('value' => 'view');
+  // add permission to user
+  if ($action == 'update' || $action == 'add') {
+		if (strstr($perm, 'R') !== FALSE) {
+		  $relation->field_album_perm['und'][] = array('value' => 'view');
+		}
+		if (strstr($perm, 'W') !== FALSE) {
+		  $relation->field_album_perm['und'][] = array('value' => 'edit');
+		}		  
 	}
-	if (strstr($perm, 'W') !== FALSE) {
-	  $relation->field_album_perm['und'][] = array('value' => 'edit');
-	}		  
+	
+	// remove permission from user
+	if ($action == 'remove') {
+		if (strstr($perm, 'R') !== FALSE) {
+			_kendra_social_remove_perm($relation->field_album_perm['und'], 'view');
+		}
+		if (strstr($perm, 'W') !== FALSE) {
+			_kendra_social_remove_perm($relation->field_album_perm['und'], 'edit');
+		}
+	}
+	watchdog('d', '<pre>' . print_r($relation, TRUE) . '</pre>');
+	
+	// if some permissions then save the relation, else delete
 	if (!empty($relation->field_album_perm['und'])) {
 	  $rid = relation_save($relation);
 	  return $rid;
+	} else {
+		if (!empty($relation->rid)) {
+			relation_delete($relation->rid);
+		}
 	}
 	return FALSE;
+} 
+
+function _kendra_social_remove_perm(&$perm_array, $perm) {
+	if (!empty($perm_array)) {
+		foreach ($perm_array as $key => $value) {
+			if ($value['value'] == $perm) {
+				unset($perm_array[$key]);
+			}
+		}
+	}
+	return $perm_array;
 }
 
 function _kendra_social_albums_update_user($id, $data) {
@@ -215,11 +276,15 @@ function _kendra_social_albums_update_user($id, $data) {
   $fail = TRUE;
 
   foreach (explode(',', $data['user']) as $uid) {
-    $account = user_load($uid);
+    //$account = user_load($uid);
     // check user and box exist
-    if (isset($box->nid) && isset($account->uid)) {
+		// Temp skip account check for performance reasons!
+    if (isset($box->nid)) { //&& isset($account->uid)) {
 	    $fail = FALSE;
-	    $rid = _kendra_social_add_user_to_box($account->uid, $box->nid, $data['perm']);
+	    if (empty($data['action'])) {
+				$data['action'] = 'update';
+			}
+	    $rid = _kendra_social_add_user_to_box($uid, $box->nid, $data['perm'], $data['action']);
 	    if ($rid) {
 		    $updates[] = $rid;
  	    }

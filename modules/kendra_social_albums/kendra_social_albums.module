@@ -24,6 +24,11 @@ function _kendra_social_albums_delete_user_rel($boxid, $uid) {
   relation_delete($relation->rid);
 }
 
+
+function _kendra_social_albums_permission_check() {
+	watchdog('p', '<pre>' . print_r(func_get_args(), TRUE) . '</pre>');
+}
+
 // TODO: more restricted access control
 function _kendra_social_album_access_check($op, $box, $account) {
   if ($op == 'view') {

@@ -127,6 +127,37 @@ function _kendra_social_albums_index_fetch($account = NULL) {
       );
     }
   }
+
+	// load public albums
+	$query3 = new EntityFieldQuery();
+	$public_albums = $query3->entityCondition('entity_type', 'node')	
+		->entityCondition('bundle', 'album')
+		->fieldCondition('field_album_public', 'value', 1)
+		->propertyCondition('status', 1)
+		->execute();
+	if (!empty($public_albums['node'])) {
+		foreach ($public_albums['node'] as $nid => $album) {
+			$output[$nid] = array('id' => $nid, 'owner' => FALSE);
+		}
+	}
+	
+	// TODO: load saracen friends from cache to use in next query
+	// can't do user_load here as causes infinite recursion
+	
+	// load friends albums
+	$query4 = new EntityFieldQuery();
+	$friends_albums = $query4->entityCondition('entity_type', 'node')
+	  ->entityCondition('bundle', 'album')
+	  ->fieldCondition('field_album_friends', 'value', '%R%', 'LIKE')
+	//  ->propertyCondition('uid', $friends_array, 'IN')
+	  ->propertyCondition('status', 1)
+	  ->execute();
+	if (!empty($friends_albums['node'])) {
+		foreach ($friends_albums['node'] as $nid => $album) {
+			$output[$nid] = array('id' => $nid, 'owner' => FALSE);
+		}
+	}
+	
   foreach ($user_albums['node'] as $nid => $album) {
     $output[$nid] = array('id' => $nid, 'owner' => TRUE);
   }
@@ -135,11 +166,12 @@ function _kendra_social_albums_index_fetch($account = NULL) {
     $output[$nid]['title'] = $album_node->title;
     $output[$nid]['description'] = $album_node->description;
     $output[$nid]['item_count'] = count($album_node->items);
-
   }
 
   return $output;
 }
+
+
 function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
   $node = node_load($id);
   $box = new StdClass();

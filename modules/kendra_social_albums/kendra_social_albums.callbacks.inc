@@ -244,7 +244,6 @@ function _kendra_social_add_user_to_box($uid, $bid, $perm, $action = 'update') {
 			_kendra_social_remove_perm($relation->field_album_perm['und'], 'edit');
 		}
 	}
-	watchdog('d', '<pre>' . print_r($relation, TRUE) . '</pre>');
 	
 	// if some permissions then save the relation, else delete
 	if (!empty($relation->field_album_perm['und'])) {

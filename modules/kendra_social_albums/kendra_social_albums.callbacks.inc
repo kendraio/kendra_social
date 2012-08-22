@@ -247,58 +247,59 @@ function _kendra_social_albums_delete($id) {
 }
 
 function _kendra_social_add_user_to_box($uid, $bid, $perm, $action = 'update') {
-	// Delete any existing relations for this box and user
-	if ($action == 'update') { 
-  	_kendra_social_albums_delete_user_rel($bid, $uid);
-		// Create new relation with updated permissions
+
+	$existing = _kendra_social_albums_fetch_user_rel($bid, $uid);
+	if (empty($existing->rid)) {
+	  // relation doesn't exist, so create it
 		$endpoints = array(
 		  array('entity_type' => 'node', 'entity_id' => $bid),
 		  array('entity_type' => 'user', 'entity_id' => $uid),
 		);
-		$relation = relation_create('album_user', $endpoints);
-  } else {
-	  // to add or remove perm then load the existing relation
-	  $relation = _kendra_social_albums_fetch_user_rel($bid, $uid);
-	  if (empty($relation->rid)) {
-		  // relation doesn't exist, so create it
-			$endpoints = array(
-			  array('entity_type' => 'node', 'entity_id' => $bid),
-			  array('entity_type' => 'user', 'entity_id' => $uid),
-			);
-			$relation = relation_create('album_user', $endpoints);
+		$existing = relation_create('album_user', $endpoints);
+  }
+  $old_perms = field_get_items('relation', $existing, 'field_album_perms');
+  $new_perms = array();
+  if (!empty($old_perms)) {
+	  foreach ($old_perms as $p) {
+		   $new_perms[$p['value']] = 1;
 	  }
   }
 
-  // add permission to user
-  if ($action == 'update' || $action == 'add') {
-		if (strstr($perm, 'R') !== FALSE) {
-		  $relation->field_album_perm['und'][] = array('value' => 'view');
+  if ($action == 'update') {
+	  $new_perms = array();
+	}
+	if ($action == 'update' || $action == 'add') {
+	  if (strstr($perm, 'R') !== FALSE) {
+		  $new_perms['view'] = 1;
 		}
 		if (strstr($perm, 'W') !== FALSE) {
-		  $relation->field_album_perm['und'][] = array('value' => 'edit');
-		}		  
-	}
-	
-	// remove permission from user
+		  $new_perms['edit'] = 1;
+		}
+  }
 	if ($action == 'remove') {
 		if (strstr($perm, 'R') !== FALSE) {
-			_kendra_social_remove_perm($relation->field_album_perm['und'], 'view');
+		  unset($new_perms['view']);
 		}
 		if (strstr($perm, 'W') !== FALSE) {
-			_kendra_social_remove_perm($relation->field_album_perm['und'], 'edit');
+		  unset($new_perms['edit']);
 		}
+	}
+	$existing->field_album_perm[LANGUAGE_NONE] = array();
+	foreach ($new_perms as $p => $val) {
+		$existing->field_album_perm[LANGUAGE_NONE][] = array('value' => $p);
 	}
 	
 	// if some permissions then save the relation, else delete
-	if (!empty($relation->field_album_perm['und'])) {
-	  $rid = relation_save($relation);
+	if (!empty($new_perms)) {
+	  $rid = relation_save($existing);
 	  return $rid;
 	} else {
-		if (!empty($relation->rid)) {
-			relation_delete($relation->rid);
+		if (!empty($existing->rid)) {
+			relation_delete($existing->rid);
 		}
 	}
 	return FALSE;
+	
 } 
 
 function _kendra_social_remove_perm(&$perm_array, $perm) {

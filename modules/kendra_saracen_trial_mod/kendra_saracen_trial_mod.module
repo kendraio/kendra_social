@@ -114,7 +114,7 @@ function _kendra_saracen_get_facebook_friends($account, $fbu, $access_code) {
 }
 
 function _kendra_saracen_import_facebook_friend($job) {
-	$fb = "https://graph.facebook.com/{$job->fbu}/friends?access_token={$item->access_token}";
+	$fb = "https://graph.facebook.com/{$job->fbu}/friends?access_token={$job->access_token}";
 	$response = drupal_http_request($fb);
   if ($response->code == 200) {
 	  $data = json_decode($response->data);

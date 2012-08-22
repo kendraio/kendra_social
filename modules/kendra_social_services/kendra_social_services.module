@@ -10,13 +10,40 @@ include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_servic
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/kendra_social_services.resources.inc';
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/kendra_social_services.callbacks.inc';
 
-// This function adds the recommender word cloud into user profiles when loading them
-function kendra_social_services_user_load($users) {
-  $recommendation = db_query("SELECT * FROM {kendra_match_recommender_out_tags} t WHERE t.uid IN (:uids)", array(':uids' => array_keys($users)));
+
+// Takes an array of user objects and adds in recommendation information
+function _kss_user_load_recommendations(&$users) {
+	$recommendation = db_query("SELECT * FROM {kendra_match_recommender_out_tags} t WHERE t.uid IN (:uids)", array(':uids' => array_keys($users)));
   foreach ($recommendation as $record) {
     $users[$record->uid]->profile_tags[] = array('name' => $record->tag, 'score' => $record->weight, 'type' => 'explicit');
   }
-  $fb_users = db_query("SELECT u.uid, u.fbu, a.session_key FROM {fb_user_app} a INNER JOIN {fb_user} u ON a.fbu = u.fbu WHERE uid IN (:uids)",
+}
+
+// Takes an array of user objects and adds in user FB likes
+function _kss_user_load_facebook_likes(&$users) { 
+  $fblikes = db_query("SELECT * FROM {sparql_store_fblike_temp} f WHERE f.uid IN (:uids)", array(':uids' => array_keys($users)));
+  foreach ($fblikes as $like) {
+    $users[$like->uid]->{$like->connection}[] = $like->name;
+  }
+}
+
+// Takes an array of user objects and adds in user's FB friends
+function _kss_user_load_facebook_friends(&$users) {
+	
+}
+
+
+
+
+// This function adds the recommender word cloud into user profiles when loading them
+function kendra_social_services_user_load($users) {
+
+  // Load tags from recommender output table
+	_kss_user_load_recommendations($users);
+
+  // Queue up an update of the Facebook data to run on cron
+  $fb_users = db_query("SELECT u.uid, u.fbu, a.session_key FROM {fb_user_app} a 
+	  INNER JOIN {fb_user} u ON a.fbu = u.fbu WHERE uid IN (:uids)",
     array(':uids' => array_keys($users))
   );
   foreach ($fb_users as $fbuser) {
@@ -31,11 +58,14 @@ function kendra_social_services_user_load($users) {
     $item->access_token = $fbuser->session_key;
     $queue->createItem($item);
   }
-  // DEBUG: load fb likes for this user into profile
-  $fblikes = db_query("SELECT * FROM {sparql_store_fblike_temp} f WHERE f.uid IN (:uids)", array(':uids' => array_keys($users)));
-  foreach ($fblikes as $like) {
-    $users[$like->uid]->{$like->connection}[] = $like->name;
-  }
+
+  // Load all FB likes into profile 
+  _kss_user_load_facebook_likes($users);
+
+  // Load FB friends into profile
+  _kss_user_load_facebook_friends($users);
+
+
   if (TRUE) { // set to false to debug friends
 	  foreach ($users as $account) {
 		  $users[$account->uid]->saracen_friends = array();

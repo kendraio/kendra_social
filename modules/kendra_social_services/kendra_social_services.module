@@ -27,6 +27,7 @@ function kendra_social_services_user_load($users) {
     $item->type = 'facebook_profile';
     $item->uid = $fbuser->uid;
     $item->fbu = $fbuser->fbu;
+    // TODO: remove access token from user object after finished loading
     $item->access_token = $fbuser->session_key;
     $queue->createItem($item);
   }
@@ -38,7 +39,6 @@ function kendra_social_services_user_load($users) {
   if (TRUE) { // set to false to debug friends
 	  foreach ($users as $account) {
 		  $users[$account->uid]->saracen_friends = array();
-		  //used for live debugging: if ($account->uid == 27) {
 			if (isset($account->fbu) && isset($account->key)) {
 				$friends = _kendra_saracen_get_facebook_friends($account, $account->fbu, $account->key);
 				$users[$account->uid]->facebook_friends = array();
@@ -64,8 +64,9 @@ function kendra_social_services_user_load($users) {
 				} else {
 					$users[$account->uid]->facebook_friends = $friends;
 				}
-		//}
 		  }
+			// TODO: enable extra twitter import - probably best move this to cron?
+		  $twitter_active = FALSE;
 		  if ($twitter_active) {
 			  static $twitter_lists;
 			  if (!isset($twitter_lists[$account->uid])) {
@@ -141,55 +142,6 @@ function kendra_social_services_user_load($users) {
   }
 }
 
-// old hacked version of user profile load hook
-function kendra_social_services_user_load_noqueue($users) {
-  $recommend = db_query("SELECT * FROM {kendra_match_recommender_out_tags} t WHERE t.uid IN (:uids)",
-    array(':uids' => array_keys($users))
-  );
-  foreach ($recommend as $record) {
-    $users[$record->uid]->profile_tags[] = array('name' => $record->tag, 'score' => $record->weight,
-      'type' => 'explicit',
-    );
-  }
-  $result = db_query('SELECT u.uid, u.fbu, a.session_key FROM {fb_user_app} a INNER JOIN {fb_user} u ON a.fbu = u.fbu WHERE uid IN (:uids)',
-    array(':uids' => array_keys($users))
-  );
-  foreach ($result as $record) {
-    $users[$record->uid]->fbu = $record->fbu;
-    //$users[$record->uid]->access_token = $record->session_key;
-    $connections = array('likes', 'movies', 'music');
-    $first = TRUE;
-    foreach ($connections as $connection) {
-      $test = drupal_http_request('https://graph.facebook.com/' . $record->fbu . '/' . $connection . '?access_token=' . $record->session_key);
-      if ($test->code == 200) {
-        $data = json_decode($test->data);
-        foreach ($data->data as $like) {
-          $key = "fb_{$connection}";
-          $users[$record->uid]->{$key}[] = $like->name;
-          if ($first) {
-            // if first, drop all profile tags from recommender input
-            _kendra_saracen_save_recommend($record->uid, NULL, 'profile', $like->name, TRUE, $like->id);
-          }
-          else {
-            _kendra_saracen_save_recommend($record->uid, NULL, 'profile', $like->name, FALSE, $like->id);
-          }
-          $first = FALSE;
-          _kendra_saracen_sparql_util('userFb', $key, url('user/' . $record->uid, array('absolute' => TRUE)), $users[$record->uid]->{$key});
-        }
-      }
-      else {
-        if (isset($test->data)) {
-          $data = json_decode($test->data);
-          $users[$record->uid]->fb_error[$connection] = $data->error->message;
-          // $users[$record->uid]->fb_error_debug[$connection] = print_r($test, TRUE);
-        }
-        else {
-          $users[$record->uid]->fb_error[$connection] = print_r($test, TRUE);
-        }
-      }
-    }
-  }
-}
 
 function kendra_social_services_permission() {
   return array(

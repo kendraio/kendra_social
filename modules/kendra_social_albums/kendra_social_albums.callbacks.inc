@@ -164,13 +164,20 @@ function _kendra_social_albums_index_fetch($account = NULL) {
   foreach ($output as $nid => $box) {
     $album_node = _kendra_social_albums_retrieve($nid);
     $output[$nid]['title'] = $album_node->title;
-    $output[$nid]['description'] = $album_node->description;
+    $output[$nid]['description'] = !empty($album_node->description) ? $album_node->description : '';
     $output[$nid]['item_count'] = count($album_node->items);
   }
 
   return $output;
 }
 
+/* Returns TRUE if the given NID is a valid box */
+/* Use for testing if a box exists without having to load entire box object */
+function _kendra_social_albums_box_exists($id) {
+  $nid = db_query("SELECT nid FROM {node} n WHERE n.nid = :nid AND n.type = 'album'",
+    array(':nid' => $id))->fetchField();
+  return !empty($nid);
+}
 
 function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
   $node = node_load($id);
@@ -187,12 +194,16 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
 	$friends = field_get_items('node', $node, 'field_album_friends');
   $box->friends = (empty($friends[0]['value'])) ? FALSE : $friends[0]['value'];
 
-  $box->description = $node->field_album_description[$node->language][0]['value'];
+  $description = field_get_items('node', $node, 'field_album_description');
+  if (!empty($description)) {
+	  $box->description = $description[0]['value'];
+  }
   $box->owner = $node->uid;
   $box->owner_name = $node->name;
   if (!$no_data) {
 	  $box->items = array();
 	  $box->users = array(array('uid' => $node->uid, 'perm' => array('Owner', 'R', 'W')));
+	  $box->users_temp = array();
 	  $items = relation_query('node', $id)->execute();
 	 
 	  foreach ($items as $item_id => $rel) {
@@ -209,10 +220,12 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
  				// and boxes include users!
    			// $temp_account = user_load($rel->endpoints[LANGUAGE_NONE][1]['entity_id']);
  				$perm = array();
-				foreach ($rel->field_album_perm[LANGUAGE_NONE] as $i => $p) {
-					if ($p['value'] == 'view') { $perm[] = 'R'; }
-					if ($p['value'] == 'edit') { $perm[] = 'W'; }
-				}
+			  if (!empty($rel->field_album_perm[LANGUAGE_NONE])) {
+					foreach ($rel->field_album_perm[LANGUAGE_NONE] as $i => $p) {
+						if ($p['value'] == 'view') { $perm[] = 'R'; }
+						if ($p['value'] == 'edit') { $perm[] = 'W'; }
+					}
+			  }
 				if (!empty($rel->endpoints[LANGUAGE_NONE][1]['entity_id'])) {
 					foreach ($perm as $p) {
 						$box->users_temp[$rel->endpoints[LANGUAGE_NONE][1]['entity_id']][] = $p;
@@ -220,14 +233,15 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
 			  }
 			}
 	  }   
+	  foreach ($box->users_temp as $key => $perm) {
+		  $box->users[] = array(
+		  	'uid' => $key,
+		    'perm' => $perm, 
+		  );
+	  }
+	  unset($box->users_temp);
   }
-  foreach ($box->users_temp as $key => $perm) {
-	  $box->users[] = array(
-	  	'uid' => $key,
-	    'perm' => $perm, 
-	  );
-  }
-  unset($box->users_temp);
+
   return $box;
 }
 
@@ -258,6 +272,7 @@ function _kendra_social_add_user_to_box($uid, $bid, $perm, $action = 'update') {
 		$existing = relation_create('album_user', $endpoints);
   }
   $old_perms = field_get_items('relation', $existing, 'field_album_perms');
+  watchdog('dd', '<pre>' . print_r($old_perms, TRUE) . '</pre>');
   $new_perms = array();
   if (!empty($old_perms)) {
 	  foreach ($old_perms as $p) {
@@ -312,23 +327,24 @@ function _kendra_social_remove_perm(&$perm_array, $perm) {
 	}
 	return $perm_array;
 }
-
+ 
 function _kendra_social_albums_update_user($id, $data) {
 	global $user;
-  $box = node_load($id);
+  //$box = node_load($id);
+  $bid = $id;
   $updates = array();
   $fail = TRUE;
 
   foreach (explode(',', $data['user']) as $uid) {
     //$account = user_load($uid);
     // check user and box exist
-		// Temp skip account check for performance reasons!
-    if (isset($box->nid)) { //&& isset($account->uid)) {
+		// Temp skip account check for performance reasons! and box check!
+    if (isset($bid)) { //&& isset($account->uid)) {
 	    $fail = FALSE;
 	    if (empty($data['action'])) {
 				$data['action'] = 'update';
 			}
-	    $rid = _kendra_social_add_user_to_box($uid, $box->nid, $data['perm'], $data['action']);
+	    $rid = _kendra_social_add_user_to_box($uid, $bid, $data['perm'], $data['action']);
 	    if ($rid) {
 		    $updates[] = $rid;
  	    }

@@ -99,6 +99,9 @@ foreach ($result as $node) {
   if (!isset($node->nid)) {
     $node = node_load($node->entity_id);
   }
+  if (empty($node->language)) {
+	  $node->language = LANGUAGE_NONE;
+  }
 
   // lookup extra properties from sparql
   $store = sparql_get_store(variable_get('kendra_saracen_mediaitem_store', 'mediaItems'), SPARQL_ENDPOINT);
@@ -112,7 +115,9 @@ foreach ($result as $node) {
   //watchdog('d', '<pre>' . print_r($node, TRUE) . '</pre>');
   foreach ($node->field_mediaitem_tags[$node->language] as $key => $term) {
     $term = taxonomy_term_load($term['tid']);
-    $node->field_mediaitem_tags[$node->language][$key] = array('tid' => $term->tid, 'name' => $term->name);
+    if (!empty($term->tid)) {
+      $node->field_mediaitem_tags[$node->language][$key] = array('tid' => $term->tid, 'name' => $term->name);
+    }
   }
 
   if (isset($node->field_mediaitem_info[$node->language][0]['value'])) {
@@ -153,7 +158,11 @@ foreach ($result as $node) {
   if (isset($annotations['node'])) {
     foreach ($annotations['node'] as $annot) {
       $annot = node_load($annot->nid);
-      $node->annotations[$annot->field_annotation_type['und'][0]['value']]++;
+      if (!empty($node->annotations[$annot->field_annotation_type['und'][0]['value']])) {
+        $node->annotations[$annot->field_annotation_type['und'][0]['value']]++;
+      } else {
+				$node->annotations[$annot->field_annotation_type['und'][0]['value']] = 1;
+      }
     }
     if (isset($node->annotations['Rate'])) {
       unset($node->annotations['Rate']);

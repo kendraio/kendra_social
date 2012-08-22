@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the kendra_social_boxes feature.
+ */
+
+include_once('kendra_social_boxes.features.inc');

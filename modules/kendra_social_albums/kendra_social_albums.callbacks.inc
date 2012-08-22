@@ -174,6 +174,10 @@ function _kendra_social_albums_index_fetch($account = NULL) {
 
 function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
   $node = node_load($id);
+  if (empty($node->nid)) {
+	  // Box does not exist. TODO: also check permission
+	  return FALSE;
+  }
   $box = new StdClass();
   $box->id = $node->nid;
   $box->title = $node->title;
@@ -209,13 +213,21 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
 					if ($p['value'] == 'view') { $perm[] = 'R'; }
 					if ($p['value'] == 'edit') { $perm[] = 'W'; }
 				}
-				$box->users[] = array(
-					'uid' => $rel->endpoints[LANGUAGE_NONE][1]['entity_id'],
-					'perm' => $perm,
-				);
+				if (!empty($rel->endpoints[LANGUAGE_NONE][1]['entity_id'])) {
+					foreach ($perm as $p) {
+						$box->users_temp[$rel->endpoints[LANGUAGE_NONE][1]['entity_id']][] = $p;
+					}
+			  }
 			}
 	  }   
   }
+  foreach ($box->users_temp as $key => $perm) {
+	  $box->users[] = array(
+	  	'uid' => $key,
+	    'perm' => $perm, 
+	  );
+  }
+  unset($box->users_temp);
   return $box;
 }
 

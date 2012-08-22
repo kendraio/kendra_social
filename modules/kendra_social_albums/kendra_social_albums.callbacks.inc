@@ -121,10 +121,12 @@ function _kendra_social_albums_index_fetch($account = NULL) {
   if (!empty($contributed_albums['relation'])) {
     foreach ($contributed_albums['relation'] as $rid => $relation) {
       $relation = relation_load($rid);
-      $output[$relation->endpoints['und'][0]['entity_id']] = array(
-        'id' => $relation->endpoints['und'][0]['entity_id'], 
-        'owner' => FALSE,
-      );
+      if (!empty($relation->endpoints['und'][0]['entity_id'])) {
+        $output[$relation->endpoints['und'][0]['entity_id']] = array(
+          'id' => $relation->endpoints['und'][0]['entity_id'], 
+          'owner' => FALSE,
+        );
+			}
     }
   }
 
@@ -158,8 +160,10 @@ function _kendra_social_albums_index_fetch($account = NULL) {
 		}
 	}
 	
-  foreach ($user_albums['node'] as $nid => $album) {
-    $output[$nid] = array('id' => $nid, 'owner' => TRUE);
+	if (!empty($user_albums['node'])) {
+    foreach ($user_albums['node'] as $nid => $album) {
+      $output[$nid] = array('id' => $nid, 'owner' => TRUE);
+    } 
   }
   foreach ($output as $nid => $box) {
     $album_node = _kendra_social_albums_retrieve($nid);

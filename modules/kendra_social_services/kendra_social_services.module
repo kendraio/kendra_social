@@ -32,7 +32,12 @@ function _kss_user_load_facebook_friends(&$users) {
 	
 }
 
-
+// Takes an array of users and loads their boxes
+function _kss_user_load_boxes(&$users) {
+  foreach ($users as $uid => $account) {
+    $users[$uid]->boxes = _kendra_social_albums_index_fetch($account); 
+  }
+}
 
 
 // This function adds the recommender word cloud into user profiles when loading them
@@ -58,6 +63,9 @@ function kendra_social_services_user_load($users) {
     $item->access_token = $fbuser->session_key;
     $queue->createItem($item);
   }
+
+  // Load user's boxes into profile
+	_kss_user_load_boxes($users);
 
   // Load all FB likes into profile 
   _kss_user_load_facebook_likes($users);
@@ -96,69 +104,8 @@ function kendra_social_services_user_load($users) {
 				}
 		  }
 			// TODO: enable extra twitter import - probably best move this to cron?
-		  $twitter_active = FALSE;
-		  if ($twitter_active) {
-			  static $twitter_lists;
-			  if (!isset($twitter_lists[$account->uid])) {
-  				$twitter_uid = db_query("SELECT twitter_uid FROM {twitter_account} WHERE uid = :uid", array(':uid' => $account->uid))->fetchField();
-	  			if (!empty($twitter_uid)) {
-		  		  module_load_include('inc', 'twitter');
-  		  	  $twitter_account = twitter_account_load($twitter_uid);
-					  $auth = $twitter_account->get_auth();
-	  		    $twitter = new TwitterOAuth(
-	    				variable_get('twitter_consumer_key', ''), variable_get('twitter_consumer_secret', ''), 
-							$auth['oauth_token'], $auth['oauth_token_secret']);
-	          $params = array('screen_name' => $twitter_account->screen_name);
-						$url = 'http://api.twitter.com/1/friends/ids.json';
-		  		  //$twitter_lists[$account->uid] = '<pre>' . print_r($twitter, TRUE) . '</pre>';
-		        $twitter_result = $twitter->auth_request($url, $params, 'GET');
-						$twitter_lists[$account->uid] = json_decode($twitter_result);
-		        //$twitter_lists[$account->uid] = $twitter->call('friends/ids', $params, 'GET');
-		  		  //$users[$account->uid]->twitter_verify = $twitter->verify_credentials();
-		  		  //$users[$account->uid]->twitter_auth = $auth;
-		      } else {
-						$twitter_lists[$account->uid] = array();
-					}
-			  }
-			  if (isset($twitter_lists[$account->uid]->ids)) { 
-  			  $users[$account->uid]->twitter_friends = $twitter_lists[$account->uid]->ids;        
-				  $saracen_friends = db_query("SELECT t.twitter_uid, t.uid FROM {twitter_account} t WHERE t.twitter_uid IN (:tuids)",
-				    array(':tuids' => $users[$account->uid]->twitter_friends)
-				  );
-					static $twitter_names;
-					// TODO: more robust method of looking up twitter friend names
-					if ($account->uid == 27) { 
-					  $url = 'http://api.twitter.com/1/users/lookup.json';
-					  $params = array('user_id' => implode(',', array_slice($twitter_lists[$account->uid]->ids, 0, 100)));
-						try {
-							$twitter_debug = json_decode($twitter->auth_request($url, $params, 'POST'));
-							if (is_array($twitter_debug)) {
-								foreach ($twitter_debug as $twit) {
-									$twitter_names[$twit->id] = $twit->screen_name;
-								}
-							}
-						} catch (Exception $e) {
-							$users[$account->uid]->twitter_debug = $e->__toString();
-						}
-					}
-				  foreach ($saracen_friends as $sfriend) {
-					  if (isset($users[$account->uid]->saracen_friends[$sfriend->uid])) {
-						  $users[$account->uid]->saracen_friends[$sfriend->uid]->sources[] = 'twitter';
-						} else {
-							if (!isset($twitter_names[$sfriend->twitter_uid])) {
-							  $users[$account->uid]->saracen_friends[$sfriend->uid]->twitter_name = $twitter_names[$sfriend->twitter_uid];
-								//$twitter_names[$sfriend->twitter_uid] = !empty($twitname) ? $twitname : 'unknown';
-							}
-							$users[$account->uid]->saracen_friends[$sfriend->uid] = (object) array(
-								'id' => $sfriend->uid,
-								'name' => isset($twitter_names[$sfriend->twitter_uid]) ? $twitter_names[$sfriend->twitter_uid] : 'unknown',
-								'sources' => array('twitter'),
-							);
-						}
-				  }
-        }
-	    }
-	    
+		  // _kss_user_load_twitter_data($users, $account);
+			
 	  } 
   }
   foreach ($users as $uid => $account) {
@@ -167,10 +114,71 @@ function kendra_social_services_user_load($users) {
 		  $users[$uid]->saracen_friends[$fid]->boxes = _kendra_social_albums_index_fetch($fid);
 	  }
   }
-  foreach ($users as $uid => $account) {
-	  $users[$uid]->boxes = _kendra_social_albums_index_fetch($account);
+}
+
+
+function _kss_user_load_twitter_data(&$users, $account) {
+  static $twitter_lists;
+  if (!isset($twitter_lists[$account->uid])) {
+		$twitter_uid = db_query("SELECT twitter_uid FROM {twitter_account} WHERE uid = :uid", array(':uid' => $account->uid))->fetchField();
+		if (!empty($twitter_uid)) {
+		  module_load_include('inc', 'twitter');
+  	  $twitter_account = twitter_account_load($twitter_uid);
+		  $auth = $twitter_account->get_auth();
+	    $twitter = new TwitterOAuth(
+				variable_get('twitter_consumer_key', ''), variable_get('twitter_consumer_secret', ''), 
+				$auth['oauth_token'], $auth['oauth_token_secret']);
+      $params = array('screen_name' => $twitter_account->screen_name);
+			$url = 'http://api.twitter.com/1/friends/ids.json';
+		  //$twitter_lists[$account->uid] = '<pre>' . print_r($twitter, TRUE) . '</pre>';
+      $twitter_result = $twitter->auth_request($url, $params, 'GET');
+			$twitter_lists[$account->uid] = json_decode($twitter_result);
+      //$twitter_lists[$account->uid] = $twitter->call('friends/ids', $params, 'GET');
+		  //$users[$account->uid]->twitter_verify = $twitter->verify_credentials();
+		  //$users[$account->uid]->twitter_auth = $auth;
+    } else {
+			$twitter_lists[$account->uid] = array();
+		}
+  }
+  if (isset($twitter_lists[$account->uid]->ids)) { 
+	  $users[$account->uid]->twitter_friends = $twitter_lists[$account->uid]->ids;        
+	  $saracen_friends = db_query("SELECT t.twitter_uid, t.uid FROM {twitter_account} t WHERE t.twitter_uid IN (:tuids)",
+	    array(':tuids' => $users[$account->uid]->twitter_friends)
+	  );
+		static $twitter_names;
+		// TODO: more robust method of looking up twitter friend names
+		if ($account->uid == 27) { 
+		  $url = 'http://api.twitter.com/1/users/lookup.json';
+		  $params = array('user_id' => implode(',', array_slice($twitter_lists[$account->uid]->ids, 0, 100)));
+			try {
+				$twitter_debug = json_decode($twitter->auth_request($url, $params, 'POST'));
+				if (is_array($twitter_debug)) {
+					foreach ($twitter_debug as $twit) {
+						$twitter_names[$twit->id] = $twit->screen_name;
+					}
+				}
+			} catch (Exception $e) {
+				$users[$account->uid]->twitter_debug = $e->__toString();
+			}
+		}
+	  foreach ($saracen_friends as $sfriend) {
+		  if (isset($users[$account->uid]->saracen_friends[$sfriend->uid])) {
+			  $users[$account->uid]->saracen_friends[$sfriend->uid]->sources[] = 'twitter';
+			} else {
+				if (!isset($twitter_names[$sfriend->twitter_uid])) {
+				  $users[$account->uid]->saracen_friends[$sfriend->uid]->twitter_name = $twitter_names[$sfriend->twitter_uid];
+					//$twitter_names[$sfriend->twitter_uid] = !empty($twitname) ? $twitname : 'unknown';
+				}
+				$users[$account->uid]->saracen_friends[$sfriend->uid] = (object) array(
+					'id' => $sfriend->uid,
+					'name' => isset($twitter_names[$sfriend->twitter_uid]) ? $twitter_names[$sfriend->twitter_uid] : 'unknown',
+					'sources' => array('twitter'),
+				);
+			}
+	  }
   }
 }
+
 
 
 function kendra_social_services_permission() {

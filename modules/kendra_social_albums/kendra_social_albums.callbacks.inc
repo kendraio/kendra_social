@@ -249,8 +249,31 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
   return $box;
 }
 
+// TODO: Check User1 is friend of User2
+function _kss_saracen_friend($uid1, $uid2) {
+	return TRUE;
+}
+
 function _kendra_social_albums_retrieve($id) {
-	return _kendra_social_albums_retrieve_no_data($id, FALSE);
+	global $user;
+	$box = _kendra_social_albums_retrieve_no_data($id, FALSE);
+	if ($box->uid == $user->uid) {
+		return $box;
+	}
+	if ($box->public) {
+		return $box;
+	}
+	if (strstr($box->friends, 'R') !== FALSE && _kss_saracen_friend($user->uid, $box->uid)) {
+		return $box;
+	}
+	if (!empty($box->users)) {
+		foreach ($box->users as $u) {
+			if ($u->uid == $user->uid && in_array('R', $u->perm)) {
+				return $box;
+			}
+		}
+	}
+	return array('status' => 'error', 'message' => 'permission denied');
 }
 
 

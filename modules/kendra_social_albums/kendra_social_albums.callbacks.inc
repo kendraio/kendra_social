@@ -334,7 +334,10 @@ function _kendra_social_remove_perm(&$perm_array, $perm) {
  
 function _kendra_social_albums_update_user($id, $data) {
 	global $user;
-  //$box = node_load($id);
+  $box = node_load($id);
+  if ($box->uid != $user->uid) {
+	  return array('status' => 'error', 'message' => 'this is not your box.');
+  }
   $bid = $id;
   $updates = array();
   $fail = TRUE;
@@ -343,7 +346,7 @@ function _kendra_social_albums_update_user($id, $data) {
     //$account = user_load($uid);
     // check user and box exist
 		// Temp skip account check for performance reasons! and box check!
-    if (isset($bid)) { //&& isset($account->uid)) {
+    if (isset($box->bid)) { //&& isset($account->uid)) {
 	    $fail = FALSE;
 	    if (empty($data['action'])) {
 				$data['action'] = 'update';

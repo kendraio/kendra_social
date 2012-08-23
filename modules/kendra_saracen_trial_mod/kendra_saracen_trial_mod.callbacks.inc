@@ -113,13 +113,14 @@ foreach ($result as $node) {
     $node->data[str_replace($url . '#', '', $row['p'])] = $row['o'];
   }
   //watchdog('d', '<pre>' . print_r($node, TRUE) . '</pre>');
-  foreach ($node->field_mediaitem_tags[$node->language] as $key => $term) {
-    $term = taxonomy_term_load($term['tid']);
-    if (!empty($term->tid)) {
-      $node->field_mediaitem_tags[$node->language][$key] = array('tid' => $term->tid, 'name' => $term->name);
+  if (!empty($node->field_mediaitem_tags[$node->language])) {
+    foreach ($node->field_mediaitem_tags[$node->language] as $key => $term) {
+      $term = taxonomy_term_load($term['tid']);
+      if (!empty($term->tid)) {
+        $node->field_mediaitem_tags[$node->language][$key] = array('tid' => $term->tid, 'name' => $term->name);
+      }
     }
   }
-
   if (isset($node->field_mediaitem_info[$node->language][0]['value'])) {
     $node->field_mediaitem_info[$node->language] = unserialize($node->field_mediaitem_info[$node->language][0]['value']);
   }

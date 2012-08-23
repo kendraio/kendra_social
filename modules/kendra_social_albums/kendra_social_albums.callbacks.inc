@@ -275,8 +275,8 @@ function _kendra_social_add_user_to_box($uid, $bid, $perm, $action = 'update') {
 		);
 		$existing = relation_create('album_user', $endpoints);
   }
-  $old_perms = field_get_items('relation', $existing, 'field_album_perms');
-  watchdog('dd', '<pre>' . print_r($old_perms, TRUE) . '</pre>');
+  $old_perms = $existing->field_album_perm[LANGUAGE_NONE];
+  //watchdog('dd', '<pre>' . print_r($existing, TRUE) . '</pre>');
   $new_perms = array();
   if (!empty($old_perms)) {
 	  foreach ($old_perms as $p) {
@@ -346,7 +346,7 @@ function _kendra_social_albums_update_user($id, $data) {
     //$account = user_load($uid);
     // check user and box exist
 		// Temp skip account check for performance reasons! and box check!
-    if (isset($box->bid)) { //&& isset($account->uid)) {
+    if (isset($box->nid)) { //&& isset($account->uid)) {
 	    $fail = FALSE;
 	    if (empty($data['action'])) {
 				$data['action'] = 'update';

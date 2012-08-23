@@ -8,30 +8,43 @@ function _kss_annotation_retrieve($nid) {
 	return $annotate;
 }
 
-function _kss_annotation_delete($nid) {
+function _kss_annotation_delete($nid, $identifier) {
+  global $user;
+
+  // If data['identifier'] is set then we are deleting a tag.
+  // if identifier is not set then we are deleting an annotation node
+  if (!empty($identifier)) {
+    $media = _kendra_saracen_trial_mod_lookup_id($identifier);
+    $tid = $nid; // just to be clear this is a tag, not a node
+    $tags = field_get_items('node', $media, 'field_mediaitem_tags');
+    if (!empty($tags)) {
+	    foreach ($tags as $key => $value) {
+		    if ($value['tid'] == $tid) {
+			    unset($tags[$key]);
+		    }
+	    }
+    }
+    $media->field_mediaitem_tags[LANGUAGE_NONE] = $tags;
+    if ($user->uid == $media->uid) { 
+      return array('status' => 'ok', 'message' => "deleted tag {$tid} from {$data['identifier']}");
+    } else {
+	    return array('status' => 'error', 'message' => 'permission denied, mediaitem');
+    }
+  }
+
+  // else look for annotation node and unpublish:
 	$annotate = node_load($nid);
-	global $user;
-	if ($user->uid == 27) {
-		return func_get_args();
-	}
-	if (empty($annotate->nid)) {
-		$tag = taxonomy_term_load($nid);
-		if (isset($tag->vocabulary_machine_name) && $tag->vocabulary_machine_name == 'tags') {
-			if (empty($tag->description) || $tag->description == "{$user->uid}") {
-  			watchdog('tag', "user {$user->uid} deleted tag {$tag->name} ({$tag->tid})");
-	  		taxonomy_term_delete($tag->tid);
-		  	return array('status' => 'Deleted tag with ID ' . $nid);
-		  }
+	if (!empty($annotate->nid)) {
+		if ($user->uid == $annotate->uid) {
+			// unpublish the annotation. TODO: Should it be deleted?
+			$annotate->status = 0;
+			node_save($annotate);
+			return array('status' => 'ok', 'message' => "deleted annotation {$nid}");
+		} else {
+			return array('status' => 'error', 'message' => 'permission denied, annotation');
 		}
-		return array('status' => 'Error', 'message' => 'Invalid ID: Annotation does not exist');
-	}
-	if ($user->uid == $annotate->uid) {
-		$annotate->status = 0;
-		node_save($annotate);
-		return array('status' => 'Unpublished annotaiton with ID ' . $nid);
-	} else {
-		return array('status' => 'Error', 'message' => 'Operation not allowed, user is not owner of this annotation.');
-	}
+	}	
+	return array('status' => 'error', 'message' => 'Invalid ID: Annotation does not exist or mediaitem identifier missing');
 }
 
 

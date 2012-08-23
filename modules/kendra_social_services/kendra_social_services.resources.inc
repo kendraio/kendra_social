@@ -66,6 +66,12 @@ function kendra_social_services_services_get_mappings() {
 						'source' => array('path' => '0'),
 						'type' => 'int',
 						'optional' => FALSE,
+				  ),
+					array(
+						'name' => 'data',
+						'source' => 'data',
+						'type' => 'struct',
+						'optional' => TRUE,
 				  )
 				),	
 				'callback' => '_kss_annotation_delete',

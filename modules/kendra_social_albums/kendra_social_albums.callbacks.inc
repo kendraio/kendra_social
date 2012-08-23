@@ -191,6 +191,7 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
   }
   $box = new StdClass();
   $box->id = $node->nid;
+  $box->uid = $node->uid;
   $box->title = $node->title;
 
   $public = field_get_items('node', $node, 'field_album_public');
@@ -268,7 +269,7 @@ function _kendra_social_albums_retrieve($id) {
 	}
 	if (!empty($box->users)) {
 		foreach ($box->users as $u) {
-			if ($u->uid == $user->uid && in_array('R', $u->perm)) {
+			if ($u['uid'] == $user->uid && in_array('R', $u['perm'])) {
 				return $box;
 			}
 		}

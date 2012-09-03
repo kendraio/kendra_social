@@ -10,16 +10,6 @@
 function kendra_social_profile_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: create facebook_movies content.
-  $permissions['create facebook_movies content'] = array(
-    'name' => 'create facebook_movies content',
-    'roles' => array(
-      0 => 'administrator',
-      1 => 'authenticated user',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: create facebook_profile content.
   $permissions['create facebook_profile content'] = array(
     'name' => 'create facebook_profile content',
@@ -58,24 +48,6 @@ function kendra_social_profile_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: create page content.
-  $permissions['create page content'] = array(
-    'name' => 'create page content',
-    'roles' => array(
-      0 => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: delete any facebook_movies content.
-  $permissions['delete any facebook_movies content'] = array(
-    'name' => 'delete any facebook_movies content',
-    'roles' => array(
-      0 => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: delete any facebook_profile content.
   $permissions['delete any facebook_profile content'] = array(
     'name' => 'delete any facebook_profile content',
@@ -103,12 +75,11 @@ function kendra_social_profile_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: delete own facebook_movies content.
-  $permissions['delete own facebook_movies content'] = array(
-    'name' => 'delete own facebook_movies content',
+  // Exported permission: delete any mediaitem content.
+  $permissions['delete any mediaitem content'] = array(
+    'name' => 'delete any mediaitem content',
     'roles' => array(
       0 => 'administrator',
-      1 => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -150,15 +121,6 @@ function kendra_social_profile_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: edit any facebook_movies content.
-  $permissions['edit any facebook_movies content'] = array(
-    'name' => 'edit any facebook_movies content',
-    'roles' => array(
-      0 => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: edit any facebook_profile content.
   $permissions['edit any facebook_profile content'] = array(
     'name' => 'edit any facebook_profile content',
@@ -191,16 +153,6 @@ function kendra_social_profile_user_default_permissions() {
     'name' => 'edit any mediaitem content',
     'roles' => array(
       0 => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: edit own facebook_movies content.
-  $permissions['edit own facebook_movies content'] = array(
-    'name' => 'edit own facebook_movies content',
-    'roles' => array(
-      0 => 'administrator',
-      1 => 'authenticated user',
     ),
     'module' => 'node',
   );

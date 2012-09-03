@@ -371,10 +371,10 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
     }
   }
   else {
-    $op           = 'registered';
-    $node         = new StdClass();
-    $node->type   = 'mediaitem';
-    $node->uid    = $user->uid;
+    $op         = 'registered';
+    $node       = new StdClass();
+    $node->type = 'mediaitem';
+    $node->uid  = $user->uid;
     if (isset($data['userid'])) {
       $node->uid = $user->uid;
     }
@@ -385,7 +385,8 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
 
   if (isset($node->status)) {
     $node->status = $data['status'];
-  } else if ($op == 'registered'){
+  }
+  elseif ($op == 'registered') {
     $node->status = 1;
   }
   if (empty($node->title) || $reset_title) {
@@ -412,6 +413,7 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
   if (isset($data['category'])) {
     $vocab = taxonomy_vocabulary_machine_name_load('media_category');
     $terms = taxonomy_get_term_by_name($data['category'], $vocab->vid);
+
 
     if (!empty($terms)) {
       $term = array_shift($terms);
@@ -457,6 +459,7 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
   /*
   * set codec & quality
   */
+
   if (isset($data['codec']) && isset($data['quality'])) {
     $query = new EntityFieldQuery();
     $derivative = $query->entityCondition('entity_type', 'node')->entityCondition('bundle', 'derivative')->fieldCondition('field_derivative_quality', 'value', $data['quality'], 'like')->fieldCondition('field_derivative_codec', 'value', $data['codec'], 'like')->fieldCondition('field_derivative_uuid', 'value', $data['identifier'], 'like')->execute();
@@ -521,3 +524,4 @@ function _kendra_saracen_trial_mod_update_mediaitem($id, $data) {
   $data['identifier'] = $id;
   return _kendra_saracen_trial_mod_register_mediaitem($data);
 }
+

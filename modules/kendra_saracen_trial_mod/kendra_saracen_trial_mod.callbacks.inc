@@ -291,8 +291,8 @@ function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10) {
   $page2 = $page1 + $page_size;
 
   // @todo change to entity query
-  $result = db_query("SELECT nid FROM {node} WHERE type = 'mediaitem' AND status = 1 OR uid = :uid ORDER BY changed DESC LIMIT :page1, :page2",
-    array(':uid' => $uid, ':page1' => $page1, ':page2' => $page2));
+  $result = db_query("SELECT nid FROM {node} WHERE type = 'mediaitem' AND status = 1 OR uid = :uid ORDER BY changed DESC LIMIT {$page1}, {$page2}",
+    array(':uid' => $uid));
 
   $results = array();
   foreach ($result as $node) {

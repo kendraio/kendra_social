@@ -8,14 +8,15 @@ function _kss_annotation_retrieve($nid) {
 	return $annotate;
 }
 
-function _kss_annotation_delete($nid, $identifier) {
+function _kss_annotation_delete($tid, $identifier) {
   global $user;
 
   // If data['identifier'] is set then we are deleting a tag.
   // if identifier is not set then we are deleting an annotation node
   if (!empty($identifier)) {
-    $media = _kendra_saracen_trial_mod_lookup_id($identifier);
-    $tid = $nid; // just to be clear this is a tag, not a node
+    $nid = _kendra_saracen_trial_mod_lookup_id($identifier);
+
+    $media = node_load($nid);
     $tags = field_get_items('node', $media, 'field_mediaitem_tags');
     if (!empty($tags)) {
 	    foreach ($tags as $key => $value) {

@@ -5,12 +5,12 @@
  */
 
 /**
- * Implementation of hook_field_default_fields().
+ * Implements hook_field_default_fields().
  */
 function kendra_social_profile_field_default_fields() {
   $fields = array();
 
-  // Exported field: 'relation-album_contains-endpoints'
+  // Exported field: 'relation-album_contains-endpoints'.
   $fields['relation-album_contains-endpoints'] = array(
     'field_config' => array(
       'active' => '1',
@@ -26,6 +26,7 @@ function kendra_social_profile_field_default_fields() {
           2 => 'r_index',
         ),
       ),
+      'locked' => '0',
       'module' => 'relation_endpoint',
       'settings' => array(),
       'translatable' => '0',
@@ -61,7 +62,7 @@ function kendra_social_profile_field_default_fields() {
     ),
   );
 
-  // Exported field: 'relation-album_user-endpoints'
+  // Exported field: 'relation-album_user-endpoints'.
   $fields['relation-album_user-endpoints'] = array(
     'field_config' => array(
       'active' => '1',
@@ -77,6 +78,7 @@ function kendra_social_profile_field_default_fields() {
           2 => 'r_index',
         ),
       ),
+      'locked' => '0',
       'module' => 'relation_endpoint',
       'settings' => array(),
       'translatable' => '0',
@@ -112,7 +114,7 @@ function kendra_social_profile_field_default_fields() {
     ),
   );
 
-  // Exported field: 'relation-album_user-field_album_perm'
+  // Exported field: 'relation-album_user-field_album_perm'.
   $fields['relation-album_user-field_album_perm'] = array(
     'field_config' => array(
       'active' => '1',
@@ -126,6 +128,7 @@ function kendra_social_profile_field_default_fields() {
           0 => 'value',
         ),
       ),
+      'locked' => '0',
       'module' => 'list',
       'settings' => array(
         'allowed_values' => array(
@@ -173,7 +176,7 @@ function kendra_social_profile_field_default_fields() {
     ),
   );
 
-  // Exported field: 'relation-derivative-endpoints'
+  // Exported field: 'relation-derivative-endpoints'.
   $fields['relation-derivative-endpoints'] = array(
     'field_config' => array(
       'active' => '1',
@@ -189,6 +192,7 @@ function kendra_social_profile_field_default_fields() {
           2 => 'r_index',
         ),
       ),
+      'locked' => '0',
       'module' => 'relation_endpoint',
       'settings' => array(),
       'translatable' => '0',

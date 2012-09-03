@@ -5,7 +5,7 @@
  */
 
 /**
- * Implementation of hook_default_rules_configuration().
+ * Implements hook_default_rules_configuration().
  */
 function kendra_social_profile_default_rules_configuration() {
   $items = array();

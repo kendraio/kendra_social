@@ -5,7 +5,7 @@
  */
 
 /**
- * Implementation of hook_relation_default_relation_types().
+ * Implements hook_relation_default_relation_types().
  */
 function kendra_social_profile_relation_default_relation_types() {
   $export = array();

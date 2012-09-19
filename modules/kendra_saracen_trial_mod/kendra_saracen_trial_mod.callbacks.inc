@@ -508,6 +508,9 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
  */
 function _kendra_saracen_trial_mod_tag_mediaitem($id, $data) {
   global $user;
+  if (empty($data['tag'])) {
+	  return array('status' => 'error', 'message' => 'empty tag');
+  }
   $node = node_load(_kendra_saracen_trial_mod_lookup_id($id));
   $vid  = array_shift(community_tags_vids_for_node($node));
   $tags = community_tags_flatten(community_tags_get_user_node_tags($user->uid, $node->nid, $vid));

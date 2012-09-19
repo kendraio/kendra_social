@@ -26,8 +26,9 @@ function _kss_annotation_delete($tid, $identifier) {
 	    }
     }
     $media->field_mediaitem_tags[LANGUAGE_NONE] = $tags;
+    node_save($media);
     if ($user->uid == $media->uid) { 
-      return array('status' => 'ok', 'message' => "deleted tag {$tid} from {$data['identifier']}");
+      return array('status' => 'ok', 'message' => "deleted tag {$tid} from {$identifier}");
     } else {
 	    return array('status' => 'error', 'message' => 'permission denied, mediaitem');
     }

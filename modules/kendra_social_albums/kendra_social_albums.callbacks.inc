@@ -167,9 +167,13 @@ function _kendra_social_albums_index_fetch($account = NULL) {
   }
   foreach ($output as $nid => $box) {
     $album_node = _kendra_social_albums_retrieve($nid);
-    $output[$nid]['title'] = $album_node->title;
-    $output[$nid]['description'] = !empty($album_node->description) ? $album_node->description : '';
-    $output[$nid]['item_count'] = isset($album_node->items) ? count($album_node->items) : 0;
+    if (!empty($album_node->nid)) {
+      $output[$nid]['title'] = $album_node->title;
+      $output[$nid]['description'] = !empty($album_node->description) ? $album_node->description : '';
+      $output[$nid]['item_count'] = isset($album_node->items) ? count($album_node->items) : 0;
+    } else {
+	    
+    }
   }
 
   return $output;

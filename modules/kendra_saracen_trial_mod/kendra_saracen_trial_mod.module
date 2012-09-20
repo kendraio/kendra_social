@@ -208,11 +208,14 @@ function _kss_fb_connect_debug() {
   $my_url = url('fb-test', array('absolute' => TRUE));
 
   global $user;
-  $account = user_load($user->uid);
-  // return '<pre>' . print_r($account, TRUE) . '</pre>';
-
-  // known valid access token stored in a database 
-  $access_token = $account->key;
+  if (!empty($user->uid)) {
+    $account = user_load($user->uid);
+    // return '<pre>' . print_r($account, TRUE) . '</pre>';
+    // known valid access token stored in a database 
+    $access_token = $account->key;
+  } else {
+	  $access_token = '';
+  }
 
   $code = $_REQUEST["code"];
 
@@ -256,9 +259,10 @@ function _kss_fb_connect_debug() {
 	      ->fields(array('session_key' => $access_token))
 	      ->condition('fbu', $account->fbu)
 	      ->execute();
-      echo('yes: ' . $access_token);
+      //echo('yes: ' . $access_token);
   	}
   }
+  drupal_goto('');
 }
 
 function _curl_get_file_contents($URL) {

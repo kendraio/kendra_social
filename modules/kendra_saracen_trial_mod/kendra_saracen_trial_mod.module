@@ -128,7 +128,7 @@ function _kendra_saracen_import_facebook_friend($job) {
 		  _kendra_saracen_save_sparql_fb($job, $friend);
 	  }
 	} else {
-		watchdog('fb friend debug', 'failed to import: ' . print_r($response, TRUE) . ' for ' . print_r($item, TRUE));
+		watchdog('fb friend debug', 'failed to import: ' . print_r($response, TRUE) . ' for ' . print_r($job, TRUE));
 	}
 }
 

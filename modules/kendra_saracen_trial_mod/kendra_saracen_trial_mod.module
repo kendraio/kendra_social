@@ -217,7 +217,7 @@ function _kss_fb_connect_debug() {
 	  $access_token = '';
   }
 
-  $code = $_REQUEST["code"];
+  $code = isset($_REQUEST["code"]) ? $_REQUEST['code'] : NULL;
 
   // If we get a code, it means that we have re-authed the user 
   //and can get a valid access_token. 
@@ -239,7 +239,7 @@ function _kss_fb_connect_debug() {
   $decoded_response = json_decode($response);
 
   // Check for errors 
-  if ($decoded_response->error) {
+  if (!empty($decoded_response->error)) {
   // check to see if this is an oAuth error:
     if ($decoded_response->error->type== "OAuthException") {
       // Retrieving a valid access token. 

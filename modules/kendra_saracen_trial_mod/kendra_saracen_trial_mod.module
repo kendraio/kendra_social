@@ -207,11 +207,12 @@ function _kss_fb_connect_debug() {
   $app_secret = $_fb_app->secret; 
   $my_url = url('fb-test', array('absolute' => TRUE));
 
-  // known valid access token stored in a database 
-  $access_token = "YOUR_STORED_ACCESS_TOKEN";
-
   global $user;
-  return '<pre>' . print_r($user, TRUE) . '</pre>';
+  $account = user_load($user->uid);
+  // return '<pre>' . print_r($account, TRUE) . '</pre>';
+
+  // known valid access token stored in a database 
+  $access_token = $account->key;
 
   $code = $_REQUEST["code"];
 
@@ -228,14 +229,13 @@ function _kss_fb_connect_debug() {
     $access_token = $params['access_token'];
   }
 
-
   // Attempt to query the graph:
   $graph_url = "https://graph.facebook.com/me?"
     . "access_token=" . $access_token;
   $response = _curl_get_file_contents($graph_url);
   $decoded_response = json_decode($response);
 
-  //Check for errors 
+  // Check for errors 
   if ($decoded_response->error) {
   // check to see if this is an oAuth error:
     if ($decoded_response->error->type== "OAuthException") {
@@ -251,11 +251,14 @@ function _kss_fb_connect_debug() {
     }
   } 
   else {
-  // success
-    echo("success" . $decoded_response->name);
-    echo($access_token);
+	  if (!empty($account->fbu)) { 
+  	  $res = db_update('fb_user_app')
+	      ->fields(array('session_key' => $access_token))
+	      ->condition('fbu', $account->fbu)
+	      ->execute();
+      echo('yes: ' . $access_token);
+  	}
   }
-  
 }
 
 function _curl_get_file_contents($URL) {

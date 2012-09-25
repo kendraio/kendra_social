@@ -93,7 +93,11 @@ function _kendra_social_albums_create($data) {
   return array('status' => 'ok', 'identifier' => $node->nid, 'message' => 'created new album');
 }
 
-function _kendra_social_albums_index() {
+function _kendra_social_albums_index($uid = NULL) {
+	if (!empty($uid)) {
+		// Friend user ID has been provided, show detailed box list for this user
+	}
+	// No UID provided, show boxes summary list for current user
 	global $user;
 	return _kendra_social_albums_index_fetch($user);
 }
@@ -378,13 +382,17 @@ function _kendra_social_albums_batch_update_user($id, $data) {
 	// Create new permissions
 	$users = array();
 	$output = array();
-  foreach (explode(',', $data['R']) as $uid) {
-	  $users[$uid][] = array('value' => 'view');
-	  $output[] = $uid . '=' . 'R';
-	}
-  foreach (explode(',', $data['W']) as $uid) {
-	  $users[$uid][] = array('value' => 'edit');
-	  $output[] = $uid . '=' . 'W';
+	if (!empty($data['R'])) {
+    foreach (explode(',', $data['R']) as $uid) {
+	    $users[$uid][] = array('value' => 'view');
+	    $output[] = $uid . '=' . 'R';
+	  }
+  }
+  if (!empty($data['W'])) {
+    foreach (explode(',', $data['W']) as $uid) {
+	    $users[$uid][] = array('value' => 'edit');
+	    $output[] = $uid . '=' . 'W';
+	  }
 	}
 	$output = implode(',', $output);
 	
@@ -403,7 +411,7 @@ function _kendra_social_albums_batch_update_user($id, $data) {
 
 function _kendra_social_albums_update_user($id, $data) {
 	
-	if (empty($data['action']) && (!empty($data['R']) || !empty($data['W']))) {
+	if (empty($data['action'])) {
 		return _kendra_social_albums_batch_update_user($id, $data);
 	}
 	

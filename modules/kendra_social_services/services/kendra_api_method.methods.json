@@ -267,6 +267,17 @@
                 "access arguments": [
                     "access content"
                 ], 
+                "args": [
+                    {
+                        "name": "uid", 
+                        "optional": true, 
+                        "source": {
+                          "param": "uid"
+                        },
+                        "type": "int",
+                        "default value": 0
+                    }
+                ],
                 "callback": "_kendra_social_albums_index", 
                 "enabled": 1, 
                 "file": {
@@ -398,6 +409,7 @@
                     {
                         "name": "data", 
                         "optional": true, 
+                        "default value": 0,
                         "source": "data", 
                         "type": "struct"
                     }

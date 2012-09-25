@@ -29,6 +29,52 @@ function _kss_user_load_facebook_likes(&$users) {
 
 // Takes an array of user objects and adds in user's FB friends
 function _kss_user_load_facebook_friends(&$users) {
+	$friends = db_query("SELECT * FROM {kendra_saracen_friends} f WHERE f.uid IN (:uids)", array(":uids" => array_keys($users)));
+	foreach ($friends as $friend) {
+		if (REQUEST_TIME - $friend->imported <= 864000) {
+  		$users[$friend->uid]->saracen_friends = unserialize($friend->data);
+  		$users[$friend->uid]->friends_last_imported = $friend->imported;
+    } else {
+			db_query("DELETE FROM {kendra_saracen_friends} f WHERE uid = :uid", array(":uid" => $friend->uid));
+		}
+	}
+  foreach ($users as $account) {
+	  if (empty($users[$account->uid]->saracen_friends)) {
+  	  $users[$account->uid]->saracen_friends = array();
+	  	if (isset($account->fbu) && isset($account->key)) {
+				$friends = _kendra_saracen_get_facebook_friends($account, $account->fbu, $account->key);
+				$users[$account->uid]->facebook_friends = array();
+				if (is_array($friends)) {
+					foreach ($friends as $friend) {
+						$users[$account->uid]->facebook_friends[$friend->id] = $friend->name;
+					}
+					if (!empty($users[$account->uid]->facebook_friends)) {
+					  $saracen_friends = db_query("SELECT u.uid, u.fbu FROM {fb_user} u WHERE fbu IN (:fbuids)",
+					    array(':fbuids' => array_keys($users[$account->uid]->facebook_friends))
+					  );
+					  foreach ($saracen_friends as $sfriend) {
+							$users[$account->uid]->saracen_friends[$sfriend->uid] = (object) array(
+								'id' => $sfriend->uid,
+								'name' => $users[$account->uid]->facebook_friends[$sfriend->fbu],
+								'sources' => array('facebook'),
+							);
+						}
+					}
+					// TODO: remove fb friends, daniel wants this in here for now:
+					//unset($users[$account->uid]->facebook_friends);
+				} else {
+					$users[$account->uid]->facebook_friends = $friends;
+				}
+	    } 
+ 	    db_query("INSERT INTO {kendra_saracen_friends} VALUES (:uid, :val, :imported)", array(
+ 	    	':uid' => $account->uid,
+				':val' => serialize($users[$account->uid]->saracen_friends),
+				':imported' => REQUEST_TIME,
+ 	    )); 
+  		// TODO: enable extra twitter import - probably best move this to cron?
+	    // _kss_user_load_twitter_data($users, $account);
+		}
+  }
 	
 }
 
@@ -74,37 +120,6 @@ function kendra_social_services_user_load($users) {
   _kss_user_load_facebook_friends($users);
 
 
-  foreach ($users as $account) {
-	  $users[$account->uid]->saracen_friends = array();
-		if (isset($account->fbu) && isset($account->key)) {
-			$friends = _kendra_saracen_get_facebook_friends($account, $account->fbu, $account->key);
-			$users[$account->uid]->facebook_friends = array();
-			if (is_array($friends)) {
-				foreach ($friends as $friend) {
-					$users[$account->uid]->facebook_friends[$friend->id] = $friend->name;
-				}
-				if (!empty($users[$account->uid]->facebook_friends)) {
-				  $saracen_friends = db_query("SELECT u.uid, u.fbu FROM {fb_user} u WHERE fbu IN (:fbuids)",
-				    array(':fbuids' => array_keys($users[$account->uid]->facebook_friends))
-				  );
-				  foreach ($saracen_friends as $sfriend) {
-						$users[$account->uid]->saracen_friends[$sfriend->uid] = (object) array(
-							'id' => $sfriend->uid,
-							'name' => $users[$account->uid]->facebook_friends[$sfriend->fbu],
-							'sources' => array('facebook'),
-						);
-					}
-				}
-				// TODO: remove fb friends, daniel wants this in here for now:
-				//unset($users[$account->uid]->facebook_friends);
-			} else {
-				$users[$account->uid]->facebook_friends = $friends;
-			}
-	  }
-		// TODO: enable extra twitter import - probably best move this to cron?
-	  // _kss_user_load_twitter_data($users, $account);
-		
-  } 
   foreach ($users as $uid => $account) {
 	  $users[$account->uid]->saracen_friends = (array) $users[$account->uid]->saracen_friends;
 	  foreach ((array)$users[$uid]->saracen_friends as $fid => $friend) {

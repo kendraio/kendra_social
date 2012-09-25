@@ -366,6 +366,7 @@ function _kendra_social_remove_perm(&$perm_array, $perm) {
  
 function _kendra_social_albums_batch_update_user($id, $data) {
 	// return array($id, $data); 
+	// return explode(',', $data['W']);
 	
 	// Remove existing permission relations
 	$query = new EntityFieldQuery();
@@ -403,7 +404,7 @@ function _kendra_social_albums_batch_update_user($id, $data) {
 	    array('entity_type' => 'user', 'entity_id' => $uid),
 	  );
 	  $new_r = relation_create('album_user', $endpoints);
-		$new_r->field_album_perm[LANGUAGE_NONE] = array();
+		$new_r->field_album_perm[LANGUAGE_NONE] = $perms;
 	  relation_save($new_r);
   }
 	return array('status' => 'ok', 'message' => "Update box ({$id}) permissions to {$output}");

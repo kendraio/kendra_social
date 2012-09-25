@@ -203,17 +203,41 @@ function _kendra_saracen_trial_mod_get_mediaitem($id, $include_derivatives = FAL
     $watchers = db_select('kendra_mediaitem_watch', 'w')->fields('w')->condition('media_id', $id)->condition('stop', NULL)->execute();
     $node->watchers = array();
     foreach ($watchers as $watching) {
-      $node->watchers[] = array(
-        'uid' => $watching->uid,
-        'started' => $watching->start,
-      );
+	    if (_kendra_saracen_get_mediaitem_tracking($id, $watching->uid)) {
+        $node->watchers[] = array(
+          'uid' => $watching->uid,
+          'started' => $watching->start,
+        );
+      }
     }
+
+		$publish = _kendra_saracen_get_mediaitem_tracking($id);
+		$node->publish_watching_activity = ($publish) ? 1 : 0;
 
     return $node;
   }
   return array('status' => 'error', 'message' => 'unknown identifier ' . var_export($id, TRUE));
   //return 'unknown identifier: ' . var_export($id, TRUE);
 }
+
+function _kendra_saracen_get_mediaitem_tracking($id, $uid = NULL) {
+	if (empty($uid)) {
+    global $user;
+    $uid = $user->uid;
+  }
+	$tracking = db_query("SELECT * FROM {kendra_user_tracking} WHERE uid = :uid", array(':uid' => $uid));
+	$tracking = $tracking->fetchAll();
+	if (!empty($tracking)) {
+		foreach ($tracking as $track) {
+			$items = unserialize($track->data);
+			if (isset($items[$id]) && $items[$id] == 1) {
+				return TRUE;
+			}
+		}
+	}
+	return FALSE;
+}
+
 
 /**
  * filter out unused properties from a MediaItem node object
@@ -527,4 +551,44 @@ function _kendra_saracen_trial_mod_update_mediaitem($id, $data) {
   $data['identifier'] = $id;
   return _kendra_saracen_trial_mod_register_mediaitem($data);
 }
+
+
+function _kendra_saracen_trial_mod_activity_track_mediaitem($id, $publish) {
+	if (!in_array($publish, array(0, 1))) {
+		return array('status' => 'error', 'message' => 'publish value must be 0 or 1');
+	}
+	global $user;
+	$tracking = db_query("SELECT * FROM {kendra_user_tracking} WHERE uid = :uid", array(':uid' => $user->uid));
+	$tracking = $tracking->fetchAll();
+	if (!empty($tracking)) {
+		foreach ($tracking as $track) {
+			$items = unserialize($track->data);
+			$items[$id] = $publish;
+			db_query("UPDATE {kendra_user_tracking} SET data = :data WHERE uid = :uid", array(':uid' => $user->uid, 
+			  ':data' => serialize($items)));
+		}
+	} else {
+		db_query("INSERT INTO {kendra_user_tracking} VALUES (:uid, :data)", array(':uid' => $user->uid, 
+			':data' => serialize(array($id => $publish))));
+	}
+	return array('status' => 'ok', 'message' => 'set privacy=' . $publish . ' for watching activity for item ' . $id);
+}
+
+
+function _kendra_saracen_trial_mod_user_watched($uid) {
+	$res = db_query("SELECT DISTINCT media_id FROM {kendra_mediaitem_watch} WHERE uid = :uid", array(':uid' => $uid));
+	$res = $res->fetchAll();
+	$output = array();
+	foreach ($res as $media) {
+		if (_kendra_saracen_get_mediaitem_tracking($media->media_id, $uid)) {
+  		$output[] = $media->media_id;
+		}
+	}
+	return $output;
+	
+}
+
+
+
+
 

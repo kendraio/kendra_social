@@ -66,11 +66,15 @@ function _kss_user_load_facebook_friends(&$users) {
 					$users[$account->uid]->facebook_friends = $friends;
 				}
 	    } 
- 	    db_query("INSERT INTO {kendra_saracen_friends} VALUES (:uid, :val, :imported)", array(
- 	    	':uid' => $account->uid,
-				':val' => serialize($users[$account->uid]->saracen_friends),
-				':imported' => REQUEST_TIME,
- 	    )); 
+	    if (!empty($users[$account->uid]->saracen_friends)) {
+   	    db_query("INSERT INTO {kendra_saracen_friends} VALUES (:uid, :val, :imported)", array(
+ 	      	':uid' => $account->uid,
+		  		':val' => serialize($users[$account->uid]->saracen_friends),
+			  	':imported' => REQUEST_TIME,
+ 	      ));
+      } else {
+				$users[$account->uid]->fb_error = TRUE;
+			}
   		// TODO: enable extra twitter import - probably best move this to cron?
 	    // _kss_user_load_twitter_data($users, $account);
 		}

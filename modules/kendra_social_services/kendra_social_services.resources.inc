@@ -18,6 +18,21 @@ function kendra_social_services_services_get_mappings() {
 	//watchdog('service debug', '<pre>' . print_r($resources, TRUE) . '</pre>');
 	// TODO: Move these service definitions into JSON format 
 	
+	$resources['user']['relationships']['watched'] = array(
+		'access arguments' => array('access content'),
+		'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
+		'access arguments append' => FALSE,
+		'args' => array(
+			array(
+				'name' => 'id',
+				'description' => 'identifier',
+				'source' => array('path' => '0'),
+				'type' => 'int',
+				'optional' => FALSE,
+		  )
+		),
+		'callback' => '_kendra_saracen_trial_mod_user_watched',
+	); 
 	$resources['mediaItems']['targeted_actions']['startWatching'] = array(
 		'access arguments' => array('access content'),
 		'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
@@ -32,6 +47,28 @@ function kendra_social_services_services_get_mappings() {
 		  )
 		),
 		'callback' => '_kendra_saracen_trial_mod_start_watching_mediaitem',
+	);
+	$resources['mediaItems']['targeted_actions']['activity'] = array(
+		'access arguments' => array('access content'),
+		'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
+		'access arguments append' => FALSE,
+		'args' => array(
+			array(
+				'name' => 'id',
+				'description' => 'identifier',
+				'source' => array('path' => '0'),
+				'type' => 'int',
+				'optional' => FALSE,
+		  ),
+			array(
+				'name' => 'publish',
+				'description' => 'is watching activity published',
+				'source' => array('data' => 'publish'),
+				'type' => 'int',
+				'optional' => FALSE,
+		  ),
+		),
+		'callback' => '_kendra_saracen_trial_mod_activity_track_mediaitem',
 	);
 	$resources['mediaItems']['targeted_actions']['stopWatching'] = array(
 		'access arguments' => array('access content'),

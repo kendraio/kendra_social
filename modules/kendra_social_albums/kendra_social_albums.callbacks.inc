@@ -97,13 +97,15 @@ function _kendra_social_albums_create($data) {
 function _kendra_social_albums_check_perm($box, $uid) {
 	$r = FALSE;
 	$w = FALSE;
+	$account = user_load($box->uid);
+	$friends = in_array($uid, array_keys($account->saracen_friends));
   if (!empty($box->field_album_public[LANGUAGE_NONE][0]['value'])) {
 		$r = TRUE;
 	}
-	if (strstr($box->field_album_friends[LANGUAGE_NONE][0]['safe_value'], 'R')) {
+	if ($friends && strstr($box->field_album_friends[LANGUAGE_NONE][0]['safe_value'], 'R')) {
 		$r = TRUE;
 	}
-	if (strstr($box->field_album_friends[LANGUAGE_NONE][0]['safe_value'], 'W')) {
+	if ($friends && strstr($box->field_album_friends[LANGUAGE_NONE][0]['safe_value'], 'W')) {
 		$w = TRUE;
 	}
 	if (!$r || !$w) {
@@ -116,12 +118,14 @@ function _kendra_social_albums_check_perm($box, $uid) {
 	    foreach ($res['relation'] as $rel_id => $rel) {
 				$rel = relation_load($rel_id);
 				foreach ($rel->field_album_perm[LANGUAGE_NONE] as $perm) {
-					if ($perm['value'] == 'edit') {
-						$w = TRUE;
-					}
-					if ($perm['value'] == 'view') {
-						$r = TRUE;
-					}
+					if ($rel->endpoints[LANGUAGE_NONE][1]['entity_id'] == $uid) { 
+   					if ($perm['value'] == 'edit') {
+	  					$w = TRUE;
+		  			}
+			  		if ($perm['value'] == 'view') {
+				  		$r = TRUE;
+				  	}
+				  }  
 				}
 			}
 		}

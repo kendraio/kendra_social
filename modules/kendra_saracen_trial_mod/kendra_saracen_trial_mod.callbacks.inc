@@ -66,9 +66,8 @@ function _kendra_saracen_trial_mod_delete_mediaitem($id) {
     return array('status' => 'error', 'message' => 'unknown identifier');
   }
   if (node_access('delete', $node, $user)) {
-    $node->status = 0;
-    node_save($node);
-    return array('status' => 'ok', 'message' => 'unpublished media item ' . $title);
+	  node_delete($nid);
+    return array('status' => 'ok', 'message' => 'deleted media item ' . $title);
   }
   return array('status' => 'error', 'message' => 'permission denied');
 }

@@ -65,7 +65,7 @@ function _kendra_saracen_trial_mod_delete_mediaitem($id) {
   if (!isset($node->nid)) {
     return array('status' => 'error', 'message' => 'unknown identifier');
   }
-  if (user_access('delete', $node, $user)) {
+  if (node_access('delete', $node, $user)) {
     $node->status = 0;
     node_save($node);
     return array('status' => 'ok', 'message' => 'unpublished media item ' . $title);

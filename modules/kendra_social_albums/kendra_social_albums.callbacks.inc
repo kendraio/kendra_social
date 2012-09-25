@@ -360,7 +360,53 @@ function _kendra_social_remove_perm(&$perm_array, $perm) {
 	return $perm_array;
 }
  
+function _kendra_social_albums_batch_update_user($id, $data) {
+	// return array($id, $data); 
+	
+	// Remove existing permission relations
+	$query = new EntityFieldQuery();
+	$res = $query->entityCondition('entity_type', 'relation')
+	  ->entityCondition('bundle', 'album_user')
+	  ->fieldCondition('endpoints', 'entity_id', $id, '=')
+	  ->execute();
+	if (!empty($res['relation'])) {
+		foreach ($res['relation'] as $rel_id => $rel) {
+			relation_delete($rel_id);
+		}
+	}
+	
+	// Create new permissions
+	$users = array();
+	$output = array();
+  foreach (explode(',', $data['R']) as $uid) {
+	  $users[$uid][] = array('value' => 'view');
+	  $output[] = $uid . '=' . 'R';
+	}
+  foreach (explode(',', $data['W']) as $uid) {
+	  $users[$uid][] = array('value' => 'edit');
+	  $output[] = $uid . '=' . 'W';
+	}
+	$output = implode(',', $output);
+	
+	// Save the new relations
+	foreach ($users as $uid => $perms) {
+	  $endpoints = array(
+	    array('entity_type' => 'node', 'entity_id' => $id),
+	    array('entity_type' => 'user', 'entity_id' => $uid),
+	  );
+	  $new_r = relation_create('album_user', $endpoints);
+		$new_r->field_album_perm[LANGUAGE_NONE] = array();
+	  relation_save($new_r);
+  }
+	return array('status' => 'ok', 'message' => "Update box ({$id}) permissions to {$output}");
+}
+
 function _kendra_social_albums_update_user($id, $data) {
+	
+	if (empty($data['action']) && (!empty($data['R']) || !empty($data['W']))) {
+		return _kendra_social_albums_batch_update_user($id, $data);
+	}
+	
 	global $user;
   $box = node_load($id);
   if ($box->uid != $user->uid) {

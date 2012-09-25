@@ -184,7 +184,7 @@ function kendra_saracen_trial_mod_menu() {
     'access arguments' => array('administer nodes'),
     'type' => MENU_SUGGESTED_ITEM,
   );
-  $items['fb-test'] = array(
+  $items['fb-update'] = array(
   	'title' => 'Facebook Connection debugging',
 		'page callback' => '_kss_fb_connect_debug',
 		'access arguments' => array('access content'),
@@ -205,7 +205,7 @@ function _kss_fb_connect_debug() {
 	
 	$app_id = $_fb_app->apikey;
   $app_secret = $_fb_app->secret; 
-  $my_url = url('fb-test', array('absolute' => TRUE));
+  $my_url = url('fb-update', array('absolute' => TRUE));
 
   global $user;
   if (!empty($user->uid)) {
@@ -215,6 +215,11 @@ function _kss_fb_connect_debug() {
     $access_token = $account->key;
   } else {
 	  $access_token = '';
+  }
+
+  if (isset($_REQUEST['key'])) {
+	  //print '<pre>' . print_r(get_defined_vars(), TRUE) . '</pre>';
+	  return;
   }
 
   $code = isset($_REQUEST["code"]) ? $_REQUEST['code'] : NULL;
@@ -237,7 +242,7 @@ function _kss_fb_connect_debug() {
     . "access_token=" . $access_token;
   $response = _curl_get_file_contents($graph_url);
   $decoded_response = json_decode($response);
-
+  //echo $graph_url; die();
   // Check for errors 
   if (!empty($decoded_response->error)) {
   // check to see if this is an oAuth error:
@@ -248,21 +253,36 @@ function _kss_fb_connect_debug() {
         . "&redirect_uri=" . urlencode($my_url);
       echo("<script> top.location.href='" . $dialog_url 
       . "'</script>");
+      return;
     }
     else {
       echo "other error has happened";
+      return;
     }
   } 
   else {
+	  // no error - we have an access token...
+	  // Case 1: Valid saracen user has updated access token
 	  if (!empty($account->fbu)) { 
   	  $res = db_update('fb_user_app')
 	      ->fields(array('session_key' => $access_token))
 	      ->condition('fbu', $account->fbu)
 	      ->execute();
       //echo('yes: ' . $access_token);
-  	}
+  	} else if (!empty($decoded_response->id)) {
+	    // Case 2: FB user has updated access token
+		  $res = db_update('fb_user_app')
+	      ->fields(array('session_key' => $access_token))
+	      ->condition('fbu', $decoded_response->id)
+	      ->execute();
+      //echo('yes2: ' . $access_token);
+    }	
+    drupal_set_message("Your Facebook access token has been updated");
   }
-  drupal_goto('');
+  //echo('a: ' . $access_token);
+	//print '<pre>' . print_r(get_defined_vars(), TRUE) . '</pre>';
+  //drupal_goto('fb-update', array('query' => array('key' => $access_token)));
+  drupal_goto('user');
 }
 
 function _curl_get_file_contents($URL) {

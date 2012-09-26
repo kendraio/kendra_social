@@ -383,7 +383,22 @@ function _kendra_saracen_trial_mod_save_live_event($account, $id, $start = NULL,
 
 
 function _kendra_saracen_trial_mod_media_recommendations($id) {
-	return $id;
+	$nid = _kendra_saracen_trial_mod_lookup_id($id);
+	if (!empty($nid)) {
+	  $res = db_query("SELECT DISTINCT recommended_nid FROM {kendra_match_recommender_out_item_to_item} WHERE nid = :nid",
+	    array(':nid' => $nid));
+	  $output = array();
+	  $res = $res->fetchAll();
+	  foreach ($res as $node) {
+		  $node = node_load($node->recommended_nid);
+		  if (!empty($node->nid)) {
+  		  $output[$node->nid] = $node;
+			}
+	  }
+	  return $output;
+  } else {
+	  return array('status' => 'error', 'message' => 'Media item ID not found');
+  }
 }
 
 

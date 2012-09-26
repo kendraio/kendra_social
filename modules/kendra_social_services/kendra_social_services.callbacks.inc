@@ -9,8 +9,11 @@ function _kss_watching_now($limit, $who, $sort, $filter3d, $friends) {
 	if (!is_int($limit)) {
 		$msg = 'Limit must be integer value';
 	}
-	if (!in_array($who, array('none', 'friends', 'close'))) {
+	if (!in_array($who, array('all', 'none', 'friends', 'close'))) {
 		$msg = 'Who filter must be none, friends, or close';
+	}
+	if ($who == 'none') {
+		return array();
 	}
 	if (!in_array($sort, array('affinity', 'rating', 'popular', 'newest'))) {
 		$msg = 'Sort must be either affinity, rating, popular, or newest';
@@ -18,21 +21,36 @@ function _kss_watching_now($limit, $who, $sort, $filter3d, $friends) {
 	if (!in_array($filter3d, array('3d', '2d', 'both'))) {
 		$msg = 'Filter 3D must be either 3d, 2d, or both';
 	}
+	$d3 = " IN ('Yes', 'No') ";
+	if ($filter3d == '3d') {
+		$d3 = " = 'Yes' ";
+	}
+	if ($filter3d == '2d') {
+		$d3 = " = 'No' ";
+	}
 	if (!in_array($friends, array('yes', 'no'))) {
 		$msg = 'Friends filter must be either yes or no';
 	}
  	if (!empty($msg)) {
 		return array('status' => 'error', 'message' => $msg);
 	}
-	$res = db_query("SELECT DISTINCT media_id, uid FROM {kendra_mediaitem_watch} WHERE stop IS NULL");
+	$res = db_query("SELECT DISTINCT w.media_id, w.uid FROM {kendra_mediaitem_watch} w 
+		INNER JOIN {field_data_field_mediaitem_identifier} i ON w.media_id = i.field_mediaitem_identifier_value 
+		INNER JOIN {field_data_field_mediaitem_3d} d ON i.entity_id = d.entity_id 
+		WHERE w.stop IS NULL  
+		AND d.field_mediaitem_3d_value {$d3} 
+		LIMIT {$limit}");
 	$res = $res->fetchAll();
 	$output = array();
 	if (!empty($res)) {
 		foreach ($res as $media) {
+			// check if user has allowed publishing of watching information for this media item
 			if (_kendra_saracen_get_mediaitem_tracking($media->media_id, $media->uid)) {
 				$id = $media->media_id;
+				// quick find user name without loading whole user object
 				$account = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $media->uid));
 				$account = $account->fetchField();
+				// lookup media identifier and load the media item node
 				$nid = _kendra_saracen_trial_mod_lookup_id($id);
 				$media_node = node_load($nid);
 

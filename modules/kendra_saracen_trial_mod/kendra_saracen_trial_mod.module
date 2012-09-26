@@ -380,3 +380,15 @@ function _kendra_saracen_trial_mod_save_live_event($account, $id, $start = NULL,
 	))->execute();
 	return $result;
 }
+
+
+function _kendra_saracen_trial_mod_media_recommendations($id) {
+	return $id;
+}
+
+
+
+
+
+
+

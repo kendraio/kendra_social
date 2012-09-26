@@ -18,6 +18,21 @@ function kendra_social_services_services_get_mappings() {
 	//watchdog('service debug', '<pre>' . print_r($resources, TRUE) . '</pre>');
 	// TODO: Move these service definitions into JSON format 
 	
+	$resources['mediaItems']['relationships']['recommendations'] = array(
+		'access arguments' => array('access content'),
+		'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
+		'access arguments append' => FALSE,
+		'args' => array(
+			array(
+				'name' => 'id',
+				'description' => 'identifier',
+				'source' => array('path' => '0'),
+				'type' => 'int',
+				'optional' => FALSE,
+		  )
+		),
+		'callback' => '_kendra_saracen_trial_mod_media_recommendations',
+	);
 	$resources['user']['relationships']['watched'] = array(
 		'access arguments' => array('access content'),
 		'access callback' => '_kendra_saracen_trial_mod_default_access_callback',

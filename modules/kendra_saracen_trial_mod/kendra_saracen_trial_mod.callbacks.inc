@@ -443,11 +443,15 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
   }
   if (isset($data['category'])) {
     $vocab = taxonomy_vocabulary_machine_name_load('media_category');
-    $terms = taxonomy_get_term_by_name($data['category'], $vocab->vid);
-
-
-    if (!empty($terms)) {
-      $term = array_shift($terms);
+		$t_query = new EntityFieldQuery;
+		$t_result = $t_query
+		  ->entityCondition('entity_type', 'taxonomy_term')
+		  ->propertyCondition('name', trim($data['category']))
+		  ->propertyCondition('vid', $vocab->vid)
+		  ->execute();
+		
+    if (!empty($t_result['taxonomy_term'])) {
+      $term = array_shift($t_result['taxonomy_term']);
       $node->field_mediaitem_category['und'][0]['tid'] = $term->tid;
     }
     else {
@@ -455,11 +459,7 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
       $term->name = $data['category'];
       $term->vid  = $vocab->vid;
       taxonomy_term_save($term);
-      $terms = taxonomy_get_term_by_name($data['category'], $vocab->vid);
-      if (!empty($terms)) {
-        $term = array_shift($terms);
-        $node->field_mediaitem_category['und'][0]['tid'] = $term->tid;
-      }
+      $node->field_mediaitem_category['und'][0]['tid'] = $term->tid;
     }
   }
   node_object_prepare($node);

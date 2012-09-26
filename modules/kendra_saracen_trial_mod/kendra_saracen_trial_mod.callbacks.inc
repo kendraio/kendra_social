@@ -220,6 +220,9 @@ function _kendra_saracen_trial_mod_get_mediaitem($id, $include_derivatives = FAL
   //return 'unknown identifier: ' . var_export($id, TRUE);
 }
 
+/*
+ * Returns true if uid has allowed publish of watched information for the provided media id
+ */
 function _kendra_saracen_get_mediaitem_tracking($id, $uid = NULL) {
 	if (empty($uid)) {
     global $user;
@@ -571,7 +574,8 @@ function _kendra_saracen_trial_mod_activity_track_mediaitem($id, $publish) {
 		db_query("INSERT INTO {kendra_user_tracking} VALUES (:uid, :data)", array(':uid' => $user->uid, 
 			':data' => serialize(array($id => $publish))));
 	}
-	return array('status' => 'ok', 'message' => 'set privacy=' . $publish . ' for watching activity for item ' . $id);
+	return array('status' => 'ok', 'message' => 'set privacy=' . $publish . ' for watching activity for item ' . $id,
+	  'identifier' => $id);
 }
 
 

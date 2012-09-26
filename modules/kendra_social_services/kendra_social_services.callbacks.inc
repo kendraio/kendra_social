@@ -1,5 +1,63 @@
 <?php
 
+/*
+ *  This answers the API call to see who is watching what media items now.
+ *  It respects the privacy option to publish watching activity
+ */
+function _kss_watching_now($limit, $who, $sort, $filter3d, $friends) {
+	$msg = '';
+	if (!is_int($limit)) {
+		$msg = 'Limit must be integer value';
+	}
+	if (!in_array($who, array('none', 'friends', 'close'))) {
+		$msg = 'Who filter must be none, friends, or close';
+	}
+	if (!in_array($sort, array('affinity', 'rating', 'popular', 'newest'))) {
+		$msg = 'Sort must be either affinity, rating, popular, or newest';
+	}
+	if (!in_array($filter3d, array('3d', '2d', 'both'))) {
+		$msg = 'Filter 3D must be either 3d, 2d, or both';
+	}
+	if (!in_array($friends, array('yes', 'no'))) {
+		$msg = 'Friends filter must be either yes or no';
+	}
+ 	if (!empty($msg)) {
+		return array('status' => 'error', 'message' => $msg);
+	}
+	$res = db_query("SELECT DISTINCT media_id, uid FROM {kendra_mediaitem_watch} WHERE stop IS NULL");
+	$res = $res->fetchAll();
+	$output = array();
+	if (!empty($res)) {
+		foreach ($res as $media) {
+			if (_kendra_saracen_get_mediaitem_tracking($media->media_id, $media->uid)) {
+				$id = $media->media_id;
+				$account = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $media->uid));
+				$account = $account->fetchField();
+				$nid = _kendra_saracen_trial_mod_lookup_id($id);
+				$media_node = node_load($nid);
+
+				if (!empty($media_node->nid)) {
+					$info = field_get_items('node', $media_node, 'field_mediaitem_info');
+					$data = array();
+					if (!empty($info[0]['value'])) {
+		  			$data = unserialize($info[0]['value']);
+					}
+					$img = (empty($data['image'])) ? '' : $data['image'];
+					$output[$id] = array(
+						'identifier' => $id,
+						'title' => $media_node->title,
+						'user' => $account,
+						'uid' => $media->uid,
+						'image' => $img,
+					);
+				}
+		  }
+		}
+	}
+	return $output;
+}
+
+
 //function _user_resource_retrieve3($uid) {
 //  return "ok";
 //}

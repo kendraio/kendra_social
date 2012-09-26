@@ -100,6 +100,53 @@ function kendra_social_services_services_get_mappings() {
 		),
 		'callback' => '_kendra_saracen_trial_mod_stop_watching_mediaitem',
 	); 
+	$resources['watchingNow'] = array(
+		'operations' => array(
+			'index' => array(
+				'access arguments' => array('access content'),
+				'access arguments append' => FALSE,
+				'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
+				'callback' => '_kss_watching_now',
+				'args' => array(
+					array(
+						'name' => 'limit',
+						'source' => array('param' => 'limit'),
+						'type' => 'int',
+						'optional' => TRUE,
+						'default value' => 5,
+					),
+					array(
+						'name' => 'who',
+						'source' => array('param' => 'who'),
+						'type' => 'string',
+						'optional' => TRUE,
+						'default value' => 'friends',
+					),
+					array(
+						'name' => 'sort',
+						'source' => array('param' => 'sort'),
+						'type' => 'string',
+						'optional' => TRUE,
+						'default value' => 'affinity',
+					),
+					array(
+						'name' => 'filter3d',
+						'source' => array('param' => 'filter3d'),
+						'type' => 'string',
+						'optional' => TRUE,
+						'default value' => 'both',
+					),
+					array(
+						'name' => 'friends',
+						'source' => array('param' => 'friends'),
+						'type' => 'string',
+						'optional' => TRUE,
+						'default value' => 'yes',
+					),
+				),
+			),
+		),
+	);
 	$resources['annotations'] = array(
 		'operations' => array(
 			'delete' => array(

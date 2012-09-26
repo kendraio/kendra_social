@@ -5,6 +5,7 @@
  *  It respects the privacy option to publish watching activity
  */
 function _kss_watching_now($limit, $who, $sort, $filter3d, $friends) {
+	global $user;
 	$msg = '';
 	if (!is_int($limit)) {
 		$msg = 'Limit must be integer value';
@@ -34,47 +35,83 @@ function _kss_watching_now($limit, $who, $sort, $filter3d, $friends) {
  	if (!empty($msg)) {
 		return array('status' => 'error', 'message' => $msg);
 	}
+	$orderby = ' ORDER BY w.start DESC ';
+	if ($sort == 'affinity') {
+		$orderby = ' ORDER BY r.weight DESC ';
+	}
+	if ($sort == 'rating' || $sort == 'popular') {
+		// TODO split popular query out to use COUNT of watching events rather than rating
+		$orderby = ' ORDER BY v.value DESC ';
+	}
 	$res = db_query("SELECT DISTINCT w.media_id, w.uid FROM {kendra_mediaitem_watch} w 
 		INNER JOIN {field_data_field_mediaitem_identifier} i ON w.media_id = i.field_mediaitem_identifier_value 
 		INNER JOIN {field_data_field_mediaitem_3d} d ON i.entity_id = d.entity_id 
+		LEFT JOIN {votingapi_cache} v ON v.entity_id = i.entity_id 
+		LEFT JOIN {kendra_match_recommender_out_user_to_item} r ON r.recommended_nid = i.entity_id 
 		WHERE w.stop IS NULL  
+  	AND (v.function = 'average' OR v.function IS NULL) 
 		AND d.field_mediaitem_3d_value {$d3} 
+		{$orderby} 
 		LIMIT {$limit}");
 	$res = $res->fetchAll();
 	$output = array();
 	if (!empty($res)) {
 		foreach ($res as $media) {
-			// check if user has allowed publishing of watching information for this media item
-			if (_kendra_saracen_get_mediaitem_tracking($media->media_id, $media->uid)) {
-				$id = $media->media_id;
-				// quick find user name without loading whole user object
-				$account = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $media->uid));
-				$account = $account->fetchField();
-				// lookup media identifier and load the media item node
-				$nid = _kendra_saracen_trial_mod_lookup_id($id);
-				$media_node = node_load($nid);
+			// check if user of watch event is friend of active user
+			if ($who == 'all'  
+			  || ($who == 'friends' && _kss_friend_of($user->uid, $media->uid))
+			  || ($who == 'close' && _kss_close_to($user->uid, $media->uid))
+			  ) {
+			
+				// check if user has allowed publishing of watching information for this media item
+				if (_kendra_saracen_get_mediaitem_tracking($media->media_id, $media->uid)) {
+					
+					$id = $media->media_id;
+					// quick find user name without loading whole user object
+					$account = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $media->uid));
+					$account = $account->fetchField();
+					// lookup media identifier and load the media item node
+					$nid = _kendra_saracen_trial_mod_lookup_id($id);
+					$media_node = node_load($nid);
 
-				if (!empty($media_node->nid)) {
-					$info = field_get_items('node', $media_node, 'field_mediaitem_info');
-					$data = array();
-					if (!empty($info[0]['value'])) {
-		  			$data = unserialize($info[0]['value']);
+					if (!empty($media_node->nid)) {
+						$info = field_get_items('node', $media_node, 'field_mediaitem_info');
+						$data = array();
+						if (!empty($info[0]['value'])) {
+			  			$data = unserialize($info[0]['value']);
+						}
+						$img = (empty($data['image'])) ? '' : $data['image'];
+						$output[$id] = array(
+							'identifier' => $id,
+							'title' => $media_node->title,
+							'user' => $account,
+							'uid' => $media->uid,
+							'image' => $img,
+						);
 					}
-					$img = (empty($data['image'])) ? '' : $data['image'];
-					$output[$id] = array(
-						'identifier' => $id,
-						'title' => $media_node->title,
-						'user' => $account,
-						'uid' => $media->uid,
-						'image' => $img,
-					);
-				}
-		  }
+			  }
+			}
 		}
 	}
 	return $output;
 }
 
+// return true if uid2 is close affinity to uid1
+function _kss_close_to($uid1, $uid2) {
+	return TRUE;
+}
+
+// Is uid2 a saracen friend of uid1
+function _kss_friend_of($uid1, $uid2) {
+	static $friends;
+	if (empty($friends[$uid1])) {
+  	$res = db_query("SELECT data FROM {kendra_saracen_friends} f WHERE f.uid = :uid", 
+	    array(':uid' => $uid1));
+	  $data = $res->fetchField();
+	  $friends[$uid1] = unserialize($data);
+	}
+	return isset($friends[$uid1][$uid2]);
+}
 
 //function _user_resource_retrieve3($uid) {
 //  return "ok";

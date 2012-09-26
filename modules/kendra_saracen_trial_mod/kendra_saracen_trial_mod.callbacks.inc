@@ -317,13 +317,32 @@ function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10, $c
   $page2 = $page1 + $page_size;
 
   if (!empty($category)) {
-	  return get_defined_vars();
+    $vocab = taxonomy_vocabulary_machine_name_load('media_category');
+		$t_query = new EntityFieldQuery;
+		$t_result = $t_query
+		  ->entityCondition('entity_type', 'taxonomy_term')
+		  ->propertyCondition('name', trim($category))
+		  ->propertyCondition('vid', $vocab->vid)
+		  ->execute();
+
+    if (!empty($t_result['taxonomy_term'])) {
+      $term = array_shift($t_result['taxonomy_term']);
+      $category_tid = $term->tid;
+    }
   }
 
-  // @todo change to entity query
-  $result = db_query("SELECT nid FROM {node} WHERE (type = 'mediaitem' AND status = 1) OR uid = :uid ORDER BY changed DESC LIMIT {$page1}, {$page2}",
-    array(':uid' => $uid));
-
+	if (!empty($category_tid)) {
+		$result = db_query("SELECT n.nid FROM {node} n
+			INNER JOIN {field_data_field_mediaitem_category} t ON t.entity_id = n.nid 
+			WHERE ((n.type = 'mediaitem' AND n.status = 1) OR n.uid = :uid) 
+			AND t.field_mediaitem_category_tid = :tid 
+			ORDER BY n.changed DESC LIMIT {$page1}, {$page2}",
+		  array(':uid' => $uid, ':tid' => $category_tid));
+	} else {
+    $result = db_query("SELECT nid FROM {node} WHERE (type = 'mediaitem' AND status = 1) OR uid = :uid ORDER BY changed DESC LIMIT {$page1}, {$page2}",
+      array(':uid' => $uid));
+	}
+	
   $results = array();
   foreach ($result as $node) {
     $results[] = _kendra_saracen_trial_mod_get_mediaitem($node->nid);

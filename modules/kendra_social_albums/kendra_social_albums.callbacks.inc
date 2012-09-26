@@ -257,6 +257,7 @@ function _kendra_social_albums_box_exists($id) {
 }
 
 function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
+	global $user;
   $node = node_load($id);
   if (empty($node->nid)) {
     // Box does not exist. TODO: also check permission
@@ -288,10 +289,12 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
       if ($rel->relation_type == 'album_contains') {
         $rel = relation_load($item_id);
         $media = node_load($rel->endpoints['und'][1]['entity_id']);
-        $box->items[] = array(
-          'identifier' => $media->field_mediaitem_identifier['und'][0]['value'],
-          'mediaitem' => _kendra_saracen_trial_mod_get_mediaitem($media->field_mediaitem_identifier['und'][0]['value'], FALSE),
-        );
+				if ($user->uid == $media->uid || $media->status == 1) { 
+          $box->items[] = array(
+            'identifier' => $media->field_mediaitem_identifier['und'][0]['value'],
+            'mediaitem' => _kendra_saracen_trial_mod_get_mediaitem($media->field_mediaitem_identifier['und'][0]['value'], FALSE),
+          );
+ 				}
       } elseif ($rel->relation_type == 'album_user') {
         $rel = relation_load($item_id);
         // Don't load user - can cause infinite recursion! user load includes boxes

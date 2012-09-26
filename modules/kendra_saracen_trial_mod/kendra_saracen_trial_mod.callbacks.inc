@@ -305,7 +305,7 @@ function _kendra_saracen_trial_mod_filter_mediaitem(&$node, $include_derivatives
  * get all mediaItems
  * @todo filter by user preferences
  */
-function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10) {
+function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10, $category = NULL) {
   global $user;
   $uid = $user->uid;
 
@@ -315,6 +315,10 @@ function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10) {
 
   $page1 = intval($page) * $page_size;
   $page2 = $page1 + $page_size;
+
+  if (!empty($category)) {
+	  return get_defined_vars();
+  }
 
   // @todo change to entity query
   $result = db_query("SELECT nid FROM {node} WHERE (type = 'mediaitem' AND status = 1) OR uid = :uid ORDER BY changed DESC LIMIT {$page1}, {$page2}",

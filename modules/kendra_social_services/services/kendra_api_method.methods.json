@@ -566,6 +566,16 @@
                             "param": "page_size"
                         }, 
                         "type": "int"
+                    }, 
+                    {
+                        "default_value": "", 
+                        "description": "category", 
+                        "name": "category", 
+                        "optional": true, 
+                        "source": {
+                            "param": "category"
+                        }, 
+                        "type": "string"
                     }
                 ], 
                 "callback": "_kendra_saracen_trial_mod_list_mediaitem", 

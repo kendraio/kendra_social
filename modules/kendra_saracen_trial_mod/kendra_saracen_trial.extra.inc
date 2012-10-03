@@ -35,7 +35,7 @@ function _kss_annotation_delete($tid, $identifier) {
   }
 
   // else look for annotation node and unpublish:
-	$annotate = node_load($nid);
+	$annotate = node_load($tid);
 	if (!empty($annotate->nid)) {
 		if ($user->uid == $annotate->uid) {
 			// unpublish the annotation. TODO: Should it be deleted?
@@ -48,5 +48,14 @@ function _kss_annotation_delete($tid, $identifier) {
 	}	
 	return array('status' => 'error', 'message' => 'Invalid ID: Annotation does not exist or mediaitem identifier missing');
 }
+
+
+
+
+
+
+
+
+
 
 

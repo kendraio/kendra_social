@@ -85,6 +85,18 @@ function kendra_social_services_services_get_mappings() {
 		),
 		'callback' => '_kendra_saracen_trial_mod_activity_track_mediaitem',
 	);
+	$resources['user']['actions']['preferences'] = array(
+		'access arguments' => array('access content'),
+		'args' => array(
+			array(
+				'name' => 'data',
+				'source' => 'data',
+				'type' => 'struct',
+				'optional' => TRUE,
+			),
+		),
+		'callback' => '_kendra_saracen_trial_mod_save_user_prefs',
+	);
 	$resources['mediaItems']['targeted_actions']['stopWatching'] = array(
 		'access arguments' => array('access content'),
 		'access callback' => '_kendra_saracen_trial_mod_default_access_callback',

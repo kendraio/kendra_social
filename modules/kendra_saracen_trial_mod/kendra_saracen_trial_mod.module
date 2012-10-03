@@ -2,6 +2,27 @@
 /* PLEASE NOTE: I renamed this file from the GitHub version 
 because it had same name as install profile. This code needs further refactoring */
 
+
+
+function _kendra_saracen_trial_mod_save_user_prefs($data) {
+	if (!in_array($data['fb_update'], array('0', '1'))) {
+	  return array('status' => 'error', 'message' => 'fb_update must be 0 or 1');	
+	}
+  if (!in_array($data['get_email'], array('0', '1'))) {
+	  return array('status' => 'error', 'message' => 'get_email must be 0 or 1');	
+	}
+	$edit = array('data' => array(
+  	'fb_update' => !empty($data['fb_update']),
+		'get_email' => !empty($data['get_email']),
+  ));
+  global $user;
+  $account = user_load($user->uid);
+  user_save($account, $edit);
+  return array('status' => 'ok', 'message' => 'updated user preferences');
+}
+
+
+
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_saracen_trial_mod') . '/kendra_saracen_trial_mod.callbacks.inc';
 function kendra_saracen_trial_init() {
   drupal_add_css('#header {background-color:#323D77;background-image:none;}', array('type' => 'inline'));

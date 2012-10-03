@@ -46,7 +46,8 @@ function _kendra_saracen_trial_mod_annotate_mediaitem($id, $data) {
 
   node_object_prepare($node);
   node_save($node);
-
+	
+  _kss_notification_add($data['type'], $org->nid, $user->uid, $org->uid, $node->nid);
   return array('status' => 'OK', 'message' => 'created user annotation for ' . $org->title,
     'type' => $data['type'],
   );
@@ -197,7 +198,9 @@ function _kendra_saracen_trial_mod_get_mediaitem($id, $include_derivatives = FAL
     );
     foreach ($result as $rec) {
       $temp = node_load($rec->recommended_nid);
-      $node->recommended[$rec->recommended_nid] = $temp->field_mediaitem_identifier[LANGUAGE_NONE][0]['value'];
+			if (!empty($temp->nid)) {
+        $node->recommended[$rec->recommended_nid] = $temp->field_mediaitem_identifier[LANGUAGE_NONE][0]['value'];
+			}
     }
 
     $watchers = db_select('kendra_mediaitem_watch', 'w')->fields('w')->condition('media_id', $id)->condition('stop', NULL)->execute();
@@ -339,6 +342,10 @@ function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10, $c
 			ORDER BY n.changed DESC LIMIT {$page1}, {$page2}",
 		  array(':uid' => $uid, ':tid' => $category_tid));
 	} else {
+		// if was given category but got here then category was empty 
+		if (!empty($category)) {
+			return array();
+		}
     $result = db_query("SELECT nid FROM {node} WHERE (type = 'mediaitem' AND status = 1) OR uid = :uid ORDER BY changed DESC LIMIT {$page1}, {$page2}",
       array(':uid' => $uid));
 	}
@@ -367,8 +374,14 @@ function _kendra_saracen_trial_mod_add_rate_mediaitem($id, $data, $lookup_nid = 
   // TODO: add error checking so no null result
   _kendra_saracen_save_recommend($account, $nid, 'rating', $data['value']);
   _kendra_saracen_save_recommend($account, $nid, 'like', $data['value']);
-  return _fivestar_cast_vote('node', $nid, $data['value'], 'vote', $account);
-  return func_get_args();
+
+  $org_node = node_load($nid);
+
+  $vote = _fivestar_cast_vote('node', $nid, $data['value'], 'vote', $account);
+  _kss_notification_add('Rate', $vote['user']['vote_id'], $account, $org_node->uid, $nid);
+
+  return $vote;
+  //return func_get_args();
 }
 
 /**
@@ -548,6 +561,10 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
     $rid = relation_save($relation);
   }
 
+  if ($op == 'registered') {
+    _kss_notification_add('Import', $node->nid, 0, $node->uid);
+  }
+
   // return notification of registered node
   return array('status' => 'OK', 'message' => 'Media item ' . $op, 'identifier' => $data['identifier']);
 }
@@ -567,6 +584,10 @@ function _kendra_saracen_trial_mod_tag_mediaitem($id, $data) {
   community_tags_taxonomy_node_save($node, array('tags' => array($vid => $tags)), FALSE, $user->uid);
   $tags = community_tags_flatten(community_tags_get_user_node_tags($user->uid, $node->nid, $vid));
   _kendra_saracen_save_recommend($user->uid, $node->nid, 'tag', $data['tag']);
+
+  // TODO "Friends tagged" - screen 47
+  //_kss_notification_add('Tag', $source, $user_from, $user_to, $source2 = 0);
+
   return $tags;
 }
 

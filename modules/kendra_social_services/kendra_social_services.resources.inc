@@ -147,6 +147,69 @@ function kendra_social_services_services_get_mappings() {
 			),
 		),
 	);
+	$resources['notifications'] = array(
+		'actions' => array(
+			'approve' => array(
+				'access arguments' => array('access content'),
+				'callback' => '_kss_notification_approve',
+				'args' => array(
+					array(
+						'name' => 'data',
+						'source' => 'data',
+						'type' => 'struct',
+						'optional' => FALSE,
+ 					),
+				),
+			),			
+			'reject' => array(
+				'access arguments' => array('access content'),
+				'callback' => '_kss_notification_reject',
+				'args' => array(
+					array(
+						'name' => 'data',
+						'source' => 'data',
+						'type' => 'struct',
+						'optional' => FALSE,
+ 					),
+				),
+			),
+		),
+		'operations' => array(
+			'create' => array(
+				'access arguments' => array('access content'),
+				'callback' => '_kss_notification_create',
+				'args' => array(
+					array(
+  					'name' => 'data',
+	  				'type' => 'struct',
+		  			'source' => 'data',
+			  		'optional' => FALSE,
+				  ),
+			  ),
+			),
+			'index' => array(
+				'access arguments' => array('access content'),
+				'access callback' => '_kendra_saracen_trial_mod_default_access_callback',
+				'callback' => '_kss_notification_list',
+				'args' => array(
+					array(
+						'name' => 'filter',
+						'source' => array('param' => 'filter'),
+						'type' => 'string',
+						'optional' => TRUE,
+						'default value' => '',
+					),
+					array(
+						'name' => 'type',
+						'source' => array('param' => 'type'),
+						'type' => 'string',
+						'optional' => TRUE,
+						'default value' => '',
+					),
+				),
+			),
+		),
+	);
 	$resources['annotations'] = array(
 		'operations' => array(
 			'delete' => array(

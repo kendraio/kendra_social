@@ -12,6 +12,9 @@ function _kendra_social_albums_add_item($box, $data) {
         );
         $relation = relation_create('album_contains', $endpoints);
         $rid = relation_save($relation);
+				if ($user->uid != $box->uid) {
+  			  _kss_notification_add('Share', $media, $user->uid, $box->uid, $box->nid, $rid);
+				}
         return array('status' => 'ok', 'message' => "added media item ({$data['item']}) ({$media}) to box ({$box->nid})");
       } else {
         return array('status' => 'error', 'message' => 'no media item found with that id');

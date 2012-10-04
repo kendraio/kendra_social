@@ -93,10 +93,6 @@ function _kss_user_load_boxes(&$users) {
 // This function adds the recommender word cloud into user profiles when loading them
 function kendra_social_services_user_load($users) {
 
-  foreach ($users as $id => $account) {
-	 $users[$id]
-	}
-
   // Load tags from recommender output table
 	_kss_user_load_recommendations($users);
 

@@ -35,7 +35,7 @@ function _kss_user_load_facebook_friends(&$users) {
   		$users[$friend->uid]->saracen_friends = unserialize($friend->data);
   		$users[$friend->uid]->friends_last_imported = $friend->imported;
     } else {
-			db_query("DELETE FROM {kendra_saracen_friends} f WHERE uid = :uid", array(":uid" => $friend->uid));
+			db_query("DELETE FROM {kendra_saracen_friends} WHERE uid = :uid", array(":uid" => intval($friend->uid)));
 		}
 	}
   foreach ($users as $account) {

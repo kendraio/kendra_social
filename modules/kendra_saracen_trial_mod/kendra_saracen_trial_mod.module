@@ -357,12 +357,12 @@ function _kendra_saracen_trial_dev_generate_data_submit($form, &$form_state) {
 	}
 }
 
-
 function _kendra_saracen_trial_mod_start_watching_mediaitem($id) {
 	global $user;
 	db_update('kendra_mediaitem_watch')
 		->fields(array(
 			'stop' => REQUEST_TIME,
+  		'media_id' => $id,
 		))
 		->condition('stop', NULL)
 		->condition('uid', $user->uid)
@@ -376,6 +376,7 @@ function _kendra_saracen_trial_mod_stop_watching_mediaitem($id) {
 			'stop' => REQUEST_TIME,
 		))
 		->condition('stop', NULL)
+		->condition('media_id', $id)
 		->condition('uid', $user->uid)
 		->execute();
 	return $closed;

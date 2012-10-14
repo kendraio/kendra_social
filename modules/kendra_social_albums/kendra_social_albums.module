@@ -13,7 +13,7 @@ function _kendra_social_albums_fetch_user_rel($boxid, $uid) {
 	return relation_load($relation->rid);
 }
 
-function _kendra_social_albums_delete_user_rel($boxid, $uid) {  
+function _kendra_social_albums_delete_user_rel($boxid, $uid) {
   $query = new EntityFieldQuery();
   $res = $query->entityCondition('entity_type', 'relation')
     ->entityCondition('bundle', 'album_user')
@@ -38,6 +38,11 @@ function _kendra_social_album_access_check($op, $box, $account) {
     if ($box->uid == $account->uid) {
       return TRUE;
     }
+    // is Friend in box global permission
+    $friends = field_get_items('node', $box, 'field_album_friends');
+    if (!empty($friends[0]['value']) && strstr($friends[0]['value'], 'W')) {
+      return TRUE;
+    }
     $query = new EntityFieldQuery();
     $albums = $query->entityCondition('entity_type', 'relation')
       ->entityCondition('bundle', 'album_user')
@@ -49,7 +54,9 @@ function _kendra_social_album_access_check($op, $box, $account) {
     foreach ($relation->field_album_perm['und'] as $perm) {
       $perms[] = $perm['value'];
     }
-    return in_array('edit', $perms);
+    if (in_array('edit', $perms)) {
+      return TRUE;
+    }
   }
   return FALSE;
 }
@@ -75,14 +82,14 @@ function _kendra_social_albums_delete_item($box, $data) {
       ->fieldCondition('endpoints', 'entity_id', $media, '=')
       ->execute();
     $relation = array_shift($res['relation']);
-    
-    if (isset($relation->rid)) { 
+
+    if (isset($relation->rid)) {
       relation_delete($relation->rid);
       return array('status' => 'ok', 'message' => 'item deleted from album');
     } else {
       return array('status' => 'error', 'message' => 'no matching item found in album');
     }
-    
+
   } else {
     return array('status' => 'error', 'message' => 'a box ID and item ID is required');
   }

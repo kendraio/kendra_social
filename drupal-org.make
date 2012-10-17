@@ -134,9 +134,6 @@ projects[rubik][patch][999582] = http://drupal.org/files/issues/999582-1_notices
 ; http://drupal.org/node/684554
 projects[markdown][patch][684554] = http://drupal.org/files/issues/markdown-684554.patch
 
-;projects[services][patch][] = "https://raw.github.com/kendrainitiative/kendra_social/master/patches/services-resource-access-defaults.patch"
-projects[services][patch][1355952][url] = "https://raw.github.com/kendrainitiative/kendra_social/master/patches/services-libraries-spyc.patch"
-
 ; -------------
 ; Libraries
 ; -------------
@@ -161,6 +158,12 @@ libraries[jsonpath][destination] = modules/contrib/feeds_jsonpath_parser
 libraries[facebook-php-sdk][download][type] = "git"
 libraries[facebook-php-sdk][download][url] = "git://github.com/facebook/php-sdk.git"
 libraries[facebook-php-sdk][directory_name] = facebook-php-sdk
+
+; Spyc: required for Services 3.1
+libraries[spyc][download][url] = http://spyc.googlecode.com/svn/trunk/spyc.php
+libraries[spyc][download][type] = file
+;libraries[spyc][directory_name] = spyc
+libraries[spyc][destination] = libraries
 
 ; custom libraries for Kendra Social
 libraries[kendra_social_test][download][[type] = file

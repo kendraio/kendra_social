@@ -46,7 +46,7 @@ function _kendra_saracen_trial_mod_annotate_mediaitem($id, $data) {
 
   node_object_prepare($node);
   node_save($node);
-	
+
   _kss_notification_add($data['type'], $org->nid, $user->uid, $org->uid, $node->nid);
   return array('status' => 'OK', 'message' => 'created user annotation for ' . $org->title,
     'type' => $data['type'],
@@ -203,7 +203,10 @@ function _kendra_saracen_trial_mod_get_mediaitem($id, $include_derivatives = FAL
 			}
     }
 
-    $watchers = db_select('kendra_mediaitem_watch', 'w')->fields('w')->condition('media_id', $id)->condition('stop', NULL)->execute();
+//    $watchers = db_select('kendra_mediaitem_watch', 'w')->fields('w')->condition('media_id', $id)->condition('stop', NULL)->execute();
+    $watchers = db_select('kendra_mediaitem_watch', 'w')
+      ->fields('w')->condition('media_id', $id)->groupBy('uid')
+      ->range(0, 10)->orderBy('start', 'DESC')->execute();
     $node->watchers = array();
     foreach ($watchers as $watching) {
 	    if (_kendra_saracen_get_mediaitem_tracking($id, $watching->uid)) {
@@ -336,20 +339,20 @@ function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10, $c
 
 	if (!empty($category_tid)) {
 		$result = db_query("SELECT n.nid FROM {node} n
-			INNER JOIN {field_data_field_mediaitem_category} t ON t.entity_id = n.nid 
-			WHERE ((n.type = 'mediaitem' AND n.status = 1) OR n.uid = :uid) 
-			AND t.field_mediaitem_category_tid = :tid 
+			INNER JOIN {field_data_field_mediaitem_category} t ON t.entity_id = n.nid
+			WHERE ((n.type = 'mediaitem' AND n.status = 1) OR n.uid = :uid)
+			AND t.field_mediaitem_category_tid = :tid
 			ORDER BY n.changed DESC LIMIT {$page1}, {$page2}",
 		  array(':uid' => $uid, ':tid' => $category_tid));
 	} else {
-		// if was given category but got here then category was empty 
+		// if was given category but got here then category was empty
 		if (!empty($category)) {
 			return array();
 		}
     $result = db_query("SELECT nid FROM {node} WHERE (type = 'mediaitem' AND status = 1) OR uid = :uid ORDER BY changed DESC LIMIT {$page1}, {$page2}",
       array(':uid' => $uid));
 	}
-	
+
   $results = array();
   foreach ($result as $node) {
     $results[] = _kendra_saracen_trial_mod_get_mediaitem($node->nid);
@@ -418,7 +421,7 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
   }
 
   // Load the node if it exists, or create a new one
-  $result = db_query("SELECT entity_id FROM {field_data_field_mediaitem_identifier} 
+  $result = db_query("SELECT entity_id FROM {field_data_field_mediaitem_identifier}
                         WHERE field_mediaitem_identifier_value=:identifier LIMIT 1", array(':identifier' => $data['identifier']));
   $nid = NULL;
   foreach ($result as $record) {
@@ -481,7 +484,7 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
 		  ->propertyCondition('name', trim($data['category']))
 		  ->propertyCondition('vid', $vocab->vid)
 		  ->execute();
-		
+
     if (!empty($t_result['taxonomy_term'])) {
       $term = array_shift($t_result['taxonomy_term']);
       $node->field_mediaitem_category['und'][0]['tid'] = $term->tid;
@@ -611,11 +614,11 @@ function _kendra_saracen_trial_mod_activity_track_mediaitem($id, $publish) {
 		foreach ($tracking as $track) {
 			$items = unserialize($track->data);
 			$items[$id] = $publish;
-			db_query("UPDATE {kendra_user_tracking} SET data = :data WHERE uid = :uid", array(':uid' => $user->uid, 
+			db_query("UPDATE {kendra_user_tracking} SET data = :data WHERE uid = :uid", array(':uid' => $user->uid,
 			  ':data' => serialize($items)));
 		}
 	} else {
-		db_query("INSERT INTO {kendra_user_tracking} VALUES (:uid, :data)", array(':uid' => $user->uid, 
+		db_query("INSERT INTO {kendra_user_tracking} VALUES (:uid, :data)", array(':uid' => $user->uid,
 			':data' => serialize(array($id => $publish))));
 	}
 	return array('status' => 'ok', 'message' => 'set privacy=' . $publish . ' for watching activity for item ' . $id,
@@ -633,7 +636,7 @@ function _kendra_saracen_trial_mod_user_watched($uid) {
 		}
 	}
 	return $output;
-	
+
 }
 
 

@@ -10,7 +10,7 @@
  */
 function kendra_social_services_schema() {
   $schema = array(
-    'kendra_social_services_in_values' => array(
+    'kendra_saracen_friends' => array(
       'description' => 'recommender_in_values',
       'fields' => array(
         'uid' => array(

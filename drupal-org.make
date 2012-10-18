@@ -164,6 +164,11 @@ libraries[spyc][download][url] = http://spyc.googlecode.com/svn/trunk/spyc.php
 libraries[spyc][download][type] = file
 ;libraries[spyc][directory_name] = spyc
 libraries[spyc][destination] = libraries
+projects[spyc][type] = library
+projects[spyc][download][type] = file
+projects[spyc][download][url] = http://spyc.googlecode.com/svn/trunk/spyc.php
+projects[spyc][download][filename] = "../spyc.php"
+projects[spyc][destination] = modules/contrib/services/servers/rest_server/lib
 
 ; custom libraries for Kendra Social
 libraries[kendra_social_test][download][[type] = file

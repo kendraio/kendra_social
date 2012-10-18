@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Installation file for the Kendra Match module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function kendra_social_services_schema() {
+  $schema = array(
+    'kendra_social_services_in_values' => array(
+      'description' => 'recommender_in_values',
+      'fields' => array(
+        'uid' => array(
+          'description' => '',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'imported' => array(
+          'description' => 'timestamp: date+time of import',
+          'type' => 'int',
+          'unsigned' => FALSE,
+          'not null' => TRUE,
+        ),
+        'data' => array(
+          'description' => 'serialized data from other service',
+          'type' => 'text',
+					'not null' => TRUE,
+					'serialize' => TRUE,
+					'size' => 'medium',
+        ),
+      ),
+      'primary key' => array('uid'),
+      'foreign keys' => array(
+        'uid' => array(
+          'table' => 'users',
+          'columns' => array('uid' => 'uid'),
+        ),
+        'nid' => array(
+          'table' => 'node',
+          'columns' => array('nid' => 'nid'),
+        ),
+      ),
+      'indexes' => array(
+        'index_key' => array('uid'),
+      ),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function kendra_social_services_install() {}
+
+/**
+ * Implements hook_uninstall().
+ */
+function kendra_social_services_uninstall() {}
+

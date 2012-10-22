@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the kendra_saracen_components feature.
+ */
+
+include_once 'kendra_saracen_components.features.inc';

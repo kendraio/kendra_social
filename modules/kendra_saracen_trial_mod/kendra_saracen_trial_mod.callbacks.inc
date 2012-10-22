@@ -220,6 +220,23 @@ function _kendra_saracen_trial_mod_get_mediaitem($id, $include_derivatives = FAL
 		$publish = _kendra_saracen_get_mediaitem_tracking($id);
 		$node->publish_watching_activity = ($publish) ? 1 : 0;
 
+    // TAGS: Load ownership info into media item tags
+    global $user;
+    // get tags from node and uids from db
+    $tags = field_get_items('node', $node, 'field_mediaitem_tags');
+    $tid_list = array();
+    $db_tags = db_query('SELECT tid, uid FROM {community_tags} WHERE nid = :nid',
+      array(':nid' => $node->nid));
+    foreach ($db_tags->fetchAll() as $term) {
+        $tid_list[$term->tid] = $term->uid;
+    }
+    // iterate through tags and add uid info
+    foreach ($tags as $key => $term) {
+      $tags[$key]['uid'] = $tid_list[$term['tid']];
+      $tags[$key]['owner'] = ($tid_list[$term['tid']] == $user->uid);
+    }
+    $node->field_mediaitem_tags[LANGUAGE_NONE] = $tags;
+
     return $node;
   }
   return array('status' => 'error', 'message' => 'unknown identifier ' . var_export($id, TRUE));

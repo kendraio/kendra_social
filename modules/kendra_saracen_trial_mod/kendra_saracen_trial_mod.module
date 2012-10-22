@@ -1,15 +1,15 @@
 <?php
-/* PLEASE NOTE: I renamed this file from the GitHub version 
+/* PLEASE NOTE: I renamed this file from the GitHub version
 because it had same name as install profile. This code needs further refactoring */
 
 
 
 function _kendra_saracen_trial_mod_save_user_prefs($data) {
 	if (!in_array($data['fb_update'], array('0', '1'))) {
-	  return array('status' => 'error', 'message' => 'fb_update must be 0 or 1');	
+	  return array('status' => 'error', 'message' => 'fb_update must be 0 or 1');
 	}
   if (!in_array($data['get_email'], array('0', '1'))) {
-	  return array('status' => 'error', 'message' => 'get_email must be 0 or 1');	
+	  return array('status' => 'error', 'message' => 'get_email must be 0 or 1');
 	}
 	$edit = array('data' => array(
   	'fb_update' => !empty($data['fb_update']),
@@ -126,7 +126,7 @@ function _kendra_saracen_get_facebook_friends($account, $fbu, $access_code) {
 	$data = cache_get('saracen_fb_user_friends_' . $fbu);
 	if (!empty($data->data)) {
 		return $data->data;
-	} 
+	}
 	$fb = "https://graph.facebook.com/{$account->fbu}/friends?access_token={$account->key}";
 	$response = drupal_http_request($fb);
 	if ($response->code == 200) {
@@ -178,7 +178,7 @@ function _kendra_saracen_sparql_util($store, $graph, $id_url, $data) {
 }
 
 function _kendra_saracen_trial_mod_lookup_id($id) {
-  $result = db_query("SELECT entity_id FROM {field_data_field_mediaitem_identifier} 
+  $result = db_query("SELECT entity_id FROM {field_data_field_mediaitem_identifier}
     WHERE field_mediaitem_identifier_value=:identifier LIMIT 1", array(':identifier' => $id));
   $nid = 0;
   foreach ($result as $record) {
@@ -215,24 +215,24 @@ function kendra_saracen_trial_mod_menu() {
 }
 
 function _kss_fb_connect_debug() {
-	
+
   global $_fb;
   global $_fb_app;
   //return '<pre>' . print_r($_fb, TRUE) . "\n" . print_r($_fb_app, TRUE) . '</pre>';
 
-	/* Code sample from 
+	/* Code sample from
 	 *  https://developers.facebook.com/blog/post/2011/05/13/how-to--handle-expired-access-tokens/
 	 */
-	
+
 	$app_id = $_fb_app->apikey;
-  $app_secret = $_fb_app->secret; 
+  $app_secret = $_fb_app->secret;
   $my_url = url('fb-update', array('absolute' => TRUE));
 
   global $user;
   if (!empty($user->uid)) {
     $account = user_load($user->uid);
     // return '<pre>' . print_r($account, TRUE) . '</pre>';
-    // known valid access token stored in a database 
+    // known valid access token stored in a database
     $access_token = $account->key;
   } else {
 	  $access_token = '';
@@ -245,12 +245,12 @@ function _kss_fb_connect_debug() {
 
   $code = isset($_REQUEST["code"]) ? $_REQUEST['code'] : NULL;
 
-  // If we get a code, it means that we have re-authed the user 
-  //and can get a valid access_token. 
+  // If we get a code, it means that we have re-authed the user
+  //and can get a valid access_token.
   if (isset($code)) {
     $token_url="https://graph.facebook.com/oauth/access_token?client_id="
-      . $app_id . "&redirect_uri=" . urlencode($my_url) 
-      . "&client_secret=" . $app_secret 
+      . $app_id . "&redirect_uri=" . urlencode($my_url)
+      . "&client_secret=" . $app_secret
       . "&code=" . $code . "&display=popup";
     $response = file_get_contents($token_url);
     $params = null;
@@ -264,15 +264,15 @@ function _kss_fb_connect_debug() {
   $response = _curl_get_file_contents($graph_url);
   $decoded_response = json_decode($response);
   //echo $graph_url; die();
-  // Check for errors 
+  // Check for errors
   if (!empty($decoded_response->error)) {
   // check to see if this is an oAuth error:
     if ($decoded_response->error->type== "OAuthException") {
-      // Retrieving a valid access token. 
+      // Retrieving a valid access token.
       $dialog_url= "https://www.facebook.com/dialog/oauth?"
-        . "client_id=" . $app_id 
+        . "client_id=" . $app_id
         . "&redirect_uri=" . urlencode($my_url);
-      echo("<script> top.location.href='" . $dialog_url 
+      echo("<script> top.location.href='" . $dialog_url
       . "'</script>");
       return;
     }
@@ -280,11 +280,11 @@ function _kss_fb_connect_debug() {
       echo "other error has happened";
       return;
     }
-  } 
+  }
   else {
 	  // no error - we have an access token...
 	  // Case 1: Valid saracen user has updated access token
-	  if (!empty($account->fbu)) { 
+	  if (!empty($account->fbu)) {
   	  $res = db_update('fb_user_app')
 	      ->fields(array('session_key' => $access_token))
 	      ->condition('fbu', $account->fbu)
@@ -297,7 +297,7 @@ function _kss_fb_connect_debug() {
 	      ->condition('fbu', $decoded_response->id)
 	      ->execute();
       //echo('yes2: ' . $access_token);
-    }	
+    }
     drupal_set_message("Your Facebook access token has been updated");
   }
   //echo('a: ' . $access_token);
@@ -336,7 +336,7 @@ function _kendra_saracen_trial_dev_generate_data_submit($form, &$form_state) {
 		$user_query->propertyCondition('status', 1);
 		$accounts = $user_query->execute();
 		$uids = array_keys($accounts['user']);
-		
+
 		$node_query = new EntityFieldQuery();
 		$node_query->entityCondition('entity_type', 'node');
 		$node_query->entityCondition('bundle', 'mediaitem');
@@ -344,11 +344,11 @@ function _kendra_saracen_trial_dev_generate_data_submit($form, &$form_state) {
 		$items = $node_query->execute();
 		$nids = array_keys($items['node']);
 		$nid_count = count($nids);
-		
+
 		foreach ($uids as $uid) {
 			shuffle($nids);
 			$selected = array_slice($nids, 0, $nid_count / 2);
-			foreach ($selected as $nid) { 
+			foreach ($selected as $nid) {
 				$value = rand(50, 100);
 			  _kendra_saracen_trial_mod_add_rate_mediaitem($nid, array('value' => $value), FALSE, $uid);
 			  drupal_set_message("User {$uid} rates {$nid} with score {$value}");
@@ -366,7 +366,7 @@ function _kendra_saracen_trial_mod_start_watching_mediaitem($id) {
 		->condition('stop', NULL)
 		->condition('media_id', $id)
 		->condition('uid', $user->uid)
-		->execute(); 
+		->execute();
 	return _kendra_saracen_trial_mod_save_live_event($user, $id, REQUEST_TIME, NULL);
 }
 function _kendra_saracen_trial_mod_stop_watching_mediaitem($id) {
@@ -410,7 +410,7 @@ function _kendra_saracen_trial_mod_media_recommendations($id) {
     $res = db_query("SELECT DISTINCT recommended_nid
     FROM {kendra_match_recommender_out_item_to_item} kendra_match_recommender_out_item_to_item
     INNER	JOIN {node} node ON node.nid=kendra_match_recommender_out_item_to_item.recommended_nid
-    WHERE node.status=1 AND node.nid = :nid",
+    WHERE node.status=1 AND node.nid != :nid",
       array(':nid' => $nid));
 	  $output = array();
 	  $res = $res->fetchAll();

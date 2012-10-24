@@ -359,6 +359,12 @@ function _kendra_saracen_trial_dev_generate_data_submit($form, &$form_state) {
 
 function _kendra_saracen_trial_mod_start_watching_mediaitem($id) {
 	global $user;
+  // Save into recommender
+  // TODO: only save if watched whole thing?
+  $nid = _kendra_saracen_trial_mod_lookup_id($id);
+  _kendra_saracen_save_recommend($user->uid, $nid, $type = 'watch', 0, FALSE, NULL, 'implicit');
+
+
 	// user started watching - update previous start times missing end times
 	// set stop = start for these events (i.e. player crashes)
 	db_update('kendra_mediaitem_watch')

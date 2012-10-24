@@ -15,6 +15,9 @@ function _kendra_social_albums_add_item($box, $data) {
 				if ($user->uid != $box->uid) {
   			  _kss_notification_add('Share', $media, $user->uid, $box->uid, $box->nid, $rid);
 				}
+        // Add this event to recommender
+        _kendra_saracen_save_recommend($user->uid, $media, 'share', $media, FALSE, NULL, 'implicit');
+
         return array('status' => 'ok', 'message' => "added media item ({$data['item']}) ({$media}) to box ({$box->nid})");
       } else {
         return array('status' => 'error', 'message' => 'no media item found with that id');
@@ -23,7 +26,7 @@ function _kendra_social_albums_add_item($box, $data) {
       return array('status' => 'error', 'message' => 'you do not have access to edit this box');
     }
   } else {
-    return array('status' => 'error', 'message' => 'a box ID and item ID is required'); 
+    return array('status' => 'error', 'message' => 'a box ID and item ID is required');
   }
 }
 
@@ -37,7 +40,7 @@ function _kendra_social_albums_update($id, $data) {
     }
     if (isset($data['description'])) {
       $box->field_album_description['und'][0]['value'] = $data['description'];
-    }  
+    }
     if (isset($data['public'])) {
       $box->field_album_public[LANGUAGE_NONE][0]['value'] = (!empty($data['public'])) ? 1 : 0;
     }
@@ -76,7 +79,7 @@ function _kendra_social_albums_create($data) {
   $node->status = 1;
   $node->uid = $user->uid;
   $node->language = 'und';
-  if (isset($data['title'])) { 
+  if (isset($data['title'])) {
     $node->title = $data['title'];
   } else {
     return array('status' => 'error', 'message' => 'Title is required');
@@ -84,10 +87,10 @@ function _kendra_social_albums_create($data) {
   if (isset($data['description'])) {
     $node->field_album_description['und'][0]['value'] = $data['description'];
   }
-  
+
   if (isset($data['public'])) {
     $node->field_album_public[LANGUAGE_NONE][0]['value'] = 1;
-  } 
+  }
   if (isset($data['friends'])) {
     $node->field_album_friends[LANGUAGE_NONE][0]['value'] = 1;
   }
@@ -121,20 +124,20 @@ function _kendra_social_albums_check_perm($box, $uid) {
 	    foreach ($res['relation'] as $rel_id => $rel) {
 				$rel = relation_load($rel_id);
 				foreach ($rel->field_album_perm[LANGUAGE_NONE] as $perm) {
-					if ($rel->endpoints[LANGUAGE_NONE][1]['entity_id'] == $uid) { 
+					if ($rel->endpoints[LANGUAGE_NONE][1]['entity_id'] == $uid) {
    					if ($perm['value'] == 'edit') {
 	  					$w = TRUE;
 		  			}
 			  		if ($perm['value'] == 'view') {
 				  		$r = TRUE;
 				  	}
-				  }  
+				  }
 				}
 			}
 		}
 	}
 	return array('R' => $r, 'W' => $w);
-} 
+}
 
 function _kendra_social_albums_index($uid = NULL) {
 	global $user;
@@ -161,7 +164,7 @@ function _kendra_social_albums_index($uid = NULL) {
 						'R' => $perm['R'],
 						'W' => $perm['W'],
           );
-        } 
+        }
 			}
     }
     return $boxes;
@@ -177,13 +180,13 @@ function _kendra_social_albums_index_fetch($account = NULL) {
   }
   if ($account == NULL) {
     global $user;
-    $account = $user; 
+    $account = $user;
   }
   $query = new EntityFieldQuery();
   $user_albums = $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'album')
     ->propertyCondition('uid', $account->uid, '=')
-    ->execute();    
+    ->execute();
   $query2 = new EntityFieldQuery();
   $contributed_albums = $query2->entityCondition('entity_type', 'relation')
     ->entityCondition('bundle', 'album_user')
@@ -195,7 +198,7 @@ function _kendra_social_albums_index_fetch($account = NULL) {
       $relation = relation_load($rid);
       if (!empty($relation->endpoints['und'][0]['entity_id'])) {
         $output[$relation->endpoints['und'][0]['entity_id']] = array(
-          'id' => $relation->endpoints['und'][0]['entity_id'], 
+          'id' => $relation->endpoints['und'][0]['entity_id'],
           'owner' => FALSE,
         );
       }
@@ -204,7 +207,7 @@ function _kendra_social_albums_index_fetch($account = NULL) {
 
   // load public albums
   $query3 = new EntityFieldQuery();
-  $public_albums = $query3->entityCondition('entity_type', 'node')  
+  $public_albums = $query3->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'album')
     ->fieldCondition('field_album_public', 'value', 1)
     ->propertyCondition('status', 1)
@@ -214,10 +217,10 @@ function _kendra_social_albums_index_fetch($account = NULL) {
       $output[$nid] = array('id' => $nid, 'owner' => FALSE);
     }
   }
-  
+
   // TODO: load saracen friends from cache to use in next query
   // can't do user_load here as causes infinite recursion
-  
+
   // load friends albums
   $query4 = new EntityFieldQuery();
   $friends_albums = $query4->entityCondition('entity_type', 'node')
@@ -231,11 +234,11 @@ function _kendra_social_albums_index_fetch($account = NULL) {
       $output[$nid] = array('id' => $nid, 'owner' => FALSE);
     }
   }
-  
+
   if (!empty($user_albums['node'])) {
     foreach ($user_albums['node'] as $nid => $album) {
       $output[$nid] = array('id' => $nid, 'owner' => TRUE);
-    } 
+    }
   }
   foreach ($output as $nid => $box) {
     $album_node = _kendra_social_albums_retrieve($nid);
@@ -244,7 +247,7 @@ function _kendra_social_albums_index_fetch($account = NULL) {
       $output[$nid]['description'] = !empty($album_node->description) ? $album_node->description : '';
       $output[$nid]['item_count'] = isset($album_node->items) ? count($album_node->items) : 0;
     } else {
-      //$output[$nid]['debug'] = $album_node; 
+      //$output[$nid]['debug'] = $album_node;
     }
   }
 
@@ -287,12 +290,12 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
     $box->users = array(array('uid' => $node->uid, 'perm' => array('Owner', 'R', 'W')));
     $box->users_temp = array();
     $items = relation_query('node', $id)->execute();
-   
+
     foreach ($items as $item_id => $rel) {
       if ($rel->relation_type == 'album_contains') {
         $rel = relation_load($item_id);
         $media = node_load($rel->endpoints['und'][1]['entity_id']);
-				if ($user->uid == $media->uid || $media->status == 1) { 
+				if ($user->uid == $media->uid || $media->status == 1) {
           $box->items[] = array(
             'identifier' => $media->field_mediaitem_identifier['und'][0]['value'],
             'mediaitem' => _kendra_saracen_trial_mod_get_mediaitem($media->field_mediaitem_identifier['und'][0]['value'], FALSE),
@@ -316,11 +319,11 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
           }
         }
       }
-    }   
+    }
     foreach ($box->users_temp as $key => $perm) {
       $box->users[] = array(
         'uid' => $key,
-        'perm' => $perm, 
+        'perm' => $perm,
       );
     }
     unset($box->users_temp);
@@ -363,7 +366,7 @@ function _kendra_social_albums_delete($id) {
   if ($user->uid == $album->uid) {
     node_delete($id);
     return array('status' => 'deleted box with ID ' . $id);
-  } 
+  }
   return array('status' => 'error', 'message' => 'user can only delete their own box.');
 }
 
@@ -410,7 +413,7 @@ function _kendra_social_add_user_to_box($uid, $bid, $perm, $action = 'update') {
   foreach ($new_perms as $p => $val) {
     $existing->field_album_perm[LANGUAGE_NONE][] = array('value' => $p);
   }
-  
+
   // if some permissions then save the relation, else delete
   if (!empty($new_perms)) {
     $rid = relation_save($existing);
@@ -421,8 +424,8 @@ function _kendra_social_add_user_to_box($uid, $bid, $perm, $action = 'update') {
     }
   }
   return FALSE;
-  
-} 
+
+}
 
 function _kendra_social_remove_perm(&$perm_array, $perm) {
   if (!empty($perm_array)) {
@@ -434,11 +437,11 @@ function _kendra_social_remove_perm(&$perm_array, $perm) {
   }
   return $perm_array;
 }
- 
+
 function _kendra_social_albums_batch_update_user($id, $data) {
-  // return array($id, $data); 
+  // return array($id, $data);
   // return explode(',', $data['W']);
-  
+
   // Remove existing permission relations
   $query = new EntityFieldQuery();
   $res = $query->entityCondition('entity_type', 'relation')
@@ -450,7 +453,7 @@ function _kendra_social_albums_batch_update_user($id, $data) {
       relation_delete($rel_id);
     }
   }
-  
+
   // Create new permissions
   $users = array();
   $output = array();
@@ -467,7 +470,7 @@ function _kendra_social_albums_batch_update_user($id, $data) {
     }
   }
   $output = implode(',', $output);
-  
+
   // Save the new relations
   foreach ($users as $uid => $perms) {
     $endpoints = array(
@@ -482,11 +485,11 @@ function _kendra_social_albums_batch_update_user($id, $data) {
 }
 
 function _kendra_social_albums_update_user($id, $data) {
-  
+
   if (empty($data['action'])) {
     return _kendra_social_albums_batch_update_user($id, $data);
   }
-  
+
   global $user;
   $box = node_load($id);
   if ($box->uid != $user->uid) {
@@ -512,7 +515,7 @@ function _kendra_social_albums_update_user($id, $data) {
     }
   }
   if (!empty($updates)) {
-    return array('status' => 'ok', 'message' => 
+    return array('status' => 'ok', 'message' =>
       "added user ({$data['user']}) to box ({$id})", 'identifier' => implode(',', $updates));
   }
   if ($fail) {

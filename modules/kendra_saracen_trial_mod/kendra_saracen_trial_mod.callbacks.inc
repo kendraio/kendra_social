@@ -177,7 +177,10 @@ function _kendra_saracen_trial_mod_get_mediaitem($id, $include_derivatives = FAL
         unset($node->annotations['Rate']);
       }
     }
-    $node->views_count = 0;
+    $media_id = $node->field_mediaitem_identifier[LANGUAGE_NONE][0]['value'];
+    $count_query = db_query("SELECT COUNT(watch_id) FROM {kendra_mediaitem_watch} WHERE media_id = :id",
+      array(':id' => $media_id));
+    $node->views_count = intval($count_query->fetchField());
 
     //_kendra_saracen_trial_mod_filter_mediaitem($node, $include_derivatives);
 

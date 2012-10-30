@@ -20,7 +20,7 @@ function _kss_user_load_recommendations(&$users) {
 }
 
 // Takes an array of user objects and adds in user FB likes
-function _kss_user_load_facebook_likes(&$users) { 
+function _kss_user_load_facebook_likes(&$users) {
   $fblikes = db_query("SELECT * FROM {sparql_store_fblike_temp} f WHERE f.uid IN (:uids)", array(':uids' => array_keys($users)));
   foreach ($fblikes as $like) {
     $users[$like->uid]->{$like->connection}[] = $like->name;
@@ -65,7 +65,7 @@ function _kss_user_load_facebook_friends(&$users) {
 				} else {
 					$users[$account->uid]->facebook_friends = $friends;
 				}
-	    } 
+	    }
 	    if (!empty($users[$account->uid]->saracen_friends)) {
    	    db_query("INSERT INTO {kendra_saracen_friends} VALUES (:uid, :val, :imported)", array(
  	      	':uid' => $account->uid,
@@ -75,17 +75,15 @@ function _kss_user_load_facebook_friends(&$users) {
       } else {
 				$users[$account->uid]->fb_error = TRUE;
 			}
-  		// TODO: enable extra twitter import - probably best move this to cron?
-	    // _kss_user_load_twitter_data($users, $account);
 		}
   }
-	
+
 }
 
 // Takes an array of users and loads their boxes
 function _kss_user_load_boxes(&$users) {
   foreach ($users as $uid => $account) {
-    $users[$uid]->boxes = _kendra_social_albums_index_fetch($account); 
+    $users[$uid]->boxes = _kendra_social_albums_index_fetch($account);
   }
 }
 
@@ -97,7 +95,7 @@ function kendra_social_services_user_load($users) {
 	_kss_user_load_recommendations($users);
 
   // Queue up an update of the Facebook data to run on cron
-  $fb_users = db_query("SELECT u.uid, u.fbu, a.session_key FROM {fb_user_app} a 
+  $fb_users = db_query("SELECT u.uid, u.fbu, a.session_key FROM {fb_user_app} a
 	  INNER JOIN {fb_user} u ON a.fbu = u.fbu WHERE uid IN (:uids)",
     array(':uids' => array_keys($users))
   );
@@ -117,10 +115,10 @@ function kendra_social_services_user_load($users) {
   // Load user's boxes into profile
 	_kss_user_load_boxes($users);
 
-  // Load all FB likes into profile 
-  _kss_user_load_facebook_likes($users);
+  // Load all FB likes into profile
+  //_kss_user_load_facebook_likes($users);
 
-  // Load FB friends into profile
+  // Load friends into profile and merge with twitter friends
   _kss_user_load_facebook_friends($users);
 
 
@@ -129,20 +127,50 @@ function kendra_social_services_user_load($users) {
 	  foreach ((array)$users[$uid]->saracen_friends as $fid => $friend) {
 		  $users[$uid]->saracen_friends[$fid]->boxes = _kendra_social_albums_index_fetch($fid);
 	  }
+
+    // Remove unneeded info from user object
+    unset($users[$uid]->rdf_mapping);
+    unset($users[$uid]->friend);
+    unset($users[$uid]->fb_likes);
+    unset($users[$uid]->fb_music);
+    unset($users[$uid]->fb_movies);
   }
 }
 
+function _kss_user_get_twitter_friends($account) {
+  $twitter_uid = db_query("SELECT twitter_uid FROM {twitter_account}
+    WHERE uid = :uid LIMIT 1", array(':uid' => $account->uid))->fetchField();
+  if (!empty($twitter_uid)) {
+    module_load_include('inc', 'twitter');
+    $twitter_account = twitter_account_load($twitter_uid);
+    $auth = $twitter_account->get_auth();
+    $twitter = new TwitterOAuth(
+      variable_get('twitter_consumer_key', ''),
+      variable_get('twitter_consumer_secret', ''),
+      $auth['oauth_token'], $auth['oauth_token_secret']);
+    $params = array('screen_name' => $twitter_account->screen_name);
+    $url = 'http://api.twitter.com/1/friends/ids.json';
+    $twitter_result = $twitter->auth_request($url, $params, 'GET');
+    $twitter_lists[$account->uid] = json_decode($twitter_result);
+    $twitter_friends = db_query("SELECT uid FROM {twitter_account}
+      WHERE twitter_uid IN (:tuids)", array(':tuids' => $twitter_lists[$uid]->ids));
+    return array_keys($twitter_friends->fetchAllAssoc('uid'));
+  }
+  return array();
+}
 
 function _kss_user_load_twitter_data(&$users, $account) {
   static $twitter_lists;
   if (!isset($twitter_lists[$account->uid])) {
-		$twitter_uid = db_query("SELECT twitter_uid FROM {twitter_account} WHERE uid = :uid", array(':uid' => $account->uid))->fetchField();
+		$twitter_uid = db_query("SELECT twitter_uid FROM {twitter_account}
+      WHERE uid = :uid", array(':uid' => $account->uid))->fetchField();
 		if (!empty($twitter_uid)) {
 		  module_load_include('inc', 'twitter');
   	  $twitter_account = twitter_account_load($twitter_uid);
 		  $auth = $twitter_account->get_auth();
 	    $twitter = new TwitterOAuth(
-				variable_get('twitter_consumer_key', ''), variable_get('twitter_consumer_secret', ''), 
+				variable_get('twitter_consumer_key', ''),
+        variable_get('twitter_consumer_secret', ''),
 				$auth['oauth_token'], $auth['oauth_token_secret']);
       $params = array('screen_name' => $twitter_account->screen_name);
 			$url = 'http://api.twitter.com/1/friends/ids.json';
@@ -156,14 +184,14 @@ function _kss_user_load_twitter_data(&$users, $account) {
 			$twitter_lists[$account->uid] = array();
 		}
   }
-  if (isset($twitter_lists[$account->uid]->ids)) { 
-	  $users[$account->uid]->twitter_friends = $twitter_lists[$account->uid]->ids;        
+  if (isset($twitter_lists[$account->uid]->ids)) {
+	  $users[$account->uid]->twitter_friends = $twitter_lists[$account->uid]->ids;
 	  $saracen_friends = db_query("SELECT t.twitter_uid, t.uid FROM {twitter_account} t WHERE t.twitter_uid IN (:tuids)",
 	    array(':tuids' => $users[$account->uid]->twitter_friends)
 	  );
 		static $twitter_names;
 		// TODO: more robust method of looking up twitter friend names
-		if ($account->uid == 27) { 
+		if ($account->uid == 27) {
 		  $url = 'http://api.twitter.com/1/users/lookup.json';
 		  $params = array('user_id' => implode(',', array_slice($twitter_lists[$account->uid]->ids, 0, 100)));
 			try {

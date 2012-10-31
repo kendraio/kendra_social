@@ -1,12 +1,12 @@
 <?php
 
 /*
-CREATE TABLE  `kendra_notifications` ( 
+CREATE TABLE  `kendra_notifications` (
 `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-`source` INT( 10 ) UNSIGNED NOT NULL , 
+`source` INT( 10 ) UNSIGNED NOT NULL ,
 `from` INT( 10 ) UNSIGNED NOT NULL ,
-`to` INT( 10 ) UNSIGNED NOT NULL , 
-`type` VARCHAR( 25 ) NOT NULL , 
+`to` INT( 10 ) UNSIGNED NOT NULL ,
+`type` VARCHAR( 25 ) NOT NULL ,
 `time` INT( 11 ) NOT NULL , INDEX (  `to` ) ) ENGINE = INNODB;
 
 ALTER TABLE  `kendra_notifications` ADD  `source2` INT( 10 ) UNSIGNED NOT NULL
@@ -27,10 +27,10 @@ function _kss_notification_add($type, $source, $user_from, $user_to, $source2 = 
 	  	':s' => $source,
 			':f' => $user_from, ':t' => $user_to,
 			':ty' => $type, ':ti' => REQUEST_TIME, ':ss' => $source2,
-			':r' => $rid, 
+			':r' => $rid,
 	  ));
 }
- 
+
 function _kss_notification_create() {
 	watchdog('notification', '<pre>' . print_r(func_get_args(), TRUE) . '</pre>');
 	return array('status' => 'ok', 'message' => 'notification logged');
@@ -44,38 +44,38 @@ user id
 user name
 message
 media id
-annotation content 
+annotation content
 timestamp
 
 */
 
 function _kss_notification_list($filter, $type) {
-	global $user;
-	
 	$q_filter = empty($type) ? '' : " AND n.type = :t";
 	$params = array(':uid' => $user->uid);
 	if (!empty($type)) {
 		$params[':t'] = $type;
 	}
-	
+
 	$res = db_query("SELECT n.id, n.type, n.from, u.name, n.source, n.source2, n.time
-		FROM {kendra_notifications} n  
-		LEFT JOIN {users} u ON u.uid = n.from 
+		FROM {kendra_notifications} n
+		LEFT JOIN {users} u ON u.uid = n.from
 		WHERE `to` = :uid {$q_filter}", $params);
 
   $annotation_types = array('Review', 'Location', 'Link', 'Comment', 'Friend');
- 
+
 	$output = array();
 	foreach ($res as $result) {
 		$text = ''; $start = ''; $length = '';
 		if (in_array($result->type, $annotation_types)) {
 			$annotation = node_load($result->source2);
-			$text = field_get_items('node', $annotation, 'field_annotation_text');
-			$text = (!empty($text[0]['safe_value'])) ? $text[0]['safe_value'] : '';
-			$start = field_get_items('node', $annotation, 'field_annotation_start');
-			$start = (!empty($start[0]['value'])) ? $start[0]['value'] : '';
-			$length = field_get_items('node', $annotation, 'field_annotation_length');
-			$length = (!empty($length[0]['value'])) ? $length[0]['value'] : '';
+      if (!empty($annotation->type)) {
+  			$text = field_get_items('node', $annotation, 'field_annotation_text');
+	  		$text = (!empty($text[0]['safe_value'])) ? $text[0]['safe_value'] : '';
+		  	$start = field_get_items('node', $annotation, 'field_annotation_start');
+			  $start = (!empty($start[0]['value'])) ? $start[0]['value'] : '';
+			  $length = field_get_items('node', $annotation, 'field_annotation_length');
+			  $length = (!empty($length[0]['value'])) ? $length[0]['value'] : '';
+      }
 		}
 		$output[] = array(
 			'id' => intval($result->id),
@@ -90,7 +90,7 @@ function _kss_notification_list($filter, $type) {
 		);
 	}
 	return $output;
-} 
+}
 
 function _kss_notification_create_message($result) {
   $node = node_load($result->source);
@@ -101,7 +101,7 @@ function _kss_notification_create_message($result) {
 	if ($result->type == "Import") {
 		return "Import of video {$node->title} completed.";
 	}
-  if ($node->nid) { 
+  if ($node->nid) {
     return "{$result->name} added a {$result->type} on video {$node->title}";
   }
   return "No message";

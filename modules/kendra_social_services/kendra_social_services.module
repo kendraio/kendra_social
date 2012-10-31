@@ -6,6 +6,8 @@
  * Code for the Kendra Social Services feature.
  */
 
+
+
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/kendra_social_services.features.inc';
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/kendra_social_services.resources.inc';
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_services') . '/kendra_social_services.callbacks.inc';
@@ -41,6 +43,19 @@ function _kss_user_load_facebook_friends(&$users) {
   foreach ($users as $account) {
 	  if (empty($users[$account->uid]->saracen_friends)) {
   	  $users[$account->uid]->saracen_friends = array();
+
+      // Load twitter friends
+      $users[$account->uid]->twitter_friends = _kss_user_get_twitter_friends($account);
+      foreach($users[$account->uid]->twitter_friends as $twitfid) {
+        $tmp_name = db_query('SELECT name FROM {users} WHERE uid = :uid',
+          array(':uid' => $twitfid));
+        $users[$account->uid]->saracen_friends[$twitfid] = (object) array(
+          'id' => $twitfid,
+          'name' => $tmp_name->fetchField(),
+          'sources' => array('twitter'),
+        );
+      }
+
 	  	if (isset($account->fbu) && isset($account->key)) {
 				$friends = _kendra_saracen_get_facebook_friends($account, $account->fbu, $account->key);
 				$users[$account->uid]->facebook_friends = array();
@@ -53,11 +68,15 @@ function _kss_user_load_facebook_friends(&$users) {
 					    array(':fbuids' => array_keys($users[$account->uid]->facebook_friends))
 					  );
 					  foreach ($saracen_friends as $sfriend) {
-							$users[$account->uid]->saracen_friends[$sfriend->uid] = (object) array(
-								'id' => $sfriend->uid,
-								'name' => $users[$account->uid]->facebook_friends[$sfriend->fbu],
-								'sources' => array('facebook'),
-							);
+              if (empty($users[$account->uid]->saracen_friends[$sfriend->uid])) {
+  							$users[$account->uid]->saracen_friends[$sfriend->uid] = (object) array(
+	  							'id' => $sfriend->uid,
+		  						'name' => $users[$account->uid]->facebook_friends[$sfriend->fbu],
+			  					'sources' => array('facebook'),
+				  			);
+              } else {
+                $users[$account->uid]->saracen_friends[$sfriend->uid]->sources[] = 'facebook';
+              }
 						}
 					}
 					// TODO: remove fb friends, daniel wants this in here for now:
@@ -153,7 +172,7 @@ function _kss_user_get_twitter_friends($account) {
     $twitter_result = $twitter->auth_request($url, $params, 'GET');
     $twitter_lists[$account->uid] = json_decode($twitter_result);
     $twitter_friends = db_query("SELECT uid FROM {twitter_account}
-      WHERE twitter_uid IN (:tuids)", array(':tuids' => $twitter_lists[$uid]->ids));
+      WHERE twitter_uid IN (:tuids)", array(':tuids' => $twitter_lists[$account->uid]->ids));
     return array_keys($twitter_friends->fetchAllAssoc('uid'));
   }
   return array();

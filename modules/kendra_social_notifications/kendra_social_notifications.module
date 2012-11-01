@@ -50,6 +50,7 @@ timestamp
 */
 
 function _kss_notification_list($filter, $type) {
+  global $user;
 	$q_filter = empty($type) ? '' : " AND n.type = :t";
 	$params = array(':uid' => $user->uid);
 	if (!empty($type)) {

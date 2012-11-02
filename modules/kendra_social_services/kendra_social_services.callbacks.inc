@@ -43,29 +43,32 @@ function _kss_watching_now($limit, $who, $sort, $filter3d, $friends) {
 		// TODO split popular query out to use COUNT of watching events rather than rating
 		$orderby = ' ORDER BY v.value DESC ';
 	}
-	$res = db_query("SELECT DISTINCT w.media_id, w.uid FROM {kendra_mediaitem_watch} w 
-		INNER JOIN {field_data_field_mediaitem_identifier} i ON w.media_id = i.field_mediaitem_identifier_value 
-		INNER JOIN {field_data_field_mediaitem_3d} d ON i.entity_id = d.entity_id 
-		LEFT JOIN {votingapi_cache} v ON v.entity_id = i.entity_id 
-		LEFT JOIN {kendra_match_recommender_out_user_to_item} r ON r.recommended_nid = i.entity_id 
-		WHERE w.stop IS NULL  
-  	AND (v.function = 'average' OR v.function IS NULL) 
-		AND d.field_mediaitem_3d_value {$d3} 
-		{$orderby} 
-		LIMIT {$limit}");
+	$res = db_query("SELECT DISTINCT w.media_id, w.uid FROM {kendra_mediaitem_watch} w
+		LEFT JOIN {field_data_field_mediaitem_identifier} i ON w.media_id = i.field_mediaitem_identifier_value
+		LEFT JOIN {field_data_field_mediaitem_3d} d ON i.entity_id = d.entity_id
+		LEFT JOIN {votingapi_cache} v ON v.entity_id = i.entity_id
+		LEFT JOIN {kendra_match_recommender_out_user_to_item} r ON r.recommended_nid = i.entity_id
+		WHERE w.stop IS NULL
+    AND w.start >= " . strtotime('-2 hour'));
+    /* return strtotime('-1 hour');
+  	AND (v.function = 'average' OR v.function IS NULL)
+		AND d.field_mediaitem_3d_value {$d3}
+		{$orderby}
+		LIMIT {$limit}"
+    );*/
 	$res = $res->fetchAll();
 	$output = array();
 	if (!empty($res)) {
 		foreach ($res as $media) {
 			// check if user of watch event is friend of active user
-			if ($who == 'all'  
+			if ($who == 'all'
 			  || ($who == 'friends' && _kss_friend_of($user->uid, $media->uid))
 			  || ($who == 'close' && _kss_close_to($user->uid, $media->uid))
 			  ) {
-			
+
 				// check if user has allowed publishing of watching information for this media item
 				if (_kendra_saracen_get_mediaitem_tracking($media->media_id, $media->uid)) {
-					
+
 					$id = $media->media_id;
 					// quick find user name without loading whole user object
 					$account = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $media->uid));
@@ -105,7 +108,7 @@ function _kss_close_to($uid1, $uid2) {
 function _kss_friend_of($uid1, $uid2) {
 	static $friends;
 	if (empty($friends[$uid1])) {
-  	$res = db_query("SELECT data FROM {kendra_saracen_friends} f WHERE f.uid = :uid", 
+  	$res = db_query("SELECT data FROM {kendra_saracen_friends} f WHERE f.uid = :uid",
 	    array(':uid' => $uid1));
 	  $data = $res->fetchField();
 	  $friends[$uid1] = unserialize($data);
@@ -170,7 +173,7 @@ function _kss_accounts_connect($domain = 'facebook.com,twitter.com') {
 			return array(
 	      'embed' => "<iframe src=\"{$connect_url}\" width=\"300px\" height=\"400px\" />"
 	       // . theme('twitter_signin_button'),
-			); 
+			);
 		} else if ($domain = 'facebook.com') {
 			$connect_url = url('connect', array('absolute' => TRUE));
 			return array(
@@ -219,9 +222,9 @@ function _kss_groups_create () { return _kss_default_callback(); }
 function _kss_groups_delete () { return _kss_default_callback(); }
 function _kss_groups_retrieve () { return _kss_default_callback(); }
 function _kss_groups_update () { return _kss_default_callback(); }
-function _kss_mediaitems_create () { 
+function _kss_mediaitems_create () {
   watchdog('debug', '<pre>' . print_r(func_get_args(), TRUE) . '</pre>');
-  return _kss_default_callback(); 
+  return _kss_default_callback();
 }
 function _kss_mediaitems_delete () { return _kss_default_callback(); }
 function _kss_mediaitems_retrieve () { return "mediaitem"; return _kss_default_callback(); }

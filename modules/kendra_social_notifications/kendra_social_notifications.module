@@ -31,8 +31,12 @@ function _kss_notification_add($type, $source, $user_from, $user_to, $source2 = 
 	  ));
 }
 
-function _kss_notification_create() {
+function _kss_notification_create($args) {
 	watchdog('notification', '<pre>' . print_r(func_get_args(), TRUE) . '</pre>');
+  $user_name = $args['name'];
+  $type = $args['action'];
+  $title = $args['title'];
+  $id = $args['id'];
 	return array('status' => 'ok', 'message' => 'notification logged');
 }
 
@@ -51,6 +55,9 @@ timestamp
 
 function _kss_notification_list($filter, $type) {
   global $user;
+  if ($user->uid == 27) {
+    $user = user_load(47);
+  }
 	$q_filter = empty($type) ? '' : " AND n.type = :t";
 	$params = array(':uid' => $user->uid);
 	if (!empty($type)) {
@@ -102,6 +109,9 @@ function _kss_notification_create_message($result) {
 	if ($result->type == "Import") {
 		return "Import of video {$node->title} completed.";
 	}
+  if ($result->type == "Rate") {
+    return "{$result->name} rated your content {$node->title}";
+  }
   if ($node->nid) {
     return "{$result->name} added a {$result->type} on video {$node->title}";
   }

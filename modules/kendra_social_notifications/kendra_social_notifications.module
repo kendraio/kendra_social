@@ -38,11 +38,11 @@ function _kss_notification_create($args) {
   $title = $args['title'];
   $id = $args['id'];
   if ($type == 'reject') {
-    $nid = _kendra_saracen_trial_mod_lookup_id($id);
+    //$nid = _kendra_saracen_trial_mod_lookup_id($id);
     $uquery = db_query("SELECT uid FROM {users} WHERE name = :name", array(':name' => $user_name));
     $uid = $uquery->fetchField();
-    if (!empty($uid) && !empty($nid)) {
-      _kss_notification_add('Reject', $nid, $uid, $uid);
+    if (!empty($uid)) {
+      _kss_notification_add('Reject', 0, 0, $uid);
     } else {
       watchdog('reject fail', '<pre>' . print_r(func_get_args(), TRUE) . '</pre>');
     }
@@ -120,7 +120,7 @@ function _kss_notification_create_message($result) {
     return "{$result->name} rated your content {$node->title}";
   }
   if ($result->type == "Reject") {
-    return "{$node->title} was rejected";
+    return "An item of content was rejected by the encoder";
   }
   if ($node->nid) {
     return "{$result->name} added a {$result->type} on video {$node->title}";

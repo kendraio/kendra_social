@@ -520,6 +520,9 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
     }
   }
   node_object_prepare($node);
+  if ($op == 'updated') {
+    $node->status = 1;
+  }
   node_save($node);
 
   /**

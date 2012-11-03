@@ -4,7 +4,7 @@
  *  This answers the API call to see who is watching what media items now.
  *  It respects the privacy option to publish watching activity
  */
-function _kss_watching_now($limit, $who, $sort, $filter3d, $friends) {
+function _kss_watching_now($limit = 10, $who, $sort, $filter3d, $friends) {
 	global $user;
 	$msg = '';
 	if (!is_int($limit)) {
@@ -49,13 +49,12 @@ function _kss_watching_now($limit, $who, $sort, $filter3d, $friends) {
 		LEFT JOIN {votingapi_cache} v ON v.entity_id = i.entity_id
 		LEFT JOIN {kendra_match_recommender_out_user_to_item} r ON r.recommended_nid = i.entity_id
 		WHERE w.stop IS NULL
-    AND w.start >= " . strtotime('-2 hour'));
-    /* return strtotime('-1 hour');
-  	AND (v.function = 'average' OR v.function IS NULL)
-		AND d.field_mediaitem_3d_value {$d3}
+    AND w.start >= " . strtotime('-2 hour') . "
+    AND (v.function = 'average' OR v.function IS NULL)
+		AND (d.field_mediaitem_3d_value {$d3} OR d.field_mediaitem_3d_value IS NULL)
 		{$orderby}
 		LIMIT {$limit}"
-    );*/
+    );
 	$res = $res->fetchAll();
 	$output = array();
 	if (!empty($res)) {

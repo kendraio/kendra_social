@@ -22,6 +22,10 @@ ALTER TABLE  `kendra_notifications` ADD  `rid` INT( 10 ) UNSIGNED  NULL
 
 
 function _kss_notification_add($type, $source, $user_from, $user_to, $source2 = 0, $rid = 0) {
+  if ($user_from == $user_to) {
+    // Don't save notifications for activity on own content.
+    return;
+  }
 	db_query("INSERT INTO {kendra_notifications} (`source`, `from`, `to`, `type`, `time`, `source2`, `rid`)
 	  VALUES (:s, :f, :t, :ty, :ti, :ss, :r)", array(
 	  	':s' => $source,

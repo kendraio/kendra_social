@@ -141,7 +141,7 @@ function _kendra_saracen_trial_mod_get_mediaitem($id, $include_derivatives = FAL
           $uuid                = $deriv->field_derivative_uuid[$deriv->language][0]['value'];
           $deriv->derivativeID = $uuid . ':' . $deriv->nid;
 
-          _kendra_saracen_trial_mod_filter_mediaitem($deriv);
+          _kendra_saracen_trial_mod_filter_mediaitem($deriv, $include_derivatives);
           $node->field_mediaitem_derivatives['und'][] = $deriv;
         }
       }
@@ -333,7 +333,7 @@ function _kendra_saracen_trial_mod_filter_mediaitem(&$node, $include_derivatives
  * get all mediaItems
  * @todo filter by user preferences
  */
-function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10, $category = NULL) {
+function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10, $category = NULL, $include_derivatives = FALSE) {
   global $user;
   $uid = $user->uid;
 
@@ -377,7 +377,7 @@ function _kendra_saracen_trial_mod_list_mediaitem($page = 0, $page_size = 10, $c
 
   $results = array();
   foreach ($result as $node) {
-    $results[] = _kendra_saracen_trial_mod_get_mediaitem($node->nid);
+    $results[] = _kendra_saracen_trial_mod_get_mediaitem($node->nid, $include_derivatives);
   }
   return $results;
 }

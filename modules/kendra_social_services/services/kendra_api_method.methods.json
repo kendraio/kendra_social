@@ -299,6 +299,16 @@
                             "path": 0
                         }, 
                         "type": "int"
+                    },
+                    {
+                        "default value": 0, 
+                        "description": "Whether to include media derivatives, defaults to false.", 
+                        "name": "include_derivatives", 
+                        "optional": true, 
+                        "source": {
+                            "param": "include_derivatives"
+                        }, 
+                        "type": "int"
                     }
                 ], 
                 "callback": "_kendra_social_albums_retrieve", 
@@ -576,6 +586,16 @@
                             "param": "category"
                         }, 
                         "type": "string"
+                    },
+                    {
+                        "default value": 0, 
+                        "description": "Whether to include media derivatives, defaults to false.", 
+                        "name": "include_derivatives", 
+                        "optional": true, 
+                        "source": {
+                            "param": "include_derivatives"
+                        }, 
+                        "type": "int"
                     }
                 ], 
                 "callback": "_kendra_saracen_trial_mod_list_mediaitem", 

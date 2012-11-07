@@ -267,7 +267,7 @@ function _kendra_social_albums_box_exists($id) {
   return !empty($nid);
 }
 
-function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
+function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE, $include_derivatives = FALSE) {
 	global $user;
   $node = node_load($id);
   if (empty($node->nid)) {
@@ -303,7 +303,7 @@ function _kendra_social_albums_retrieve_no_data($id, $no_data = FALSE) {
 				if ($user->uid == $media->uid || $media->status == 1) {
           $box->items[] = array(
             'identifier' => $media->field_mediaitem_identifier['und'][0]['value'],
-            'mediaitem' => _kendra_saracen_trial_mod_get_mediaitem($media->field_mediaitem_identifier['und'][0]['value'], FALSE),
+            'mediaitem' => _kendra_saracen_trial_mod_get_mediaitem($media->field_mediaitem_identifier['und'][0]['value'], $include_derivatives),
           );
  				}
       } elseif ($rel->relation_type == 'album_user') {
@@ -342,9 +342,9 @@ function _kss_saracen_friend($uid1, $uid2) {
   return TRUE;
 }
 
-function _kendra_social_albums_retrieve($id) {
+function _kendra_social_albums_retrieve($id, $include_derivatives = FALSE) {
   global $user;
-  $box = _kendra_social_albums_retrieve_no_data($id, FALSE);
+  $box = _kendra_social_albums_retrieve_no_data($id, FALSE, $include_derivatives);
   if ($box->uid == $user->uid) {
     return $box;
   }

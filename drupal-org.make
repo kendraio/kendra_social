@@ -91,7 +91,9 @@ projects[token][version] = 1.0-beta6
 projects[views][subdir] = contrib
 projects[views][version] = 3.0-rc1
 projects[oauth][subdir] = contrib 
-projects[oauth][version] = 3.0-alpha1
+projects[oauth][version] = 3.0
+projects[twitter][subdir] = contrib 
+projects[twitter][version] = 3.3
 
 ; services
 projects[services][subdir] = contrib 

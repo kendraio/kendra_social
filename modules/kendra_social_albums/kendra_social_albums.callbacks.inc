@@ -6,7 +6,12 @@ function _kendra_social_albums_add_item($box, $data) {
     if (_kendra_social_album_access_check('edit', $box, $user)) {
       $media = _kendra_saracen_trial_mod_lookup_id($data['item']);
       if ($media) {
-        $endpoints = array(
+      	$query = new EntityFieldQuery();
+      	$res_boxes = $query->entityCondition('entity_type', 'relation')->entityCondition('bundle', 'album_contains')->fieldCondition('endpoints', 'entity_id', $media, '=')->execute();
+      	if (!empty($res_boxes['relation'])) {
+      		return array('status' => 'ok', 'message' => "album already contains media item ({$data['item']})");
+      	} 
+      	$endpoints = array(
           array('entity_type' => 'node', 'entity_id' => $box->nid),
           array('entity_type' => 'node', 'entity_id' => $media),
         );

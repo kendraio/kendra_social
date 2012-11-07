@@ -1,12 +1,12 @@
 <?php
 
 /*
-CREATE TABLE  `kendra_notifications` ( 
+CREATE TABLE  `kendra_notifications` (
 `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-`source` INT( 10 ) UNSIGNED NOT NULL , 
+`source` INT( 10 ) UNSIGNED NOT NULL ,
 `from` INT( 10 ) UNSIGNED NOT NULL ,
-`to` INT( 10 ) UNSIGNED NOT NULL , 
-`type` VARCHAR( 25 ) NOT NULL , 
+`to` INT( 10 ) UNSIGNED NOT NULL ,
+`type` VARCHAR( 25 ) NOT NULL ,
 `time` INT( 11 ) NOT NULL , INDEX (  `to` ) ) ENGINE = INNODB;
 
 ALTER TABLE  `kendra_notifications` ADD  `source2` INT( 10 ) UNSIGNED NOT NULL
@@ -22,17 +22,36 @@ ALTER TABLE  `kendra_notifications` ADD  `rid` INT( 10 ) UNSIGNED  NULL
 
 
 function _kss_notification_add($type, $source, $user_from, $user_to, $source2 = 0, $rid = 0) {
-	db_query("INSERT INTO {kendra_notifications} (`source`, `from`, `to`, `type`, `time`, `source2`, `rid`)
-	  VALUES (:s, :f, :t, :ty, :ti, :ss, :r)", array(
+  if ($user_from == $user_to) {
+    // Don't save notifications for activity on own content.
+    watchdog('debug', 'not saving comment from ' . $user_from . ' to ' . $user_to);
+    return;
+  }
+	db_query("INSERT INTO {kendra_notifications} (`source`, `from`, `to`, `type`, `time`, `source2`, `rid`, `emailed`)
+	  VALUES (:s, :f, :t, :ty, :ti, :ss, :r, 0)", array(
 	  	':s' => $source,
 			':f' => $user_from, ':t' => $user_to,
 			':ty' => $type, ':ti' => REQUEST_TIME, ':ss' => $source2,
-			':r' => $rid, 
+			':r' => $rid,
 	  ));
 }
- 
-function _kss_notification_create() {
+
+function _kss_notification_create($args) {
 	watchdog('notification', '<pre>' . print_r(func_get_args(), TRUE) . '</pre>');
+  $user_name = $args['name'];
+  $type = $args['action'];
+  $title = $args['title'];
+  $id = $args['id'];
+  if ($type == 'reject') {
+    //$nid = _kendra_saracen_trial_mod_lookup_id($id);
+    $uquery = db_query("SELECT uid FROM {users} WHERE name = :name", array(':name' => $user_name));
+    $uid = $uquery->fetchField();
+    if (!empty($uid)) {
+      _kss_notification_add('Reject', 0, 0, $uid);
+    } else {
+      watchdog('reject fail', '<pre>' . print_r(func_get_args(), TRUE) . '</pre>');
+    }
+  }
 	return array('status' => 'ok', 'message' => 'notification logged');
 }
 
@@ -44,38 +63,39 @@ user id
 user name
 message
 media id
-annotation content 
+annotation content
 timestamp
 
 */
 
 function _kss_notification_list($filter, $type) {
-	global $user;
-	
+  global $user;
 	$q_filter = empty($type) ? '' : " AND n.type = :t";
 	$params = array(':uid' => $user->uid);
 	if (!empty($type)) {
 		$params[':t'] = $type;
 	}
-	
+
 	$res = db_query("SELECT n.id, n.type, n.from, u.name, n.source, n.source2, n.time
-		FROM {kendra_notifications} n  
-		LEFT JOIN {users} u ON u.uid = n.from 
+		FROM {kendra_notifications} n
+		LEFT JOIN {users} u ON u.uid = n.from
 		WHERE `to` = :uid {$q_filter}", $params);
 
   $annotation_types = array('Review', 'Location', 'Link', 'Comment', 'Friend');
- 
+
 	$output = array();
 	foreach ($res as $result) {
 		$text = ''; $start = ''; $length = '';
 		if (in_array($result->type, $annotation_types)) {
 			$annotation = node_load($result->source2);
-			$text = field_get_items('node', $annotation, 'field_annotation_text');
-			$text = (!empty($text[0]['safe_value'])) ? $text[0]['safe_value'] : '';
-			$start = field_get_items('node', $annotation, 'field_annotation_start');
-			$start = (!empty($start[0]['value'])) ? $start[0]['value'] : '';
-			$length = field_get_items('node', $annotation, 'field_annotation_length');
-			$length = (!empty($length[0]['value'])) ? $length[0]['value'] : '';
+      if (!empty($annotation->type)) {
+  			$text = field_get_items('node', $annotation, 'field_annotation_text');
+	  		$text = (!empty($text[0]['safe_value'])) ? $text[0]['safe_value'] : '';
+		  	$start = field_get_items('node', $annotation, 'field_annotation_start');
+			  $start = (!empty($start[0]['value'])) ? $start[0]['value'] : '';
+			  $length = field_get_items('node', $annotation, 'field_annotation_length');
+			  $length = (!empty($length[0]['value'])) ? $length[0]['value'] : '';
+      }
 		}
 		$output[] = array(
 			'id' => intval($result->id),
@@ -90,7 +110,7 @@ function _kss_notification_list($filter, $type) {
 		);
 	}
 	return $output;
-} 
+}
 
 function _kss_notification_create_message($result) {
   $node = node_load($result->source);
@@ -101,7 +121,17 @@ function _kss_notification_create_message($result) {
 	if ($result->type == "Import") {
 		return "Import of video {$node->title} completed.";
 	}
-  if ($node->nid) { 
+  if ($result->type == "Rate") {
+    return "{$result->name} rated your content {$node->title}";
+  }
+  if ($result->type == "Reject") {
+    return "An item of content was rejected by the encoder";
+  }
+  if ($result->type == "Comment") {
+    $pre = user_load($result->from);
+    return "{$pre->name} commented on {$node->title}";
+  }
+  if ($node->nid) {
     return "{$result->name} added a {$result->type} on video {$node->title}";
   }
   return "No message";
@@ -151,6 +181,70 @@ function _kss_notification_reject($data) {
 	_kss_notification_approve($data);
 	return array('status' => 'ok', 'message' => 'deleted ' . $output);
 }
+
+
+/**
+ * Implements hook_cron().
+ */
+function kendra_social_notifications_cron() {
+  $notifications = db_query("SELECT * FROM {kendra_notifications} WHERE emailed = 0");
+  //watchdog('d', '<pre>' . print_r($notifications->fetchAll(), TRUE) . '</pre>');
+  $user_messages = array();
+  $sent = array();
+  // separate out required notifications by user
+  foreach ($notifications->fetchAll() as $notify) {
+    $user_messages[$notify->to][] = _kss_notification_create_message($notify);
+    $sent[] = $notify->id;
+  }
+  if (!empty($sent)) {
+    db_query("UPDATE {kendra_notifications} SET emailed = 1 WHERE id IN (:ids)",
+      array(':ids' => $sent));
+  }
+  //watchdog('sending', '<pre>' . print_r($user_messages, TRUE) . '</pre>');
+  // send one email per user
+  foreach ($user_messages as $uid => $msgs) {
+    $account = user_load($uid);
+    $params = array('account' => $account, 'messages' => $msgs);
+    drupal_mail('kendra_social_notifications', 'notice',
+      $account->mail, user_preferred_language($account), $params);
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function kendra_social_notifications_mail($key, &$message, $params) {
+  $account = $params['account'];
+  if ($account->data['get_email'] == 1) {
+    $variables = array(
+      '%username' => format_username($account),
+      '%messages' => implode("\n", $params['messages']),
+    );
+    $subject = t('You have new notifications in your Saracen account');
+    $body = strtr("Dear {$variables['%username']} \n\n You have pending notifications in your Saracen account.
+      \n\n {$variables['%messages']} \n\n Please login to the Saracen client application to approve or reject
+      the notifications.", $variables);
+    $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
+    $message['body'][] = drupal_html_to_text($body);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

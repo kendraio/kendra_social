@@ -43,7 +43,7 @@ function _kss_annotation_delete($tid, $identifier) {
 			return array('status' => 'ok', 'message' => "deleted annotation {$annotate->nid}");
 		} else {
       $media_id = $annotate->field_annotation_mediaitem[LANGUAGE_NONE][0]['value'];
-      $mediaitem_nid = _kendra_saracen_trial_mod_lookup_id($identifier);
+      $mediaitem_nid = _kendra_saracen_trial_mod_lookup_id($media_id);
       $media_node = node_load($mediaitem_nid);
       if ($user->uid == $media_node->uid) {
         node_delete($annotate->nid);

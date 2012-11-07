@@ -227,6 +227,9 @@ function _kss_fb_connect_debug() {
 	$app_id = $_fb_app->apikey;
   $app_secret = $_fb_app->secret;
   $my_url = url('fb-update', array('absolute' => TRUE));
+  $my_url = 'https://trial.saracen-p2p.eu/fb-update';
+
+  watchdog('d', $my_url);
 
   global $user;
   if (!empty($user->uid)) {

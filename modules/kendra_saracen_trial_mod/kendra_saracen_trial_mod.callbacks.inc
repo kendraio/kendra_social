@@ -538,14 +538,7 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
 
   // save data items to triple store
   $store = sparql_get_store(variable_get('kendra_saracen_mediaitem_store', 'mediaItems'), SPARQL_ENDPOINT);
-  foreach ($data as $key => $value) {
-    $value     = str_replace('"', '\"', trim($value));
-    $url       = url('node/' . $node->nid, array('absolute' => TRUE));
-    $predicate = url('node/' . $node->nid, array('fragment' => $key, 'absolute' => TRUE));
-    $store->query("INSERT INTO <mediaitems> {\n" .
-      "  <{$url}> <{$predicate}> \"{$value}\" .\n" . "}\n"
-    );
-  }
+  _kendra_saracen_trial_mod_mediaitem_save_triples($node, $data, $store);
 
   /*
   * set codec & quality
@@ -595,6 +588,28 @@ function _kendra_saracen_trial_mod_register_mediaitem($data = NULL) {
 
   // return notification of registered node
   return array('status' => 'OK', 'message' => 'Media item ' . $op, 'identifier' => $data['identifier']);
+}
+
+/**
+* save media metadata to triple store
+*/
+function _kendra_saracen_trial_mod_mediaitem_save_triples(&$node, &$data, $store) {
+	if (is_array($data)) {
+		foreach ($data as $value) {
+			_kendra_saracen_trial_mod_mediaitem_save_triples($node, $value, $store);
+		}
+	} else if (is_object($data)) {
+		// @todo
+	} else {
+		foreach ($data as $key => $value) {
+		  $value     = str_replace('"', '\"', trim($value));
+		  $url       = url('node/' . $node->nid, array('absolute' => TRUE));
+		  $predicate = url('node/' . $node->nid, array('fragment' => $key, 'absolute' => TRUE));
+		  $store->query("INSERT INTO <mediaitems> {\n" .
+		    "  <{$url}> <{$predicate}> \"{$value}\" .\n" . "}\n"
+		  );
+		}
+	}
 }
 
 /**

@@ -140,7 +140,16 @@ function _kss_profiles_retrieve($id) {
 	return $profile; // print_r($profile, TRUE);
 }
 
-function _kss_social_publish($domain, $msg) {
+function _kss_social_publish_access_2() {
+  return TRUE;
+}
+function _kss_social_publish($data) {
+  global $user;
+  $domain = $data['domain'];
+  if ($domain == 'facebook') {
+    $domain = 'facebook.com';
+  }
+  $msg = $data['content'];
 	if ($domain == 'facebook.com') {
 		$fbid = db_query("SELECT fbu FROM {fb_user} WHERE uid = :uid",
 		array(':uid' => $user->uid))->fetchField();
@@ -148,12 +157,37 @@ function _kss_social_publish($domain, $msg) {
 		array(':fbu' => $fbid))->fetchField();
 		$fb_feed_url = "https://graph.facebook.com/$fbid/feed";
 
+    $params = array(
+      'access_token' => $access_token,
+      'message' => $msg,
+      'name' => 'Saracen',
+      //'link' => 'http://trial.saracen-p2p.eu',
+      'caption' => 'Saracen Trial',
+      'method' => 'POST',
+    );
+    // Let third parties alter params.
+    $params = fb_invoke(FB_STREAM_OP_PRE_POST, array(), $params, 'fb_stream');
+    try {
+      $result = fb_graph("/{$fbid}/feed", $params, 'POST');
+      if (!empty($result['id'])) {
+        watchdog('fb posted', '<pre>' . print_r($result, TRUE) . '</pre>');
+        return 'posted message: ' . $result['id'];
+      } else {
+        watchdog('fb result', '<pre>' . print_r($result, TRUE) . '</pre>');
+      }
+    }
+    catch (Exception $e) {
+      watchdog('fb error', '<pre>' . print_r($e, TRUE) . '</pre>');
+      return 'There was an error communicating with Facebook'; //$params; //print_r($e, TRUE);
+    }
+    return 'fail';
+
 		$result = drupal_http_request($fb_feed_url, array(
 		  'method' => 'POST',
-		  'data' => "access_token={$access_token}&message={$msg}",
+		  'data' => "access_token={$access_token}&message={$msg}&link={$link}&caption={$caption}",
 		));
 
-		//watchdog('kss_social_publish', print_r($result, TRUE));
+		watchdog('kss_social_publish', print_r($result, TRUE));
 		return $result->status_message;
 	} else {
 		return "Unknown domain";

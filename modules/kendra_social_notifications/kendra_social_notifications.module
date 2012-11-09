@@ -113,6 +113,10 @@ function _kss_notification_list($filter, $type) {
 }
 
 function _kss_notification_create_message($result) {
+  if ($result->type == 'FB Error') {
+    return "Your Facebook access token has expired. Please go to " .
+      'https://trial.saracen-p2p.eu/fb-update';
+  }
   $node = node_load($result->source);
 	if ($result->type == "Share") {
 		$box = node_load($result->source2);
@@ -205,8 +209,10 @@ function kendra_social_notifications_cron() {
   foreach ($user_messages as $uid => $msgs) {
     $account = user_load($uid);
     $params = array('account' => $account, 'messages' => $msgs);
-    drupal_mail('kendra_social_notifications', 'notice',
-      $account->mail, user_preferred_language($account), $params);
+    if ($account->data['get_email'] == 1) {
+      drupal_mail('kendra_social_notifications', 'notice',
+        $account->mail, user_preferred_language($account), $params);
+    }
   }
 }
 
@@ -215,18 +221,16 @@ function kendra_social_notifications_cron() {
  */
 function kendra_social_notifications_mail($key, &$message, $params) {
   $account = $params['account'];
-  if ($account->data['get_email'] == 1) {
-    $variables = array(
-      '%username' => format_username($account),
-      '%messages' => implode("\n", $params['messages']),
-    );
-    $subject = t('You have new notifications in your Saracen account');
-    $body = strtr("Dear {$variables['%username']} \n\n You have pending notifications in your Saracen account.
-      \n\n {$variables['%messages']} \n\n Please login to the Saracen client application to approve or reject
-      the notifications.", $variables);
-    $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
-    $message['body'][] = drupal_html_to_text($body);
-  }
+  $variables = array(
+    '%username' => format_username($account),
+    '%messages' => implode("\n", $params['messages']),
+  );
+  $subject = t('You have new notifications in your Saracen account');
+  $body = strtr("Dear {$variables['%username']} \n\n You have pending notifications in your Saracen account.
+    \n\n {$variables['%messages']} \n\n Please login to the Saracen client application to approve or reject
+    the notifications.", $variables);
+  $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
+  $message['body'][] = drupal_html_to_text($body);
 }
 
 

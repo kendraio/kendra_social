@@ -103,6 +103,7 @@ function _kendra_saracen_queue_worker($item) {
 function _kendra_saracen_update_facebook_profile($item) {
   $connections = array('likes', 'movies', 'music');
   $first = TRUE;
+  $failed = FALSE;
   foreach ($connections as $connection) {
     $key = "fb_{$connection}";
     $response = drupal_http_request("https://graph.facebook.com/{$item->fbu}/{$connection}?access_token={$item->access_token}");
@@ -117,6 +118,10 @@ function _kendra_saracen_update_facebook_profile($item) {
     }
     else {
       watchdog('fb debug', 'failed to import: ' . print_r($response, TRUE) . ' for ' . print_r($item, TRUE));
+      $failed = TRUE;
+    }
+    if ($failed) {
+      _kss_notification_add('FB Error', 0, 0, $item->uid);
     }
   }
   _kendra_saracen_import_facebook_friend($item);

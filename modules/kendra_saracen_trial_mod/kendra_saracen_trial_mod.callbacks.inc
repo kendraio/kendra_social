@@ -208,11 +208,11 @@ function _kendra_saracen_trial_mod_get_mediaitem($id, $include_derivatives = FAL
 
 //    $watchers = db_select('kendra_mediaitem_watch', 'w')->fields('w')->condition('media_id', $id)->condition('stop', NULL)->execute();
     $watchers = db_select('kendra_mediaitem_watch', 'w')
-      ->fields('w')->condition('media_id', $id)->groupBy('uid')
+      ->fields('w')->condition('media_id', $media_id)->groupBy('uid')
       ->range(0, 10)->orderBy('start', 'DESC')->execute();
     $node->watchers = array();
     foreach ($watchers as $watching) {
-	    if (_kendra_saracen_get_mediaitem_tracking($id, $watching->uid)) {
+	    if (_kendra_saracen_get_mediaitem_tracking($media_id, $watching->uid)) {
         $node->watchers[] = array(
           'uid' => $watching->uid,
           'started' => $watching->start,
@@ -220,7 +220,7 @@ function _kendra_saracen_trial_mod_get_mediaitem($id, $include_derivatives = FAL
       }
     }
 
-		$publish = _kendra_saracen_get_mediaitem_tracking($id);
+		$publish = _kendra_saracen_get_mediaitem_tracking($media_id);
 		$node->publish_watching_activity = ($publish) ? 1 : 0;
 
     // TAGS: Load ownership info into media item tags

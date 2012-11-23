@@ -22,7 +22,7 @@ ALTER TABLE  `kendra_notifications` ADD  `rid` INT( 10 ) UNSIGNED  NULL
 
 
 function _kss_notification_add($type, $source, $user_from, $user_to, $source2 = 0, $rid = 0) {
-  if ($user_from == $user_to) {
+  if ($user_from == $user_to && $type != 'Reject') {
     // Don't save notifications for activity on own content.
     watchdog('debug', 'not saving comment from ' . $user_from . ' to ' . $user_to);
     return;

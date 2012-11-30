@@ -17,7 +17,8 @@ include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kendra_social_servic
 function _kss_user_load_recommendations(&$users) {
 	$recommendation = db_query("SELECT * FROM {kendra_match_recommender_out_tags} t WHERE t.uid IN (:uids)", array(':uids' => array_keys($users)));
   foreach ($recommendation as $record) {
-    $users[$record->uid]->profile_tags[] = array('name' => $record->tag, 'score' => $record->weight, 'type' => 'explicit');
+    $source = (!empty($record->source)) ? $record->source : 'explicit';
+    $users[$record->uid]->profile_tags[] = array('name' => $record->tag, 'score' => $record->weight, 'type' => $source);
   }
 }
 

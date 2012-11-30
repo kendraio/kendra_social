@@ -27,6 +27,16 @@ function _kss_notification_add($type, $source, $user_from, $user_to, $source2 = 
     watchdog('debug', 'not saving comment from ' . $user_from . ' to ' . $user_to);
     return;
   }
+  // Check if existing FB notification exists
+  if ($type == 'FB Error') {
+    $fbquery = db_query("SELECT count(id) FROM {kendra_notifications} WHERE `type` = :t AND `to` = :u",
+      array(':t' => $type, ':u' => $user_to));
+    $fb_error_count = $fbquery->fetchField();
+    if (!empty($fb_error_count)) {
+      // there is an existing notification for this user, so return without saving new notification
+      return;
+    }
+  }
 	db_query("INSERT INTO {kendra_notifications} (`source`, `from`, `to`, `type`, `time`, `source2`, `rid`, `emailed`)
 	  VALUES (:s, :f, :t, :ty, :ti, :ss, :r, 0)", array(
 	  	':s' => $source,
